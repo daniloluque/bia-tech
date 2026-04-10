@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIA Tech — Central de Incidentes</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    /* ── BRAND CONSTANTS ── */
+    :root {
+      --red: #CC092F;
+      --red-dark: #A00725;
+      --red-light: #FDECEA;
+      --cyan: #00BCD4;
+      --cyan-dark: #0097A7;
+      --cyan-light: #E0F7FA;
+      --cyan-text: #00696E;
+      --gray-900: #1A1A1A;
+      --gray-800: #333333;
+      --gray-700: #444444;
+      --gray-600: #666666;
+      --gray-400: #999999;
+      --gray-200: #E0E0E0;
+      --gray-50: #F5F5F5;
+      --white: #FFFFFF;
+      --success: #2E7D32;
+      --success-light: #E8F5E9;
+      --warning: #F9A825;
+      --warning-light: #FFF8E1;
+      --error: #D32F2F;
+      --error-light: #FDECEA;
+      --info: #1565C0;
+      --info-light: #E3F2FD;
+    }
+
+    /* ── DARK THEME (default) ── */
+    [data-theme="dark"] {
+      --bg: #111111;
+      --surface: #1E1E1E;
+      --surface-2: #242424;
+      --nav-bg: #1A1A1A;
+      --nav-border: rgba(255, 255, 255, 0.08);
+      --sidebar-bg: #1A1A1A;
+      --sidebar-border: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.07);
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --text-primary: #F0F0F0;
+      --text-secondary: #999999;
+      --text-muted: #555555;
+      --kpi-p1-border: rgba(211, 47, 47, 0.3);
+      --kpi-ia-border: rgba(0, 188, 212, 0.25);
+      --row-hover: rgba(255, 255, 255, 0.015);
+      --svc-track: rgba(255, 255, 255, 0.06);
+      --scroll-thumb: #2a2a2a;
+      --btn-border: rgba(255, 255, 255, 0.15);
+      --btn-border-hov: rgba(255, 255, 255, 0.25);
+      --toggle-bg: rgba(255, 255, 255, 0.06);
+      --toggle-border: rgba(255, 255, 255, 0.12);
+      --toggle-color: #999999;
+      --ai-track: rgba(255, 255, 255, 0.06);
+      --sidebar-item-hover-bg: rgba(255, 255, 255, 0.03);
+      --sidebar-item-hover-col: #cccccc;
+      --sidebar-footer-border: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── LIGHT THEME ── */
+    [data-theme="light"] {
+      --bg: #F5F5F5;
+      --surface: #FFFFFF;
+      --surface-2: #F8F8F8;
+      --nav-bg: #1A1A1A;
+      --nav-border: rgba(255, 255, 255, 0.08);
+      --sidebar-bg: #FFFFFF;
+      --sidebar-border: rgba(0, 0, 0, 0.08);
+      --border: rgba(0, 0, 0, 0.09);
+      --border-subtle: rgba(0, 0, 0, 0.05);
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-muted: #999999;
+      --kpi-p1-border: rgba(204, 9, 47, 0.25);
+      --kpi-ia-border: rgba(0, 188, 212, 0.3);
+      --row-hover: rgba(0, 0, 0, 0.02);
+      --svc-track: rgba(0, 0, 0, 0.07);
+      --scroll-thumb: #d0d0d0;
+      --btn-border: rgba(0, 0, 0, 0.15);
+      --btn-border-hov: rgba(0, 0, 0, 0.3);
+      --toggle-bg: rgba(0, 0, 0, 0.05);
+      --toggle-border: rgba(0, 0, 0, 0.12);
+      --toggle-color: #666666;
+      --ai-track: rgba(0, 0, 0, 0.06);
+      --sidebar-item-hover-bg: rgba(0, 0, 0, 0.03);
+      --sidebar-item-hover-col: #333333;
+      --sidebar-footer-border: rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* ── TOPBAR — always dark (wordmark consistency) ── */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: var(--nav-bg);
+      border-bottom: 0.5px solid var(--nav-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+      transition: background 0.2s;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .wordmark .bia {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .wordmark .pipe {
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.25);
+      margin: 0 4px;
+    }
+
+    .wordmark .tech {
+      font-weight: 300;
+      color: #fff;
+    }
+
+    .topbar-divider {
+      width: 0.5px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .topbar-page {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 188, 212, 0.1);
+      border: 0.5px solid rgba(0, 188, 212, 0.3);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.25;
+      }
+    }
+
+    .topbar-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      height: 100vh;
+      padding-top: 52px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 200px;
+      min-width: 200px;
+      background: var(--sidebar-bg);
+      border-right: 0.5px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+      overflow-y: auto;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .sidebar-section {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0 16px 8px;
+      margin-top: 4px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+
+    .sidebar-item:hover {
+      color: var(--sidebar-item-hover-col);
+      background: var(--sidebar-item-hover-bg);
+    }
+
+    .sidebar-item.active {
+      color: var(--cyan);
+      border-left-color: var(--cyan);
+      background: rgba(0, 188, 212, 0.06);
+      font-weight: 500;
+    }
+
+    .sidebar-item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-badge {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(204, 9, 47, 0.2);
+      color: #FF6B6B;
+    }
+
+    .sidebar-badge.cyan {
+      background: rgba(0, 188, 212, 0.15);
+      color: var(--cyan);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px;
+      border-top: 0.5px solid var(--sidebar-footer-border);
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .sidebar-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .sidebar-user-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-user-role {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .page-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--cyan);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .page-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .page-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 0.5px solid var(--btn-border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--btn-border-hov);
+      color: var(--text-primary);
+    }
+
+    .btn-primary {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      background: var(--red);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--red-dark);
+    }
+
+    /* ── KPI GRID ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .kpi-card.p1 {
+      border-color: var(--kpi-p1-border);
+    }
+
+    .kpi-card.ia {
+      border-color: var(--kpi-ia-border);
+    }
+
+    .kpi-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .kpi-label.cyan {
+      color: var(--cyan-text);
+    }
+
+    .kpi-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .kpi-value.red {
+      color: #FF6B6B;
+    }
+
+    .kpi-value.cyan {
+      color: var(--cyan);
+    }
+
+    .kpi-value.green {
+      color: #4CAF50;
+    }
+
+    .kpi-unit {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .kpi-delta {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .kpi-delta .up {
+      color: #FF6B6B;
+    }
+
+    .kpi-delta .down {
+      color: #4CAF50;
+    }
+
+    .kpi-delta .neu {
+      color: var(--cyan);
+    }
+
+    /* ── CHARTS ROW ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .charts-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .card-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* ── CHART LEGENDS ── */
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── BADGE MONO ── */
+    .badge-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-p1 {
+      background: rgba(211, 47, 47, 0.15);
+      color: #FF6B6B;
+    }
+
+    .badge-p2 {
+      background: rgba(249, 168, 37, 0.15);
+      color: #F9A825;
+    }
+
+    .badge-p3 {
+      background: rgba(0, 188, 212, 0.12);
+      color: var(--cyan);
+    }
+
+    .badge-p4 {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+    }
+
+    .badge-ia {
+      background: rgba(0, 188, 212, 0.12);
+      border: 0.5px solid rgba(0, 188, 212, 0.25);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* ── TOP SERVICES ── */
+    .svc-row {
+      display: grid;
+      grid-template-columns: 130px 1fr 32px;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 0;
+    }
+
+    .svc-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .svc-bar-track {
+      height: 4px;
+      background: var(--svc-track);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .svc-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .svc-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    /* ── INCIDENT TABLE ── */
+    .inc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .inc-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      text-align: left;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .inc-table td {
+      padding: 9px 10px;
+      border-bottom: 0.5px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+
+    .inc-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .inc-table tr:hover td {
+      background: var(--row-hover);
+    }
+
+    .inc-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+      white-space: nowrap;
+    }
+
+    .inc-svc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .inc-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .inc-age {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ── DONUT CENTER ── */
+    .donut-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .donut-center {
+      position: absolute;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .donut-total {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .donut-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── SEVERITY LEGEND ── */
+    .sev-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      margin-top: 12px;
+    }
+
+    .sev-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .sev-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── SLA CHIP ── */
+    .sla-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #4CAF50;
+      background: rgba(46, 125, 50, 0.12);
+      border: 0.5px solid rgba(46, 125, 50, 0.25);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    /* ── TREND BADGE ── */
+    .trend-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: rgba(46, 125, 50, 0.12);
+      color: #4CAF50;
+      border: 0.5px solid rgba(46, 125, 50, 0.2);
+    }
+
+    /* ── ALERT BARS ── */
+    .alert-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      border-left: 3px solid;
+    }
+
+    .alert-bar.critical {
+      background: rgba(211, 47, 47, 0.08);
+      border-color: var(--error);
+    }
+
+    .alert-bar.warning {
+      background: rgba(249, 168, 37, 0.08);
+      border-color: var(--warning);
+    }
+
+    .alert-bar.ia {
+      background: rgba(0, 188, 212, 0.06);
+      border-color: var(--cyan);
+    }
+
+    .alert-bar-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .alert-bar-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .alert-bar-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 1px;
+    }
+
+    .alert-bar-time {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── AI PULSE BAR ── */
+    .ai-pulse {
+      height: 2px;
+      background: var(--ai-track);
+      border-radius: 1px;
+      overflow: hidden;
+      margin: 12px 0 6px;
+    }
+
+    .ai-pulse-fill {
+      height: 100%;
+      background: var(--cyan);
+      border-radius: 1px;
+      animation: pulse-bar 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-bar {
+      from {
+        width: 30%;
+        opacity: 0.6;
+      }
+
+      to {
+        width: 92%;
+        opacity: 1;
+      }
+    }
+
+    .ai-pulse-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .ai-pulse-label span {
+      color: var(--cyan);
+    }
+
+    /* ── FOOTER ── */
+    .dash-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 0.5px solid var(--border-subtle);
+      margin-top: 4px;
+    }
+
+    .dash-footer-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .dash-footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scroll-thumb);
+      border-radius: 2px;
+    }
+
+    /* ── THEME TOGGLE BUTTON ── */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--toggle-bg);
+      border: 0.5px solid var(--toggle-border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--toggle-color);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .theme-toggle:hover {
+      border-color: rgba(0, 188, 212, 0.4);
+      color: var(--cyan);
+    }
+
+    /* ── LIGHT MODE: badge-p4 visibility fix ── */
+    [data-theme="light"] .badge-p4 {
+      background: rgba(0, 0, 0, 0.06);
+      color: #666666;
+    }
+
+    /* ── LIGHT MODE: sidebar item active ── */
+    [data-theme="light"] .sidebar-item.active {
+      background: rgba(0, 188, 212, 0.07);
+    }
+
+    /* ── CARD transition ── */
+    .card,
+    .kpi-card {
+      transition: background 0.2s, border-color 0.2s;
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="wordmark">
+        <span class="bia">BIA</span>
+        <span class="pipe">|</span>
+        <span class="tech">Tech</span>
+      </div>
+      <div class="topbar-divider"></div>
+      <span class="topbar-page">Central de Incidentes</span>
+    </div>
+    <div class="topbar-right">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+        <span id="themeIcon">☀</span>
+        <span id="themeLabel">Modo claro</span>
+      </button>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        LIVE
+      </div>
+      <div class="topbar-time" id="clockEl">--:--:--</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-section">Monitoramento</div>
+      <a class="sidebar-item active">
+        <div class="sidebar-item-dot" style="background:var(--red);"></div>
+        Central de Incidentes
+        <span class="sidebar-badge">8</span>
+      </a>
+      <a class="sidebar-item">
+        <div class="sidebar-item-dot" style="background:var(--cyan);"></div>
+        Change Analysis
+        <span class="sidebar-badge cyan">3</span>
+      </a>
+      <a class="sidebar-item">
+        <div class="sidebar-item-dot" style="background:var(--gray-400);"></div>
+        Alertas & PRBs
+      </a>
+      <a class="sidebar-item">
+        <div class="sidebar-item-dot" style="background:var(--gray-400);"></div>
+        Dashboard SDLC
+      </a>
+
+      <div class="sidebar-section" style="margin-top:12px;">IA Tools</div>
+      <a class="sidebar-item">
+        <div class="sidebar-item-dot" style="background:var(--cyan);"></div>
+        Gerador de Histórias
+      </a>
+      <a class="sidebar-item">
+        <div class="sidebar-item-dot" style="background:var(--cyan);"></div>
+        Code Review IA
+      </a>
+      <a class="sidebar-item">
+        <div class="sidebar-item-dot" style="background:var(--cyan);"></div>
+        Gerador de PRB
+      </a>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar">DL</div>
+          <div>
+            <div class="sidebar-user-name">Danilo Luque</div>
+            <div class="sidebar-user-role">Software Engineer · BIA Tech</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">BIA Tech · Incident Intelligence</div>
+          <div class="page-title">Central de Incidentes</div>
+          <div class="page-meta">Últimos 30 dias · Atualizado há 2min</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn-outline">Exportar</button>
+          <button class="btn-primary">Novo Incidente</button>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total</div>
+          <div class="kpi-value">247</div>
+          <div class="kpi-sub">incidentes</div>
+          <div class="kpi-delta"><span class="up">▲ 12%</span>&nbsp;vs mês anterior</div>
+        </div>
+        <div class="kpi-card p1">
+          <div class="kpi-label">Críticos P1</div>
+          <div class="kpi-value red">8</div>
+          <div class="kpi-sub">abertos agora</div>
+          <div class="kpi-delta"><span class="down">▼ 3</span>&nbsp;vs ontem</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">MTTR</div>
+          <div class="kpi-value cyan">42<span class="kpi-unit">min</span></div>
+          <div class="kpi-sub">tempo médio resolução</div>
+          <div class="kpi-delta"><span class="down">▼ 18%</span>&nbsp;com IA</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">MTTD</div>
+          <div class="kpi-value">7<span class="kpi-unit">min</span></div>
+          <div class="kpi-sub">tempo médio detecção</div>
+          <div class="kpi-delta"><span class="down">▼ 61%</span>&nbsp;vs sem IA</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Disponibilidade</div>
+          <div class="kpi-value green">99.7<span class="kpi-unit">%</span></div>
+          <div class="kpi-sub">SLA acumulado</div>
+          <div class="kpi-delta"><span class="neu">Meta: 99.5%</span></div>
+        </div>
+        <div class="kpi-card ia">
+          <div class="kpi-label cyan">IA Prevenidos</div>
+          <div class="kpi-value cyan">31</div>
+          <div class="kpi-sub">evitados este mês</div>
+          <div class="kpi-delta"><span class="neu">94%</span>&nbsp;precisão</div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 1 -->
+      <div class="charts-row">
+        <!-- Volume Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Volume de incidentes — últimos 30 dias</div>
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--red);"></div>P1/P2
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--cyan);"></div>P3/P4
+              </div>
+            </div>
+          </div>
+          <div style="position:relative;height:160px;">
+            <canvas id="volumeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Severity Donut -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Por severidade</div>
+          </div>
+          <div class="donut-wrap" style="height:120px;">
+            <canvas id="severityChart"></canvas>
+            <div class="donut-center">
+              <div class="donut-total">247</div>
+              <div class="donut-label">total</div>
+            </div>
+          </div>
+          <div class="sev-legend">
+            <div class="sev-legend-item">
+              <div class="sev-dot" style="background:#D32F2F;"></div>P1 · 8
+            </div>
+            <div class="sev-legend-item">
+              <div class="sev-dot" style="background:#F9A825;"></div>P2 · 34
+            </div>
+            <div class="sev-legend-item">
+              <div class="sev-dot" style="background:var(--cyan);"></div>P3 · 112
+            </div>
+            <div class="sev-legend-item">
+              <div class="sev-dot" style="background:#555;"></div>P4 · 93
+            </div>
+          </div>
+        </div>
+
+        <!-- MTTR by Severity -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">MTTR por severidade</div>
+          </div>
+          <div style="position:relative;height:120px;">
+            <canvas id="mttrChart"></canvas>
+          </div>
+          <div style="border-top:0.5px solid var(--border-subtle);margin-top:10px;padding-top:8px;">
+            <span class="sla-chip">✓ SLA P1: 98% dentro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 2 -->
+      <div class="charts-row-2">
+        <!-- MTTR Trend -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tendência MTTR (min) — 12 meses</div>
+            <span class="trend-badge">▼ 38% no ano</span>
+          </div>
+          <div style="position:relative;height:130px;">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Top Services -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Top serviços por volume</div>
+            <div class="card-meta">incidentes / 30d</div>
+          </div>
+          <div id="topServices" style="display:flex;flex-direction:column;gap:2px;"></div>
+        </div>
+      </div>
+
+      <!-- ROW 3: RCA + Active Incidents + Alerts -->
+      <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:10px;">
+
+        <!-- RCA Donut -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Causa raiz (RCA)</div>
+          </div>
+          <div class="donut-wrap" style="height:160px;">
+            <canvas id="rcaChart"></canvas>
+          </div>
+          <!-- AI pulse -->
+          <div class="ai-pulse">
+            <div class="ai-pulse-fill"></div>
+          </div>
+          <div class="ai-pulse-label">
+            <span style="color:var(--text-muted);">IA correlacionando padrões</span>
+            <span>em progresso</span>
+          </div>
+        </div>
+
+        <!-- Incident Table -->
+        <div class="card" style="overflow:hidden;">
+          <div class="card-header">
+            <div class="card-title">Incidentes ativos</div>
+            <div class="card-meta" style="color:var(--cyan);">8 abertos</div>
+          </div>
+          <table class="inc-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Serviço</th>
+                <th>Descrição</th>
+                <th>SEV</th>
+                <th style="text-align:right;">Aberto há</th>
+              </tr>
+            </thead>
+            <tbody id="incidentTable"></tbody>
+          </table>
+        </div>
+
+        <!-- Alerts Feed -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Alertas recentes</div>
+            <div class="card-meta">IA monitorando</div>
+          </div>
+          <div class="alert-bar critical">
+            <div>
+              <div class="alert-bar-title">SQL Injection detectada</div>
+              <div class="alert-bar-desc">auth/login.ts:47 · Deploy bloqueado</div>
+            </div>
+            <div class="alert-bar-time">2min</div>
+          </div>
+          <div class="alert-bar warning">
+            <div>
+              <div class="alert-bar-title">Latência elevada</div>
+              <div class="alert-bar-desc">payment-gateway · P95 +340ms</div>
+            </div>
+            <div class="alert-bar-time">7min</div>
+          </div>
+          <div class="alert-bar ia">
+            <div>
+              <div class="alert-bar-title">PRB preventivo aberto</div>
+              <div class="alert-bar-desc">94% correlação · auth-service</div>
+            </div>
+            <div class="alert-bar-time">15min</div>
+          </div>
+          <div class="alert-bar ia">
+            <div>
+              <div class="alert-bar-title">Análise em andamento</div>
+              <div class="alert-bar-desc">BIA revisando 12 arquivos do PR</div>
+            </div>
+            <div class="alert-bar-time">22min</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="dash-footer">
+        <div class="dash-footer-text">BIA Tech · Incident Intelligence · v1.0 · Bradesco Inteligência Artificial</div>
+        <div class="dash-footer-brand">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="0" y="0" width="7" height="7" rx="2" fill="#CC092F" />
+            <rect x="9" y="0" width="7" height="7" rx="2" fill="#00BCD4" opacity="0.7" />
+            <rect x="0" y="9" width="7" height="7" rx="2" fill="#00BCD4" opacity="0.35" />
+            <rect x="9" y="9" width="7" height="7" rx="2" fill="#CC092F" opacity="0.3" />
+            <rect x="4" y="4" width="8" height="8" rx="2" fill="#1A1A1A" />
+            <rect x="6" y="6" width="4" height="4" rx="1" fill="#00BCD4" />
+          </svg>
+          BIA Tech
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ── CLOCK ──
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clockEl').textContent =
+        now.toLocaleTimeString('pt-BR', { hour12: false });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ── THEME TOGGLE ──
+    let isDark = true;
+
+    function getChartTheme() {
+      return isDark
+        ? {
+          grid: 'rgba(255,255,255,0.05)', tick: '#555555', legend: '#666666',
+          ttBg: '#1E1E1E', ttTitle: '#F0F0F0', ttBody: '#999999'
+        }
+        : {
+          grid: 'rgba(0,0,0,0.07)', tick: '#999999', legend: '#999999',
+          ttBg: '#FFFFFF', ttTitle: '#1A1A1A', ttBody: '#666666'
+        };
+    }
+
+    const allCharts = {};
+
+    function applyChartTheme() {
+      const t = getChartTheme();
+      const tt = {
+        backgroundColor: t.ttBg,
+        borderColor: 'rgba(0,188,212,0.25)',
+        borderWidth: 1,
+        titleColor: t.ttTitle,
+        bodyColor: t.ttBody,
+        padding: 10,
+        titleFont: { family: 'JetBrains Mono', size: 11 },
+        bodyFont: { family: 'JetBrains Mono', size: 11 }
+      };
+
+      Object.values(allCharts).forEach(ch => {
+        if (!ch) return;
+        const sc = ch.options.scales;
+        if (sc) {
+          ['x', 'y'].forEach(axis => {
+            if (sc[axis]) {
+              if (sc[axis].ticks) sc[axis].ticks.color = t.tick;
+              if (sc[axis].grid) sc[axis].grid.color = t.grid;
+            }
+          });
+        }
+        if (ch.options.plugins) {
+          Object.assign(ch.options.plugins.tooltip, tt);
+          if (ch.options.plugins.legend?.labels) {
+            ch.options.plugins.legend.labels.color = t.legend;
+          }
+        }
+        ch.update('none');
+      });
+    }
+
+    function toggleTheme() {
+      isDark = !isDark;
+      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeIcon').textContent = isDark ? '☀' : '☾';
+      document.getElementById('themeLabel').textContent = isDark ? 'Modo claro' : 'Modo escuro';
+      applyChartTheme();
+    }
+
+    // ── CHART DEFAULTS ──
+    const GRID = 'rgba(255,255,255,0.05)';
+    const TICK = '#555555';
+    const TT = {
+      backgroundColor: '#1E1E1E',
+      borderColor: 'rgba(0,188,212,0.25)',
+      borderWidth: 1,
+      titleColor: '#F0F0F0',
+      bodyColor: '#999999',
+      padding: 10,
+      titleFont: { family: 'JetBrains Mono', size: 11 },
+      bodyFont: { family: 'JetBrains Mono', size: 11 }
+    };
+
+    const BASE = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: TT }
+    };
+
+    // ── DATA ──
+    const days = Array.from({ length: 30 }, (_, i) => String(i + 1));
+    const p12 = [3, 1, 4, 2, 5, 3, 2, 6, 1, 4, 3, 5, 2, 3, 4, 1, 2, 3, 5, 4, 2, 3, 1, 4, 3, 2, 5, 3, 4, 2];
+    const p34 = [5, 4, 7, 6, 9, 5, 4, 8, 6, 7, 5, 9, 6, 7, 8, 4, 5, 6, 10, 8, 5, 7, 4, 8, 6, 5, 9, 6, 8, 5];
+    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const mttrTrend = [68, 72, 65, 61, 58, 54, 52, 49, 47, 45, 43, 42];
+
+    // 1. Volume bar (stacked)
+    allCharts.volume = new Chart(document.getElementById('volumeChart'), {
+      type: 'bar',
+      data: {
+        labels: days,
+        datasets: [
+          { label: 'P1/P2', data: p12, backgroundColor: '#CC092F', borderRadius: 2, borderSkipped: false },
+          { label: 'P3/P4', data: p34, backgroundColor: '#00BCD4', borderRadius: 2, borderSkipped: false }
+        ]
+      },
+      options: {
+        ...BASE,
+        scales: {
+          x: { stacked: true, ticks: { color: TICK, font: { family: 'JetBrains Mono', size: 8 }, maxRotation: 0 }, grid: { color: GRID }, border: { display: false } },
+          y: { stacked: true, ticks: { color: TICK, font: { family: 'JetBrains Mono', size: 9 } }, grid: { color: GRID }, border: { display: false } }
+        }
+      }
+    });
+
+    // 2. Severity donut
+    allCharts.severity = new Chart(document.getElementById('severityChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['P1', 'P2', 'P3', 'P4'],
+        datasets: [{ data: [8, 34, 112, 93], backgroundColor: ['#D32F2F', '#F9A825', '#00BCD4', '#444444'], borderWidth: 0, hoverOffset: 5 }]
+      },
+      options: {
+        ...BASE,
+        cutout: '68%',
+        plugins: { ...BASE.plugins, tooltip: { ...TT, callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}` } } }
+      }
+    });
+
+    // 3. MTTR horizontal bar
+    allCharts.mttr = new Chart(document.getElementById('mttrChart'), {
+      type: 'bar',
+      data: {
+        labels: ['P1', 'P2', 'P3', 'P4'],
+        datasets: [{ data: [118, 67, 38, 14], backgroundColor: ['#D32F2F', '#F9A825', '#00BCD4', '#555555'], borderRadius: 4, borderSkipped: false }]
+      },
+      options: {
+        ...BASE,
+        indexAxis: 'y',
+        scales: {
+          x: { ticks: { color: TICK, font: { family: 'JetBrains Mono', size: 8 }, callback: v => v + 'min' }, grid: { color: GRID }, border: { display: false } },
+          y: { ticks: { color: TICK, font: { family: 'JetBrains Mono', size: 10, weight: '500' } }, grid: { display: false }, border: { display: false } }
+        }
+      }
+    });
+
+    // 4. MTTR Trend line
+    allCharts.trend = new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          data: mttrTrend,
+          borderColor: '#00BCD4',
+          borderWidth: 1.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#00BCD4',
+          pointHoverRadius: 5,
+          fill: true,
+          backgroundColor: ctx => {
+            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 130);
+            g.addColorStop(0, 'rgba(0,188,212,0.16)');
+            g.addColorStop(1, 'rgba(0,188,212,0)');
+            return g;
+          },
+          tension: 0.4
+        }]
+      },
+      options: {
+        ...BASE,
+        scales: {
+          x: { ticks: { color: TICK, font: { family: 'JetBrains Mono', size: 8 } }, grid: { color: GRID }, border: { display: false } },
+          y: { ticks: { color: TICK, font: { family: 'JetBrains Mono', size: 8 }, callback: v => v + 'm' }, grid: { color: GRID }, border: { display: false }, min: 30 }
+        }
+      }
+    });
+
+    // 5. RCA donut
+    allCharts.rca = new Chart(document.getElementById('rcaChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Infra', 'Deploy', 'Config', 'Capacity', 'External', 'Bug'],
+        datasets: [{
+          data: [31, 24, 19, 13, 8, 5],
+          backgroundColor: ['#1565C0', '#CC092F', '#F9A825', '#00BCD4', '#666', '#7B1FA2'],
+          borderWidth: 0,
+          hoverOffset: 5
+        }]
+      },
+      options: {
+        ...BASE,
+        cutout: '55%',
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              color: '#666',
+              font: { family: 'JetBrains Mono', size: 9 },
+              padding: 8,
+              boxWidth: 8,
+              boxHeight: 8,
+              usePointStyle: true
+            }
+          },
+          tooltip: TT
+        }
+      }
+    });
+
+    // ── TOP SERVICES ──
+    const services = [
+      { name: 'auth-service', count: 42, pct: 100 },
+      { name: 'payment-gateway', count: 38, pct: 90 },
+      { name: 'core-banking', count: 31, pct: 74 },
+      { name: 'notification-svc', count: 24, pct: 57 },
+      { name: 'api-gateway', count: 19, pct: 45 },
+      { name: 'data-pipeline', count: 14, pct: 33 },
+    ];
+
+    const svcContainer = document.getElementById('topServices');
+    services.forEach(s => {
+      const color = s.pct > 85 ? '#D32F2F' : s.pct > 55 ? '#F9A825' : '#00BCD4';
+      const el = document.createElement('div');
+      el.className = 'svc-row';
+      el.innerHTML = `
+      <span class="svc-name">${s.name}</span>
+      <div class="svc-bar-track">
+        <div class="svc-bar-fill" style="width:${s.pct}%;background:${color};"></div>
+      </div>
+      <span class="svc-count">${s.count}</span>
+    `;
+      svcContainer.appendChild(el);
+    });
+
+    // ── INCIDENT TABLE ──
+    const incidents = [
+      { id: 'INC-9821', svc: 'auth-service', desc: 'Latência elevada em autenticação OAuth', sev: 'P1', age: '1h 12m', bia: true },
+      { id: 'INC-9819', svc: 'payment-gateway', desc: 'Timeout intermitente em transações PIX', sev: 'P1', age: '2h 45m', bia: true },
+      { id: 'INC-9817', svc: 'core-banking', desc: 'Falha em sincronização de saldos', sev: 'P1', age: '3h 08m', bia: true },
+      { id: 'INC-9815', svc: 'notification-svc', desc: 'Fila de e-mails com atraso >30min', sev: 'P2', age: '4h 22m', bia: false },
+      { id: 'INC-9812', svc: 'api-gateway', desc: 'Rate limit incorreto em /v2/cards', sev: 'P2', age: '5h 01m', bia: true },
+      { id: 'INC-9808', svc: 'data-pipeline', desc: 'Job de ETL falhando no step enrichment', sev: 'P2', age: '6h 33m', bia: false },
+      { id: 'INC-9803', svc: 'auth-service', desc: 'Certificado SSL próximo de vencer (12h)', sev: 'P2', age: '8h 17m', bia: true },
+      { id: 'INC-9799', svc: 'core-banking', desc: 'Lentidão em relatórios de extrato', sev: 'P3', age: '11h 05m', bia: false },
+    ];
+
+    const sevClass = { P1: 'badge-p1', P2: 'badge-p2', P3: 'badge-p3', P4: 'badge-p4' };
+    const tbody = document.getElementById('incidentTable');
+
+    incidents.forEach(inc => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+      <td class="inc-id">${inc.id}</td>
+      <td class="inc-svc">${inc.svc}</td>
+      <td class="inc-desc">${inc.desc}</td>
+      <td><span class="badge-mono ${sevClass[inc.sev]}">${inc.sev}</span></td>
+      <td class="inc-age">${inc.age}</td>
+    `;
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+
+</html>

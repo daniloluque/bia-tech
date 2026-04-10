@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIA Tech — Performance Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ── BRAND ── */
+:root {
+  --red:      #CC092F;
+  --red-dark: #A00725;
+  --cyan:     #00BCD4;
+  --cyan-dark:#0097A7;
+  --success:  #2E7D32;
+  --warning:  #F9A825;
+  --error:    #D32F2F;
+  --info:     #1565C0;
+}
+
+/* ── DARK ── */
+[data-theme="dark"] {
+  --bg:            #0E0E0E;
+  --surface:       #1A1A1A;
+  --surface-2:     #202020;
+  --surface-3:     #272727;
+  --border:        rgba(255,255,255,0.07);
+  --border-s:      rgba(255,255,255,0.04);
+  --text-1:        #EFEFEF;
+  --text-2:        #888888;
+  --text-3:        #444444;
+  --input-bg:      #141414;
+  --input-border:  rgba(255,255,255,0.1);
+  --input-focus:   rgba(0,188,212,0.35);
+  --chart-grid:    rgba(255,255,255,0.04);
+  --chart-tick:    #444444;
+  --chart-tt-bg:   #1A1A1A;
+  --chart-tt-title:#EFEFEF;
+  --chart-tt-body: #888888;
+  --log-bg:        #0A0A0A;
+  --log-border:    rgba(255,255,255,0.05);
+  --scroll:        #2a2a2a;
+  --select-bg:     #141414;
+  --pill-bg:       rgba(255,255,255,0.05);
+  --pill-border:   rgba(255,255,255,0.09);
+  --topbar-bg:     #1A1A1A;
+  --topbar-border: rgba(255,255,255,0.07);
+  --tag-bg:        rgba(255,255,255,0.06);
+  --row-hover:     rgba(255,255,255,0.02);
+  --kbd-bg:        #272727;
+}
+/* ── LIGHT ── */
+[data-theme="light"] {
+  --bg:            #F2F2F2;
+  --surface:       #FFFFFF;
+  --surface-2:     #F8F8F8;
+  --surface-3:     #EFEFEF;
+  --border:        rgba(0,0,0,0.09);
+  --border-s:      rgba(0,0,0,0.05);
+  --text-1:        #1A1A1A;
+  --text-2:        #666666;
+  --text-3:        #AAAAAA;
+  --input-bg:      #FFFFFF;
+  --input-border:  rgba(0,0,0,0.12);
+  --input-focus:   rgba(0,188,212,0.3);
+  --chart-grid:    rgba(0,0,0,0.05);
+  --chart-tick:    #AAAAAA;
+  --chart-tt-bg:   #FFFFFF;
+  --chart-tt-title:#1A1A1A;
+  --chart-tt-body: #666666;
+  --log-bg:        #F5F5F5;
+  --log-border:    rgba(0,0,0,0.07);
+  --scroll:        #CCCCCC;
+  --select-bg:     #FFFFFF;
+  --pill-bg:       rgba(0,0,0,0.04);
+  --pill-border:   rgba(0,0,0,0.09);
+  --topbar-bg:     #FFFFFF;
+  --topbar-border: rgba(0,0,0,0.08);
+  --tag-bg:        rgba(0,0,0,0.05);
+  --row-hover:     rgba(0,0,0,0.02);
+  --kbd-bg:        #EBEBEB;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg); color:var(--text-1);
+  line-height:1.5; height:100vh; overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  transition:background 0.2s,color 0.2s;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:48px; background:var(--topbar-bg);
+  border-bottom:0.5px solid var(--topbar-border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; flex-shrink:0; z-index:50;
+  transition:background 0.2s,border-color 0.2s;
+}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.wordmark{display:flex;align-items:center;font-size:15px;user-select:none;}
+.wordmark .bia {font-weight:600;color:var(--red);}
+.wordmark .pipe{font-weight:300;color:var(--text-3);margin:0 4px;}
+.wordmark .tech{font-weight:300;color:var(--text-1);}
+.topbar-sep{width:0.5px;height:16px;background:var(--border);}
+.topbar-title{font-size:13px;font-weight:500;color:var(--text-2);}
+
+.theme-toggle{
+  display:flex;align-items:center;gap:6px;
+  background:var(--pill-bg);border:0.5px solid var(--pill-border);
+  border-radius:20px;padding:4px 10px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);
+  transition:all 0.15s;white-space:nowrap;
+}
+.theme-toggle:hover{border-color:rgba(0,188,212,0.4);color:var(--cyan);}
+
+.run-btn{
+  display:flex;align-items:center;gap:7px;
+  background:var(--red);border:none;border-radius:8px;
+  padding:7px 16px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#fff;
+  transition:background 0.15s;
+}
+.run-btn:hover{background:var(--red-dark);}
+.run-btn.running{background:#1A1A1A;border:0.5px solid rgba(0,188,212,0.3);color:var(--cyan);}
+[data-theme="light"] .run-btn.running{background:#FFFFFF;border:0.5px solid rgba(0,188,212,0.35);}
+.run-btn svg{flex-shrink:0;}
+
+/* status pill */
+.status-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--pill-bg);border:0.5px solid var(--pill-border);
+  border-radius:20px;padding:4px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);
+}
+.status-pill.idle .sdot{background:var(--text-3);}
+.status-pill.running .sdot{background:var(--cyan);animation:blink 1.2s infinite;}
+.status-pill.done .sdot{background:#4CAF50;}
+.status-pill.error .sdot{background:var(--error);}
+.status-pill.running{border-color:rgba(0,188,212,0.25);color:var(--cyan);}
+.status-pill.done{border-color:rgba(46,125,50,0.3);color:#4CAF50;}
+.sdot{width:6px;height:6px;border-radius:50%;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+/* ── LAYOUT ── */
+.layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  grid-template-rows:1fr 220px;
+  height:calc(100vh - 48px);
+  gap:0;
+}
+
+/* ── LEFT PANEL (config) ── */
+.config-panel{
+  grid-row:1/3;
+  background:var(--surface);
+  border-right:0.5px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  transition:background 0.2s,border-color 0.2s;
+}
+
+.panel-header{
+  padding:16px 18px 12px;
+  border-bottom:0.5px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel-title{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:0.1em;text-transform:uppercase;}
+.panel-body{padding:18px;overflow-y:auto;flex:1;}
+.panel-body::-webkit-scrollbar{width:3px;}
+.panel-body::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+/* form */
+.field{margin-bottom:16px;}
+.field-label{
+  font-size:10px;font-weight:500;color:var(--text-2);
+  letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:6px;display:block;
+}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--input-bg);
+  border:0.5px solid var(--input-border);
+  border-radius:7px;padding:8px 11px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--text-1);outline:none;
+  transition:border-color 0.15s,box-shadow 0.15s,background 0.2s;
+  -webkit-appearance:none;appearance:none;
+}
+.field select{
+  background:var(--select-bg);
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888888' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  padding-right:28px;cursor:pointer;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:rgba(0,188,212,0.5);
+  box-shadow:0 0 0 3px var(--input-focus);
+}
+.field textarea{resize:vertical;min-height:72px;font-size:11px;line-height:1.6;}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.range-wrap{display:flex;align-items:center;gap:10px;}
+.range-wrap input[type=range]{
+  flex:1;height:4px;background:var(--surface-3);
+  border-radius:2px;outline:none;border:none;box-shadow:none;padding:0;
+  -webkit-appearance:none;cursor:pointer;
+}
+.range-wrap input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--cyan);cursor:pointer;
+}
+.range-val{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--cyan);min-width:36px;text-align:right;
+}
+
+.section-sep{
+  border:none;border-top:0.5px solid var(--border);
+  margin:18px 0 16px;
+}
+
+/* method badges */
+.method-select{display:flex;gap:5px;flex-wrap:wrap;}
+.method-opt{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;
+  padding:3px 10px;border-radius:4px;cursor:pointer;
+  border:0.5px solid var(--border);
+  background:var(--tag-bg);color:var(--text-2);
+  transition:all 0.15s;user-select:none;
+}
+.method-opt.active-get   {background:rgba(46,125,50,0.15);border-color:rgba(46,125,50,0.35);color:#4CAF50;}
+.method-opt.active-post  {background:rgba(249,168,37,0.12);border-color:rgba(249,168,37,0.35);color:#F9A825;}
+.method-opt.active-put   {background:rgba(21,101,192,0.12);border-color:rgba(21,101,192,0.35);color:#42A5F5;}
+.method-opt.active-delete{background:rgba(211,47,47,0.12);border-color:rgba(211,47,47,0.3);color:#EF5350;}
+
+/* assertions */
+.assertion-row{
+  display:flex;align-items:center;gap:6px;
+  margin-bottom:6px;
+}
+.assertion-row input{flex:1;}
+.assertion-row .del-btn{
+  width:22px;height:22px;border-radius:5px;
+  background:none;border:0.5px solid var(--border);
+  cursor:pointer;color:var(--text-3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.15s;
+}
+.assertion-row .del-btn:hover{color:var(--error);border-color:rgba(211,47,47,0.3);}
+.add-assert-btn{
+  font-size:11px;color:var(--cyan);
+  background:none;border:0.5px dashed rgba(0,188,212,0.3);
+  border-radius:6px;padding:5px 10px;width:100%;
+  cursor:pointer;text-align:center;transition:all 0.15s;
+  font-family:'Inter',sans-serif;
+}
+.add-assert-btn:hover{background:rgba(0,188,212,0.06);border-style:solid;}
+
+/* ── RIGHT TOP (charts) ── */
+.charts-area{
+  background:var(--bg);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:background 0.2s;
+}
+
+/* KPI strip */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:10px;padding:14px 18px 0;flex-shrink:0;
+}
+.kpi{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  transition:background 0.2s,border-color 0.2s;
+}
+.kpi.alert-red{border-color:rgba(204,9,47,0.35);}
+.kpi.alert-green{border-color:rgba(46,125,50,0.3);}
+.kpi-label{
+  font-size:9px;font-weight:500;color:var(--text-3);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;
+}
+.kpi-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:22px;font-weight:500;line-height:1;
+  color:var(--text-1);
+}
+.kpi-val.cyan  {color:var(--cyan);}
+.kpi-val.green {color:#4CAF50;}
+.kpi-val.red   {color:#EF5350;}
+.kpi-val.yellow{color:#F9A825;}
+.kpi-unit{font-size:11px;font-weight:400;color:var(--text-2);}
+.kpi-delta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);margin-top:4px;}
+
+/* charts grid */
+.charts-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr;
+  gap:10px;padding:10px 18px 14px;flex:1;min-height:0;
+}
+.chart-card{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  display:flex;flex-direction:column;min-height:0;
+  transition:background 0.2s,border-color 0.2s;
+}
+.chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-shrink:0;}
+.chart-title{font-size:11px;font-weight:600;color:var(--text-1);}
+.chart-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);}
+.chart-wrap{flex:1;position:relative;min-height:0;}
+.chart-wrap canvas{position:absolute;inset:0;}
+
+/* ── BOTTOM (log + hist) ── */
+.bottom-area{
+  background:var(--surface);border-top:0.5px solid var(--border);
+  display:grid;grid-template-columns:1fr 200px;
+  overflow:hidden;
+  transition:background 0.2s,border-color 0.2s;
+}
+
+/* log */
+.log-panel{
+  border-right:0.5px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.log-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;border-bottom:0.5px solid var(--border);flex-shrink:0;
+}
+.log-title{font-size:10px;font-weight:600;color:var(--text-2);letter-spacing:0.08em;text-transform:uppercase;}
+.log-actions{display:flex;gap:6px;align-items:center;}
+.log-clear{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--text-3);background:none;border:0.5px solid var(--border);
+  border-radius:4px;padding:2px 8px;cursor:pointer;transition:all 0.15s;
+}
+.log-clear:hover{color:var(--text-2);border-color:rgba(255,255,255,0.15);}
+[data-theme="light"] .log-clear:hover{border-color:rgba(0,0,0,0.2);}
+
+.log-body{
+  flex:1;overflow-y:auto;padding:8px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  background:var(--log-bg);line-height:1.7;
+  transition:background 0.2s;
+}
+.log-body::-webkit-scrollbar{width:3px;}
+.log-body::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+.log-line{display:flex;gap:10px;padding:1px 0;}
+.log-line:hover{background:var(--row-hover);}
+.log-ts{color:var(--text-3);flex-shrink:0;font-size:10px;}
+.log-tag{
+  flex-shrink:0;font-size:9px;padding:1px 6px;border-radius:2px;
+  font-weight:500;letter-spacing:0.05em;align-self:center;
+}
+.tag-info  {background:rgba(21,101,192,0.15);color:#64B5F6;}
+.tag-ok    {background:rgba(46,125,50,0.15);color:#81C784;}
+.tag-warn  {background:rgba(249,168,37,0.12);color:#FFD54F;}
+.tag-error {background:rgba(211,47,47,0.12);color:#EF9A9A;}
+.tag-ia    {background:rgba(0,188,212,0.1);color:var(--cyan);}
+.log-msg{color:var(--text-1);flex:1;}
+
+/* histogram */
+.hist-panel{
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.hist-header{
+  padding:8px 14px;border-bottom:0.5px solid var(--border);flex-shrink:0;
+}
+.hist-body{flex:1;padding:10px 14px;display:flex;flex-direction:column;position:relative;}
+
+/* ── SCROLLBAR GLOBAL ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{
+  height:2px;background:var(--surface-3);border-radius:1px;
+  overflow:hidden;margin-bottom:0;flex-shrink:0;
+}
+.progress-fill{
+  height:100%;background:var(--cyan);border-radius:1px;
+  width:0%;transition:width 0.4s linear;
+}
+
+/* ── LIVE indicator ── */
+.live-indicator{
+  display:flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);
+}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:blink 1.4s infinite;}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="wordmark">
+      <span class="bia">BIA</span><span class="pipe">|</span><span class="tech">Tech</span>
+    </div>
+    <div class="topbar-sep"></div>
+    <span class="topbar-title">Performance Test</span>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill idle" id="statusPill">
+      <div class="sdot"></div>
+      <span id="statusText">idle</span>
+    </div>
+    <div class="live-indicator" id="liveIndicator" style="display:none;">
+      <div class="live-dot"></div>
+      <span id="progressText">0%</span>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀</span>
+      <span id="themeLabel">Modo claro</span>
+    </button>
+    <button class="run-btn" id="runBtn" onclick="toggleRun()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M3 2l7 4-7 4V2z" fill="white"/>
+      </svg>
+      <span id="runLabel">Iniciar teste</span>
+    </button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- CONFIG PANEL -->
+  <div class="config-panel">
+    <div class="panel-header">
+      <span class="panel-title">Configuração</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);">config.json</span>
+    </div>
+    <div class="panel-body">
+
+      <!-- Endpoint -->
+      <div class="field">
+        <label class="field-label">Endpoint</label>
+        <input type="text" id="cfgUrl" value="https://api.bradesco.io/v2/auth/token" placeholder="https://...">
+      </div>
+
+      <!-- Method -->
+      <div class="field">
+        <label class="field-label">Método HTTP</label>
+        <div class="method-select" id="methodSelect">
+          <div class="method-opt active-get" data-method="GET" onclick="selectMethod(this)">GET</div>
+          <div class="method-opt" data-method="POST" onclick="selectMethod(this)">POST</div>
+          <div class="method-opt" data-method="PUT" onclick="selectMethod(this)">PUT</div>
+          <div class="method-opt" data-method="DELETE" onclick="selectMethod(this)">DELETE</div>
+        </div>
+      </div>
+
+      <!-- Headers -->
+      <div class="field">
+        <label class="field-label">Headers</label>
+        <textarea id="cfgHeaders" placeholder='{"Authorization": "Bearer {{token}}","Content-Type": "application/json"}'>{
+  "Authorization": "Bearer {{token}}",
+  "Content-Type": "application/json"
+}</textarea>
+      </div>
+
+      <!-- Body -->
+      <div class="field">
+        <label class="field-label">Body (JSON)</label>
+        <textarea id="cfgBody" placeholder='{"key": "value"}' style="min-height:56px;">{}</textarea>
+      </div>
+
+      <hr class="section-sep">
+
+      <!-- Load config -->
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Usuários virtuais</label>
+          <div class="range-wrap">
+            <input type="range" min="1" max="500" value="50" id="vusRange"
+              oninput="document.getElementById('vusVal').textContent=this.value">
+            <span class="range-val" id="vusVal">50</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">RPS alvo</label>
+          <div class="range-wrap">
+            <input type="range" min="1" max="1000" value="200" id="rpsRange"
+              oninput="document.getElementById('rpsVal').textContent=this.value">
+            <span class="range-val" id="rpsVal">200</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Duração (s)</label>
+          <input type="number" id="cfgDuration" value="30" min="5" max="300">
+        </div>
+        <div class="field">
+          <label class="field-label">Ramp-up (s)</label>
+          <input type="number" id="cfgRampup" value="5" min="0" max="60">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Timeout (ms)</label>
+        <input type="number" id="cfgTimeout" value="5000">
+      </div>
+
+      <hr class="section-sep">
+
+      <!-- Assertions -->
+      <div class="field">
+        <label class="field-label">Assertions</label>
+        <div id="assertionList">
+          <div class="assertion-row">
+            <input type="text" placeholder="status == 200">
+            <button class="del-btn" onclick="delAssertion(this)">
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="assertion-row">
+            <input type="text" placeholder="latency_p95 &lt; 500" value="latency_p95 < 500">
+            <button class="del-btn" onclick="delAssertion(this)">
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="assertion-row">
+            <input type="text" placeholder="error_rate &lt; 1%" value="error_rate < 1%">
+            <button class="del-btn" onclick="delAssertion(this)">
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button class="add-assert-btn" onclick="addAssertion()">+ adicionar assertion</button>
+      </div>
+
+      <hr class="section-sep">
+
+      <!-- Test profile -->
+      <div class="field">
+        <label class="field-label">Perfil de carga</label>
+        <select id="cfgProfile">
+          <option value="constant">Constante</option>
+          <option value="ramp" selected>Rampa gradual</option>
+          <option value="spike">Spike</option>
+          <option value="stress">Stress progressivo</option>
+          <option value="soak">Soak (longa duração)</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHARTS AREA -->
+  <div class="charts-area">
+
+    <!-- progress bar -->
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-strip">
+      <div class="kpi" id="kpiRps">
+        <div class="kpi-label">RPS atual</div>
+        <div class="kpi-val cyan" id="kRps">—<span class="kpi-unit"></span></div>
+        <div class="kpi-delta" id="kRpsDelta">aguardando</div>
+      </div>
+      <div class="kpi" id="kpiP50">
+        <div class="kpi-label">Latência P50</div>
+        <div class="kpi-val" id="kP50">—<span class="kpi-unit"> ms</span></div>
+        <div class="kpi-delta" id="kP50Delta">aguardando</div>
+      </div>
+      <div class="kpi" id="kpiP95">
+        <div class="kpi-label">Latência P95</div>
+        <div class="kpi-val" id="kP95">—<span class="kpi-unit"> ms</span></div>
+        <div class="kpi-delta" id="kP95Delta">aguardando</div>
+      </div>
+      <div class="kpi" id="kpiErr">
+        <div class="kpi-label">Error rate</div>
+        <div class="kpi-val green" id="kErr">—<span class="kpi-unit"> %</span></div>
+        <div class="kpi-delta" id="kErrDelta">aguardando</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Req total</div>
+        <div class="kpi-val" id="kTotal">—</div>
+        <div class="kpi-delta" id="kTotalDelta">aguardando</div>
+      </div>
+    </div>
+
+    <!-- 3 charts -->
+    <div class="charts-grid">
+      <!-- Latency over time -->
+      <div class="chart-card">
+        <div class="chart-hdr">
+          <span class="chart-title">Latência ao longo do tempo</span>
+          <span class="chart-meta" id="latMeta">P50 · P95 · P99 — ms</span>
+        </div>
+        <div class="chart-wrap"><canvas id="latencyChart"></canvas></div>
+      </div>
+      <!-- Throughput -->
+      <div class="chart-card">
+        <div class="chart-hdr">
+          <span class="chart-title">Throughput</span>
+          <span class="chart-meta">req/s</span>
+        </div>
+        <div class="chart-wrap"><canvas id="rpsChart"></canvas></div>
+      </div>
+      <!-- Error rate -->
+      <div class="chart-card">
+        <div class="chart-hdr">
+          <span class="chart-title">Error rate</span>
+          <span class="chart-meta">% de falhas</span>
+        </div>
+        <div class="chart-wrap"><canvas id="errChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: LOG + HISTOGRAM -->
+  <div class="bottom-area">
+    <!-- LOG -->
+    <div class="log-panel">
+      <div class="log-header">
+        <span class="log-title">Console</span>
+        <div class="log-actions">
+          <button class="log-clear" onclick="clearLog()">limpar</button>
+        </div>
+      </div>
+      <div class="log-body" id="logBody"></div>
+    </div>
+
+    <!-- HISTOGRAM -->
+    <div class="hist-panel">
+      <div class="hist-header">
+        <span class="log-title">Distribuição latência</span>
+      </div>
+      <div class="hist-body">
+        <div style="position:relative;flex:1;"><canvas id="histChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── THEME ──
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeIcon').textContent  = isDark ? '☀' : '☾';
+  document.getElementById('themeLabel').textContent = isDark ? 'Modo claro' : 'Modo escuro';
+  updateChartTheme();
+}
+
+// ── METHOD SELECT ──
+let selectedMethod = 'GET';
+function selectMethod(el) {
+  document.querySelectorAll('.method-opt').forEach(o => {
+    o.className = 'method-opt';
+  });
+  const m = el.dataset.method.toLowerCase();
+  el.classList.add(`active-${m}`);
+  selectedMethod = el.dataset.method;
+}
+
+// ── ASSERTIONS ──
+function addAssertion() {
+  const list = document.getElementById('assertionList');
+  const row = document.createElement('div');
+  row.className = 'assertion-row';
+  row.innerHTML = `
+    <input type="text" placeholder="ex: status == 200">
+    <button class="del-btn" onclick="delAssertion(this)">
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+        <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </button>`;
+  list.appendChild(row);
+}
+function delAssertion(btn) {
+  btn.closest('.assertion-row').remove();
+}
+
+// ── CHART HELPERS ──
+function chartTheme() {
+  return isDark
+    ? { grid:'rgba(255,255,255,0.04)', tick:'#444444', ttBg:'#1A1A1A', ttTitle:'#EFEFEF', ttBody:'#888888', legend:'#666666' }
+    : { grid:'rgba(0,0,0,0.05)',       tick:'#AAAAAA', ttBg:'#FFFFFF', ttTitle:'#1A1A1A', ttBody:'#666666', legend:'#999999' };
+}
+
+function makeTT() {
+  const t = chartTheme();
+  return {
+    backgroundColor:t.ttBg, borderColor:'rgba(0,188,212,0.2)', borderWidth:1,
+    titleColor:t.ttTitle, bodyColor:t.ttBody, padding:10,
+    titleFont:{family:'JetBrains Mono',size:11}, bodyFont:{family:'JetBrains Mono',size:11}
+  };
+}
+
+function baseOpts(extra={}) {
+  const t = chartTheme();
+  return {
+    responsive:true, maintainAspectRatio:false, animation:{duration:0},
+    plugins:{ legend:{display:false}, tooltip:makeTT() },
+    scales:{
+      x:{ ticks:{color:t.tick,font:{family:'JetBrains Mono',size:8},maxRotation:0,maxTicksLimit:8},
+          grid:{color:t.grid}, border:{display:false}, ...extra.x },
+      y:{ ticks:{color:t.tick,font:{family:'JetBrains Mono',size:9}},
+          grid:{color:t.grid}, border:{display:false}, ...extra.y }
+    },
+    ...extra.base
+  };
+}
+
+// chart registry
+const charts = {};
+
+// latency chart
+charts.latency = new Chart(document.getElementById('latencyChart'), {
+  type:'line',
+  data:{
+    labels:[],
+    datasets:[
+      { label:'P50', data:[], borderColor:'#00BCD4', borderWidth:1.5, pointRadius:0, tension:0.4, fill:false },
+      { label:'P95', data:[], borderColor:'#F9A825', borderWidth:1.5, pointRadius:0, tension:0.4, fill:false },
+      { label:'P99', data:[], borderColor:'#EF5350', borderWidth:1,   pointRadius:0, tension:0.4, fill:false,
+        borderDash:[3,3] }
+    ]
+  },
+  options: baseOpts({ y:{ ticks:{color:chartTheme().tick,font:{family:'JetBrains Mono',size:9},callback:v=>v+'ms'}, grid:{color:chartTheme().grid}, border:{display:false} } })
+});
+
+// rps chart
+charts.rps = new Chart(document.getElementById('rpsChart'), {
+  type:'bar',
+  data:{ labels:[], datasets:[{ data:[], backgroundColor:'rgba(0,188,212,0.6)', borderRadius:2, borderSkipped:false }] },
+  options: baseOpts()
+});
+
+// error chart
+charts.err = new Chart(document.getElementById('errChart'), {
+  type:'line',
+  data:{
+    labels:[],
+    datasets:[{
+      data:[], borderColor:'#EF5350', borderWidth:1.5, pointRadius:0, tension:0.4,
+      fill:true, backgroundColor: ctx => {
+        const g = ctx.chart.ctx.createLinearGradient(0,0,0,120);
+        g.addColorStop(0,'rgba(211,47,47,0.2)'); g.addColorStop(1,'rgba(211,47,47,0)');
+        return g;
+      }
+    }]
+  },
+  options: baseOpts({ y:{ ticks:{color:chartTheme().tick,font:{family:'JetBrains Mono',size:9},callback:v=>v+'%'}, grid:{color:chartTheme().grid}, border:{display:false}, min:0 } })
+});
+
+// histogram
+charts.hist = new Chart(document.getElementById('histChart'), {
+  type:'bar',
+  data:{
+    labels:['0-50','50-100','100-200','200-300','300-500','500+'],
+    datasets:[{ data:[0,0,0,0,0,0], backgroundColor:['#4CAF50','#4CAF50','#00BCD4','#F9A825','#EF5350','#EF5350'], borderRadius:3, borderSkipped:false }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, animation:{duration:300},
+    plugins:{ legend:{display:false}, tooltip:makeTT() },
+    scales:{
+      x:{ ticks:{color:chartTheme().tick,font:{family:'JetBrains Mono',size:8}}, grid:{display:false}, border:{display:false} },
+      y:{ ticks:{color:chartTheme().tick,font:{family:'JetBrains Mono',size:8}}, grid:{color:chartTheme().grid}, border:{display:false} }
+    }
+  }
+});
+
+function updateChartTheme() {
+  const t = chartTheme();
+  const tt = makeTT();
+  Object.values(charts).forEach(ch => {
+    if (!ch) return;
+    const sc = ch.options.scales;
+    if (sc) {
+      ['x','y'].forEach(a => {
+        if (sc[a]) {
+          if (sc[a].ticks) sc[a].ticks.color = t.tick;
+          if (sc[a].grid)  sc[a].grid.color  = t.grid;
+        }
+      });
+    }
+    if (ch.options.plugins?.tooltip) Object.assign(ch.options.plugins.tooltip, tt);
+    if (ch.options.plugins?.legend?.labels) ch.options.plugins.legend.labels.color = t.legend;
+    ch.update('none');
+  });
+}
+
+// ── SIMULATION STATE ──
+let running = false;
+let simTimer = null;
+let elapsed = 0;
+let totalDuration = 30;
+let totalReqs = 0;
+let timeLabels = [];
+let p50data=[], p95data=[], p99data=[], rpsData=[], errData=[];
+let histBuckets = [0,0,0,0,0,0];
+
+function randBetween(a,b){return a+Math.random()*(b-a);}
+function randInt(a,b){return Math.floor(randBetween(a,b+1));}
+
+function latBucket(ms) {
+  if(ms<50)   return 0;
+  if(ms<100)  return 1;
+  if(ms<200)  return 2;
+  if(ms<300)  return 3;
+  if(ms<500)  return 4;
+  return 5;
+}
+
+function setStatus(state, text) {
+  const pill = document.getElementById('statusPill');
+  pill.className = `status-pill ${state}`;
+  document.getElementById('statusText').textContent = text;
+}
+
+function log(tag, tagClass, msg) {
+  const body = document.getElementById('logBody');
+  const ts = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="log-ts">${ts}</span><span class="log-tag ${tagClass}">${tag}</span><span class="log-msg">${msg}</span>`;
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+}
+
+function clearLog(){document.getElementById('logBody').innerHTML='';}
+
+function updateKPI(id, val, unit, delta, colorClass) {
+  document.getElementById(id).innerHTML = `${val}<span class="kpi-unit"> ${unit}</span>`;
+  document.getElementById(id).className = `kpi-val ${colorClass}`;
+  const did = id + 'Delta';
+  if (document.getElementById(did)) document.getElementById(did).textContent = delta;
+}
+
+function tick() {
+  elapsed++;
+  totalDuration = parseInt(document.getElementById('cfgDuration').value)||30;
+  const rampup = parseInt(document.getElementById('cfgRampup').value)||5;
+  const targetRps = parseInt(document.getElementById('rpsRange').value)||200;
+  const vus = parseInt(document.getElementById('vusRange').value)||50;
+  const pct = Math.min(100, (elapsed/totalDuration)*100);
+
+  document.getElementById('progressBar').style.width = pct+'%';
+  document.getElementById('progressText').textContent = Math.round(pct)+'%';
+
+  // ramp factor
+  const ramp = elapsed <= rampup ? elapsed/rampup : 1;
+  // occasional spike in stress
+  const profile = document.getElementById('cfgProfile').value;
+  const spikeFactor = profile === 'spike' && elapsed === Math.floor(totalDuration*0.6) ? 3 : 1;
+
+  const currentRps = Math.round(targetRps * ramp * spikeFactor * randBetween(0.88, 1.08));
+  const reqsThisTick = currentRps;
+  totalReqs += reqsThisTick;
+
+  // latency simulation: increases with load
+  const loadFactor = currentRps / targetRps;
+  const baseP50 = randBetween(60, 120) * loadFactor;
+  const baseP95 = baseP50 * randBetween(2.2, 3.5);
+  const baseP99 = baseP95 * randBetween(1.5, 2.2);
+
+  // occasional slowdown
+  const blip = Math.random() < 0.08 ? randBetween(2, 5) : 1;
+  const p50 = Math.round(baseP50 * blip);
+  const p95 = Math.round(baseP95 * blip);
+  const p99 = Math.round(baseP99 * blip);
+
+  // error rate
+  const baseErr = loadFactor > 1.2 ? randBetween(1, 8) : randBetween(0, 0.8);
+  const errRate  = parseFloat((baseErr * (blip > 2 ? blip : 1)).toFixed(2));
+
+  // histogram
+  const sampleMs = p50 * randBetween(0.5, 2.5);
+  histBuckets[latBucket(sampleMs)]++;
+
+  // push data
+  const label = elapsed+'s';
+  timeLabels.push(label);
+  p50data.push(p50); p95data.push(p95); p99data.push(p99);
+  rpsData.push(currentRps); errData.push(errRate);
+
+  // trim to last 40 points
+  const MAX=40;
+  if(timeLabels.length>MAX){
+    timeLabels.shift(); p50data.shift(); p95data.shift(); p99data.shift();
+    rpsData.shift(); errData.shift();
+  }
+
+  // update charts
+  charts.latency.data.labels = timeLabels;
+  charts.latency.data.datasets[0].data = p50data;
+  charts.latency.data.datasets[1].data = p95data;
+  charts.latency.data.datasets[2].data = p99data;
+  charts.latency.update('none');
+
+  charts.rps.data.labels = timeLabels;
+  charts.rps.data.datasets[0].data = rpsData;
+  charts.rps.update('none');
+
+  charts.err.data.labels = timeLabels;
+  charts.err.data.datasets[0].data = errData;
+  charts.err.update('none');
+
+  charts.hist.data.datasets[0].data = [...histBuckets];
+  charts.hist.update();
+
+  // KPIs
+  const errColor = errRate > 2 ? 'red' : errRate > 0.5 ? 'yellow' : 'green';
+  const p95Color = p95 > 400 ? 'red' : p95 > 200 ? 'yellow' : '';
+  updateKPI('kRps',  currentRps, 'rps', `target: ${targetRps}`, 'cyan');
+  updateKPI('kP50',  p50, 'ms', `p50 latência`, '');
+  updateKPI('kP95',  p95, 'ms', `threshold: 500ms`, p95Color);
+  updateKPI('kErr',  errRate, '%', `${Math.round(errRate*reqsThisTick/100)} erros/s`, errColor);
+  document.getElementById('kTotal').textContent = totalReqs.toLocaleString('pt-BR');
+  document.getElementById('kTotalDelta').textContent = `${vus} VUs ativos`;
+
+  // alert borders
+  document.getElementById('kpiErr').className = `kpi ${errColor==='red'?'alert-red':errColor==='green'?'alert-green':''}`;
+  document.getElementById('kpiP95').className = `kpi ${p95Color==='red'?'alert-red':p95Color==='yellow'?'':''}`
+
+  // log entries (occasional)
+  if(elapsed===1){
+    log('INFO','tag-info',`Teste iniciado · ${vus} VUs · alvo ${targetRps} rps · ${totalDuration}s`);
+  }
+  if(elapsed<=rampup && elapsed%2===0){
+    log('INFO','tag-info',`Ramp-up: ${Math.round(ramp*100)}% da carga (${currentRps} rps)`);
+  }
+  if(blip>2){
+    log('WARN','tag-warn',`Pico de latência detectado — P95: ${p95}ms · P99: ${p99}ms`);
+  }
+  if(errRate>2){
+    log('ERROR','tag-error',`Error rate elevada: ${errRate}% · ${currentRps} req/s`);
+  }
+  if(Math.random()<0.15){
+    log('IA','tag-ia',`BIA detectou padrão: latência correlacionada com carga em auth-service`);
+  }
+  if(elapsed===totalDuration){
+    finishTest();
+  }
+}
+
+function finishTest() {
+  clearInterval(simTimer);
+  running = false;
+
+  const lastP95 = p95data[p95data.length-1]||0;
+  const lastErr = errData[errData.length-1]||0;
+  const passed = lastP95 < 500 && lastErr < 1;
+
+  setStatus(passed?'done':'error', passed?'passed':'failed');
+  document.getElementById('liveIndicator').style.display='none';
+  document.getElementById('progressBar').style.width='100%';
+
+  const runBtn = document.getElementById('runBtn');
+  runBtn.className = 'run-btn';
+  runBtn.innerHTML = `
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M3 2l7 4-7 4V2z" fill="white"/>
+    </svg>
+    <span>Novo teste</span>`;
+
+  log('INFO','tag-info',`─────────────────────────────────────`);
+  log(passed?'OK':'FAIL', passed?'tag-ok':'tag-error',
+    passed
+      ? `Teste concluído — todos os thresholds passaram ✓`
+      : `Teste concluído — ${lastP95>500?'P95 acima do limite':'error rate > 1%'} ✗`
+  );
+  log('INFO','tag-info',`Total de requisições: ${totalReqs.toLocaleString('pt-BR')}`);
+  log('INFO','tag-info',`P95 final: ${lastP95}ms · Error rate final: ${lastErr}%`);
+}
+
+function resetState() {
+  elapsed=0; totalReqs=0;
+  timeLabels=[]; p50data=[]; p95data=[]; p99data=[]; rpsData=[]; errData=[];
+  histBuckets=[0,0,0,0,0,0];
+  document.getElementById('progressBar').style.width='0%';
+  document.getElementById('progressText').textContent='0%';
+  ['kRps','kP50','kP95','kErr'].forEach(id=>{
+    document.getElementById(id).innerHTML='—';
+    document.getElementById(id).className='kpi-val';
+  });
+  document.getElementById('kTotal').textContent='—';
+  ['kRpsDelta','kP50Delta','kP95Delta','kErrDelta','kTotalDelta'].forEach(id=>{
+    document.getElementById(id).textContent='aguardando';
+  });
+  ['kpiRps','kpiP50','kpiP95','kpiErr'].forEach(id=>{
+    document.getElementById(id).className='kpi';
+  });
+  [charts.latency,charts.rps,charts.err].forEach(ch=>{
+    ch.data.labels=[];
+    ch.data.datasets.forEach(ds=>ds.data=[]);
+    ch.update('none');
+  });
+  charts.hist.data.datasets[0].data=[0,0,0,0,0,0];
+  charts.hist.update();
+}
+
+function toggleRun() {
+  if (running) {
+    clearInterval(simTimer);
+    running = false;
+    setStatus('idle','idle');
+    document.getElementById('liveIndicator').style.display='none';
+    const runBtn = document.getElementById('runBtn');
+    runBtn.className='run-btn';
+    runBtn.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 2l7 4-7 4V2z" fill="white"/></svg><span>Iniciar teste</span>`;
+    log('WARN','tag-warn','Teste interrompido manualmente');
+    return;
+  }
+
+  resetState(); clearLog();
+  running = true;
+  totalDuration = parseInt(document.getElementById('cfgDuration').value)||30;
+
+  setStatus('running','running');
+  document.getElementById('liveIndicator').style.display='flex';
+
+  const runBtn = document.getElementById('runBtn');
+  runBtn.className = 'run-btn running';
+  runBtn.innerHTML = `
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <rect x="1" y="1" width="3" height="8" rx="1" fill="currentColor"/>
+      <rect x="6" y="1" width="3" height="8" rx="1" fill="currentColor"/>
+    </svg>
+    <span>Parar</span>`;
+
+  log('INFO','tag-info',`Iniciando teste de performance...`);
+  log('INFO','tag-info',`Endpoint: ${document.getElementById('cfgUrl').value}`);
+  log('INFO','tag-info',`Método: ${selectedMethod} · Perfil: ${document.getElementById('cfgProfile').value}`);
+
+  simTimer = setInterval(tick, 1000);
+}
+
+// ── INIT LOG ──
+log('INFO','tag-info','BIA Tech Performance Test v1.0 — pronto');
+log('INFO','tag-info','Configure o endpoint e clique em Iniciar teste');
+log('IA','tag-ia','BIA monitorando thresholds: P95 < 500ms · error_rate < 1%');
+</script>
+</body>
+</html>

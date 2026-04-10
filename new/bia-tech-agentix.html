@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentix — BIA Tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --red:#CC092F; --red-dark:#A00725; --red-light:rgba(204,9,47,0.1);
+  --cyan:#00BCD4; --cyan-dark:#0097A7; --cyan-light:rgba(0,188,212,0.1);
+  --success:#2E7D32; --warning:#F9A825; --error:#D32F2F; --purple:#7B1FA2;
+}
+[data-theme="dark"] {
+  --bg:#1E1E1E; --bg2:#252525;
+  --surf:#252525; --surf2:#2A2A2A; --surf3:#333333; --surf4:#3A3A3A;
+  --bord:rgba(255,255,255,0.07); --bord-s:rgba(255,255,255,0.04);
+  --bord-active:rgba(0,188,212,0.4);
+  --t1:#F0F0F0; --t2:#888; --t3:#444; --t4:#2a2a2a;
+  --inp:#1A1A1A; --inp-bord:rgba(255,255,255,0.1); --inp-focus:rgba(0,188,212,0.3);
+  --topbar:#1E1E1E; --topbar-bord:rgba(255,255,255,0.07);
+  --scroll:#2a2a2a;
+  --pill-bg:rgba(255,255,255,0.05); --pill-bord:rgba(255,255,255,0.09);
+  --card-hover:rgba(255,255,255,0.02);
+  --grid:rgba(255,255,255,0.04); --tick:#444;
+  --tt-bg:#1A1A1A; --tt-t:#F0F0F0; --tt-b:#888;
+  --msg-user:rgba(255,255,255,0.04); --msg-user-bord:rgba(255,255,255,0.06);
+  --code-bg:#0A0A0A; --code-bord:rgba(255,255,255,0.06);
+  --tag-bg:rgba(255,255,255,0.06);
+  --step-done:rgba(0,188,212,0.15); --step-active:rgba(0,188,212,0.08);
+  --overlay:rgba(0,0,0,0.7);
+}
+[data-theme="light"] {
+  --bg:#FFFFFF; --bg2:#F8F8F8;
+  --surf:#FFFFFF; --surf2:#F8F8F8; --surf3:#F0F0F0; --surf4:#E8E8E8;
+  --bord:rgba(0,0,0,0.09); --bord-s:rgba(0,0,0,0.05);
+  --bord-active:rgba(0,188,212,0.45);
+  --t1:#1A1A1A; --t2:#666; --t3:#AAA; --t4:#DDD;
+  --inp:#FFF; --inp-bord:rgba(0,0,0,0.12); --inp-focus:rgba(0,188,212,0.25);
+  --topbar:#FFFFFF; --topbar-bord:rgba(0,0,0,0.08);
+  --scroll:#CCC;
+  --pill-bg:rgba(0,0,0,0.04); --pill-bord:rgba(0,0,0,0.09);
+  --card-hover:rgba(0,0,0,0.015);
+  --grid:rgba(0,0,0,0.05); --tick:#AAA;
+  --tt-bg:#FFF; --tt-t:#1A1A1A; --tt-b:#666;
+  --msg-user:rgba(0,0,0,0.03); --msg-user-bord:rgba(0,0,0,0.06);
+  --code-bg:#F4F4F4; --code-bord:rgba(0,0,0,0.07);
+  --tag-bg:rgba(0,0,0,0.05);
+  --step-done:rgba(0,188,212,0.1); --step-active:rgba(0,188,212,0.06);
+  --overlay:rgba(0,0,0,0.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);
+  height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased;
+  transition:background 0.25s,color 0.25s;}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:50px;background:var(--topbar);border-bottom:0.5px solid var(--topbar-bord);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;flex-shrink:0;z-index:200;position:relative;
+  transition:background 0.25s,border-color 0.25s;
+}
+.topbar-left{display:flex;align-items:center;gap:0;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.wordmark{display:flex;align-items:center;font-size:15px;user-select:none;margin-right:20px;}
+.wordmark .bia{font-weight:700;color:var(--red);}
+.wordmark .pipe{font-weight:300;color:var(--t3);margin:0 4px;}
+.wordmark .tech{font-weight:300;color:var(--t1);}
+.product-badge{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;
+  background:var(--cyan-light);border:0.5px solid rgba(0,188,212,0.3);
+  color:var(--cyan);padding:3px 10px;border-radius:20px;letter-spacing:0.06em;
+}
+.nav-tabs{display:flex;align-items:center;gap:0;margin-left:24px;}
+.nav-tab{
+  height:50px;line-height:50px;padding:0 18px;
+  font-size:12px;font-weight:500;color:var(--t3);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all 0.15s;user-select:none;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--t2);}
+.nav-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+
+.theme-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--pill-bg);border:0.5px solid var(--pill-bord);
+  border-radius:20px;padding:4px 10px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t2);
+  transition:all 0.15s;
+}
+.theme-btn:hover{border-color:rgba(0,188,212,0.4);color:var(--cyan);}
+
+.new-agent-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--red);border:none;border-radius:8px;
+  padding:7px 14px;cursor:pointer;
+  font-size:12px;font-weight:600;color:#fff;
+  transition:background 0.15s;
+}
+.new-agent-btn:hover{background:var(--red-dark);}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:calc(100vh - 50px);}
+.view{display:none;flex:1;overflow:hidden;}
+.view.active{display:flex;}
+
+/* ─────────────────────────────────
+   VIEW 1: DASHBOARD
+───────────────────────────────── */
+#viewDashboard{flex-direction:column;overflow-y:auto;}
+#viewDashboard::-webkit-scrollbar{width:4px;}
+#viewDashboard::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+.dash-inner{padding:24px;max-width:1200px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:20px;}
+
+/* KPI strip */
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.kcard{
+  background:var(--surf);border:0.5px solid var(--bord);border-radius:12px;
+  padding:16px 18px;transition:background 0.25s,border-color 0.25s;
+  animation:fadeUp 0.4s ease both;
+}
+.kcard:nth-child(1){animation-delay:0.05s;}
+.kcard:nth-child(2){animation-delay:0.10s;}
+.kcard:nth-child(3){animation-delay:0.15s;}
+.kcard:nth-child(4){animation-delay:0.20s;}
+.kcard.hl-cyan{border-color:rgba(0,188,212,0.25);}
+.kcard.hl-red {border-color:rgba(204,9,47,0.2);}
+.klabel{font-size:9px;font-weight:500;color:var(--t3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;}
+.kval{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;line-height:1;color:var(--t1);}
+.kval.cyan{color:var(--cyan);} .kval.red{color:var(--red);}
+.kval.green{color:#4CAF50;} .kval.purple{color:#AB47BC;}
+.kdelta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);margin-top:6px;}
+.kdelta .up{color:#4CAF50;} .kdelta .dw{color:var(--red);}
+
+/* agent cards */
+.dash-section-title{
+  font-size:11px;font-weight:600;color:var(--t2);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;
+}
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.agent-card{
+  background:var(--surf);border:0.5px solid var(--bord);border-radius:12px;
+  padding:18px;cursor:pointer;
+  transition:all 0.2s;animation:fadeUp 0.4s ease both;
+}
+.agent-card:nth-child(1){animation-delay:0.1s;}
+.agent-card:nth-child(2){animation-delay:0.15s;}
+.agent-card:nth-child(3){animation-delay:0.2s;}
+.agent-card:nth-child(4){animation-delay:0.25s;}
+.agent-card:nth-child(5){animation-delay:0.3s;}
+.agent-card:nth-child(6){animation-delay:0.35s;}
+.agent-card:hover{border-color:var(--bord-active);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.12);}
+.agent-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.agent-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.agent-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.agent-status-dot.on{background:#4CAF50;animation:pulse-green 2s infinite;}
+.agent-status-dot.off{background:var(--t4);}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(76,175,80,0.4);}50%{box-shadow:0 0 0 5px rgba(76,175,80,0);}}
+.agent-name{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px;}
+.agent-desc{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:12px;}
+.agent-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.agent-tag{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  background:var(--tag-bg);border:0.5px solid var(--bord);
+  color:var(--t2);padding:2px 7px;border-radius:3px;
+}
+.agent-metrics{
+  display:flex;gap:16px;padding-top:12px;border-top:0.5px solid var(--bord-s);
+}
+.agent-metric{display:flex;flex-direction:column;gap:2px;}
+.agent-metric-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--t1);}
+.agent-metric-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;}
+.agent-card-actions{display:flex;gap:6px;margin-top:12px;}
+.ac-btn{
+  flex:1;font-size:11px;font-weight:500;padding:5px 0;border-radius:6px;
+  border:0.5px solid var(--bord);background:var(--surf2);color:var(--t2);
+  cursor:pointer;transition:all 0.15s;text-align:center;
+}
+.ac-btn:hover{border-color:rgba(0,188,212,0.3);color:var(--cyan);}
+.ac-btn.primary{background:var(--red);border-color:var(--red);color:#fff;}
+.ac-btn.primary:hover{background:var(--red-dark);}
+
+/* chart card */
+.dash-charts{display:grid;grid-template-columns:2fr 1fr;gap:12px;}
+.chart-card{
+  background:var(--surf);border:0.5px solid var(--bord);border-radius:12px;
+  padding:16px 18px;animation:fadeUp 0.4s 0.3s ease both;
+  transition:background 0.25s,border-color 0.25s;
+}
+.chart-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.chart-card-title{font-size:12px;font-weight:600;color:var(--t1);}
+.chart-card-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);}
+.chart-body{position:relative;height:160px;}
+.chart-body canvas{position:absolute;inset:0;}
+
+/* ─────────────────────────────────
+   VIEW 2: CREATE (WIZARD)
+───────────────────────────────── */
+#viewCreate{flex-direction:row;overflow:hidden;}
+
+.wizard-sidebar{
+  width:220px;min-width:220px;background:var(--surf);
+  border-right:0.5px solid var(--bord);padding:24px 0;
+  display:flex;flex-direction:column;
+  transition:background 0.25s,border-color 0.25s;
+}
+.wizard-steps{padding:0 16px;flex:1;}
+.wizard-step{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 8px;border-radius:8px;margin-bottom:2px;
+  cursor:pointer;transition:background 0.15s;
+  position:relative;
+}
+.wizard-step:not(:last-child)::after{
+  content:'';position:absolute;left:22px;top:36px;
+  width:1px;height:20px;background:var(--bord);
+}
+.wizard-step.done::after{background:rgba(0,188,212,0.3);}
+.wizard-step.active{background:var(--step-active);}
+.step-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--surf3);border:0.5px solid var(--bord);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:var(--t3);
+  flex-shrink:0;transition:all 0.2s;
+}
+.wizard-step.active .step-num{background:var(--cyan);border-color:var(--cyan);color:#fff;}
+.wizard-step.done .step-num{background:rgba(0,188,212,0.2);border-color:rgba(0,188,212,0.4);color:var(--cyan);}
+.step-info{flex:1;}
+.step-title{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:1px;transition:color 0.15s;}
+.wizard-step.active .step-title{color:var(--t1);}
+.wizard-step.done .step-title{color:var(--cyan);}
+.step-desc{font-size:10px;color:var(--t3);}
+.wizard-footer{padding:16px;border-top:0.5px solid var(--bord);}
+.wizard-prog-label{font-size:10px;color:var(--t3);margin-bottom:6px;font-family:'JetBrains Mono',monospace;}
+.wizard-prog-track{height:3px;background:var(--surf3);border-radius:2px;overflow:hidden;}
+.wizard-prog-fill{height:100%;background:var(--cyan);border-radius:2px;transition:width 0.4s ease;}
+
+/* wizard content */
+.wizard-content{
+  flex:1;overflow-y:auto;padding:32px 40px;
+  display:flex;flex-direction:column;
+}
+.wizard-content::-webkit-scrollbar{width:4px;}
+.wizard-content::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+.wiz-step-panel{display:none;flex-direction:column;gap:0;animation:fadeUp 0.3s ease;}
+.wiz-step-panel.active{display:flex;}
+.wiz-header{margin-bottom:28px;}
+.wiz-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--cyan);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px;
+}
+.wiz-title{font-size:22px;font-weight:600;letter-spacing:-0.01em;color:var(--t1);margin-bottom:6px;}
+.wiz-desc{font-size:13px;color:var(--t2);line-height:1.6;}
+
+/* form elements */
+.field{margin-bottom:20px;}
+.field-label{font-size:10px;font-weight:500;color:var(--t2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px;display:block;}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--inp);border:0.5px solid var(--inp-bord);
+  border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;
+  font-size:13px;color:var(--t1);outline:none;
+  transition:border-color 0.15s,box-shadow 0.15s,background 0.25s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:rgba(0,188,212,0.5);box-shadow:0 0 0 3px var(--inp-focus);
+}
+.field textarea{resize:vertical;min-height:100px;line-height:1.6;font-size:13px;}
+.field select{-webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;background-color:var(--inp);padding-right:32px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field-hint{font-size:11px;color:var(--t3);margin-top:5px;}
+
+/* persona cards */
+.persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.persona-card{
+  background:var(--surf2);border:1.5px solid var(--bord);border-radius:10px;
+  padding:14px;cursor:pointer;transition:all 0.15s;text-align:center;
+}
+.persona-card:hover{border-color:rgba(0,188,212,0.3);background:var(--surf);}
+.persona-card.selected{border-color:var(--cyan);background:rgba(0,188,212,0.05);}
+.persona-emoji{font-size:24px;margin-bottom:6px;}
+.persona-name{font-size:11px;font-weight:600;color:var(--t1);margin-bottom:2px;}
+.persona-desc{font-size:10px;color:var(--t3);}
+
+/* tool toggles */
+.tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;}
+.tool-toggle{
+  background:var(--surf2);border:0.5px solid var(--bord);border-radius:10px;
+  padding:14px 16px;cursor:pointer;transition:all 0.15s;
+  display:flex;align-items:center;gap:12px;
+}
+.tool-toggle:hover{border-color:rgba(0,188,212,0.25);}
+.tool-toggle.on{border-color:rgba(0,188,212,0.4);background:rgba(0,188,212,0.05);}
+.tool-icon-wrap{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:16px;
+}
+.tool-info-wrap{flex:1;}
+.tool-name{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:1px;}
+.tool-desc-sm{font-size:10px;color:var(--t3);}
+.tool-check{
+  width:18px;height:18px;border-radius:5px;
+  border:1.5px solid var(--bord);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.15s;
+}
+.tool-toggle.on .tool-check{background:var(--cyan);border-color:var(--cyan);}
+
+/* permission sliders */
+.perm-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:0.5px solid var(--bord-s);
+}
+.perm-row:last-child{border-bottom:none;}
+.perm-info{flex:1;}
+.perm-name{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:2px;}
+.perm-desc{font-size:10px;color:var(--t3);}
+.toggle-sw{
+  width:36px;height:20px;border-radius:10px;
+  background:var(--surf3);border:0.5px solid var(--bord);
+  cursor:pointer;position:relative;transition:all 0.2s;flex-shrink:0;
+}
+.toggle-sw.on{background:var(--cyan);border-color:var(--cyan);}
+.toggle-sw::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:12px;height:12px;border-radius:50%;background:#fff;
+  transition:transform 0.2s;
+}
+.toggle-sw.on::after{transform:translateX(16px);}
+
+/* model selector */
+.model-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.model-card{
+  background:var(--surf2);border:1.5px solid var(--bord);border-radius:10px;
+  padding:14px 16px;cursor:pointer;transition:all 0.15s;
+}
+.model-card:hover{border-color:rgba(0,188,212,0.3);}
+.model-card.selected{border-color:var(--cyan);background:rgba(0,188,212,0.05);}
+.model-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.model-name{font-size:12px;font-weight:600;color:var(--t1);}
+.model-badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  padding:2px 7px;border-radius:3px;
+}
+.badge-fast{background:rgba(249,168,37,0.12);color:#F9A825;}
+.badge-smart{background:rgba(0,188,212,0.1);color:var(--cyan);}
+.badge-code{background:rgba(21,101,192,0.12);color:#64B5F6;}
+.badge-vision{background:rgba(123,31,162,0.12);color:#CE93D8;}
+.model-desc{font-size:10px;color:var(--t3);line-height:1.5;}
+
+/* wizard nav */
+.wizard-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:32px;padding-top:20px;border-top:0.5px solid var(--bord);
+}
+.wiz-back-btn{
+  font-size:12px;font-weight:500;color:var(--t2);
+  background:none;border:0.5px solid var(--bord);
+  border-radius:8px;padding:8px 16px;cursor:pointer;transition:all 0.15s;
+}
+.wiz-back-btn:hover{color:var(--t1);border-color:rgba(255,255,255,0.2);}
+[data-theme="light"] .wiz-back-btn:hover{border-color:rgba(0,0,0,0.2);}
+.wiz-next-btn{
+  font-size:12px;font-weight:600;color:#fff;
+  background:var(--red);border:none;
+  border-radius:8px;padding:8px 20px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:background 0.15s;
+}
+.wiz-next-btn:hover{background:var(--red-dark);}
+.wiz-next-btn.finish{background:var(--success);}
+.wiz-next-btn.finish:hover{background:#1B5E20;}
+.step-counter{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);}
+
+/* ─────────────────────────────────
+   VIEW 3: PLAYGROUND
+───────────────────────────────── */
+#viewPlayground{flex-direction:row;overflow:hidden;}
+
+.pg-sidebar{
+  width:260px;min-width:260px;background:var(--surf);
+  border-right:0.5px solid var(--bord);
+  display:flex;flex-direction:column;
+  transition:background 0.25s,border-color 0.25s;
+}
+.pg-sidebar-hdr{
+  padding:14px 16px;border-bottom:0.5px solid var(--bord);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pg-sidebar-title{font-size:10px;font-weight:600;color:var(--t2);letter-spacing:0.1em;text-transform:uppercase;}
+.pg-sidebar-body{padding:12px;overflow-y:auto;flex:1;}
+.pg-sidebar-body::-webkit-scrollbar{width:3px;}
+.pg-sidebar-body::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+/* agent selector */
+.pg-agent-select{
+  background:var(--surf2);border:0.5px solid var(--bord);
+  border-radius:8px;padding:10px 12px;margin-bottom:12px;
+  cursor:pointer;transition:all 0.15s;
+}
+.pg-agent-select:hover{border-color:rgba(0,188,212,0.3);}
+.pg-agent-select-top{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
+.pg-agent-name{font-size:12px;font-weight:600;color:var(--t1);}
+.pg-agent-model{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-top:1px;}
+
+.pg-section-sep{font-size:9px;color:var(--t3);letter-spacing:0.1em;text-transform:uppercase;margin:14px 0 8px;font-weight:500;}
+
+/* context variables */
+.ctx-row{
+  display:flex;align-items:center;gap:6px;margin-bottom:6px;
+}
+.ctx-key,.ctx-val{
+  flex:1;min-width:0;width:100%;background:var(--inp);border:0.5px solid var(--inp-bord);
+  border-radius:6px;padding:6px 9px;font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--t1);outline:none;transition:border-color 0.15s,background 0.25s;
+}
+.ctx-key:focus,.ctx-val:focus{border-color:rgba(0,188,212,0.4);}
+.ctx-del{
+  width:24px;height:24px;border-radius:4px;background:var(--surf3);
+  border:0.5px solid var(--bord);cursor:pointer;color:var(--t3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;
+}
+.ctx-del:hover{color:var(--error);border-color:rgba(211,47,47,0.3);background:rgba(211,47,47,0.05);}
+.add-ctx-btn{
+  font-size:10px;color:var(--cyan);background:rgba(0,188,212,0.05);
+  border:0.5px dashed rgba(0,188,212,0.3);border-radius:5px;
+  padding:6px 10px;margin-top:2px;width:100%;cursor:pointer;transition:all 0.15s;
+}
+.add-ctx-btn:hover{background:rgba(0,188,212,0.1);border-style:solid;}
+
+/* debug toggle */
+.debug-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-top:0.5px solid var(--bord-s);margin-top:8px;
+}
+.debug-label{font-size:11px;color:var(--t2);}
+
+/* pg chat */
+.pg-chat{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.pg-chat-hdr{
+  padding:12px 20px;border-bottom:0.5px solid var(--bord);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  background:var(--surf);transition:background 0.25s,border-color 0.25s;
+}
+.pg-chat-title{font-size:13px;font-weight:600;color:var(--t1);}
+.pg-chat-meta{font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.pg-chat-actions{display:flex;gap:6px;}
+
+.pg-messages{flex:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:0;}
+.pg-messages::-webkit-scrollbar{width:4px;}
+.pg-messages::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+.pm-wrap{padding:4px 0;animation:fadeUp 0.2s ease;}
+.pm-row{display:flex;gap:10px;align-items:flex-start;max-width:820px;}
+.pm-row.user-row{margin-left:auto;flex-direction:row-reverse;}
+.pm-avatar{
+  width:26px;height:26px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;
+  font-size:13px;
+}
+.pm-avatar.agent{background:var(--red);}
+.pm-avatar.user{background:var(--surf3);border:0.5px solid var(--bord);}
+.pm-content{flex:1;}
+.pm-header{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.pm-name{font-size:11px;font-weight:600;color:var(--t1);}
+.pm-name.agent{color:var(--red);}
+.pm-time{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);}
+.pm-body{font-size:13px;color:var(--t1);line-height:1.7;}
+.pm-body p{margin-bottom:8px;}
+.pm-body p:last-child{margin-bottom:0;}
+.pm-body code{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  background:var(--tag-bg);color:var(--cyan);padding:1px 5px;border-radius:3px;
+}
+
+/* tool trace (debug) */
+.tool-trace{
+  background:var(--code-bg);border:0.5px solid var(--code-bord);
+  border-radius:8px;padding:10px 13px;margin:8px 0;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  transition:background 0.25s;
+}
+.trace-hdr{display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer;}
+.trace-title{font-size:10px;color:var(--cyan);}
+.trace-expand{font-size:9px;color:var(--t3);}
+.trace-body{color:var(--t2);line-height:1.7;font-size:10px;}
+.trace-key{color:var(--cyan);}
+.trace-val{color:#81C784;}
+.trace-num{color:#F9A825;}
+
+/* typing */
+.typing-row{display:flex;align-items:center;gap:4px;padding:4px 0;}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--t3);
+  animation:typing 1.4s ease-in-out infinite;}
+.tdot:nth-child(2){animation-delay:.2s;}
+.tdot:nth-child(3){animation-delay:.4s;}
+@keyframes typing{0%,80%,100%{transform:scale(1);opacity:.4;}40%{transform:scale(1.3);opacity:1;}}
+
+/* pg input */
+.pg-input-area{
+  padding:12px 20px 18px;border-top:0.5px solid var(--bord);
+  background:var(--surf);flex-shrink:0;
+  transition:background 0.25s,border-color 0.25s;
+}
+.pg-input-box{
+  display:flex;align-items:flex-end;gap:8px;
+  background:var(--inp);border:0.5px solid var(--inp-bord);
+  border-radius:10px;padding:10px 12px;transition:all 0.2s;
+}
+.pg-input-box:focus-within{border-color:rgba(0,188,212,0.5);box-shadow:0 0 0 3px var(--inp-focus);}
+.pg-input-box textarea{
+  flex:1;background:none;border:none;outline:none;
+  font-family:'Inter',sans-serif;font-size:13px;color:var(--t1);
+  resize:none;min-height:22px;max-height:150px;line-height:1.6;transition:color 0.25s;
+}
+.pg-input-box textarea::placeholder{color:var(--t3);}
+.pg-send-btn{
+  width:32px;height:32px;border-radius:8px;background:var(--red);
+  border:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:background 0.15s;
+}
+.pg-send-btn:hover{background:var(--red-dark);}
+.pg-footer-hint{
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);
+  margin-top:7px;display:flex;align-items:center;justify-content:space-between;
+}
+
+/* pg right panel (debug/context) */
+.pg-debug{
+  width:240px;min-width:240px;background:var(--surf);
+  border-left:0.5px solid var(--bord);display:flex;flex-direction:column;
+  overflow:hidden;transition:background 0.25s,border-color 0.25s;
+}
+.pg-debug-hdr{
+  padding:12px 14px;border-bottom:0.5px solid var(--bord);
+  font-size:10px;font-weight:600;color:var(--t2);letter-spacing:0.1em;text-transform:uppercase;
+}
+.pg-debug-body{padding:12px 14px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;}
+.pg-debug-body::-webkit-scrollbar{width:3px;}
+.pg-debug-body::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+.debug-section-title{font-size:9px;font-weight:500;color:var(--t3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.debug-stat{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 0;border-bottom:0.5px solid var(--bord-s);
+}
+.debug-stat:last-child{border-bottom:none;}
+.debug-stat-label{font-size:11px;color:var(--t2);}
+.debug-stat-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t1);}
+.debug-stat-val.cyan{color:var(--cyan);}
+.debug-stat-val.green{color:#4CAF50;}
+.debug-stat-val.red{color:#EF5350;}
+.token-bar{height:3px;border-radius:2px;background:var(--surf3);overflow:hidden;margin-top:6px;}
+.token-fill{height:100%;background:var(--cyan);border-radius:2px;transition:width 0.5s ease;}
+.token-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-top:3px;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:2px;}
+
+/* icon btn */
+.icon-btn{
+  width:28px;height:28px;border-radius:6px;background:none;
+  border:0.5px solid var(--bord);cursor:pointer;color:var(--t3);
+  display:flex;align-items:center;justify-content:center;transition:all 0.15s;
+}
+.icon-btn:hover{color:var(--t2);background:var(--surf2);}
+
+/* ia badge */
+.ia-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--cyan-light);border:0.5px solid rgba(0,188,212,0.25);
+  border-radius:3px;padding:1px 7px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cyan);
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="wordmark">
+      <span class="bia">BIA</span><span class="pipe">|</span><span class="tech">Tech</span>
+    </div>
+    <div class="product-badge">Agentix</div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="switchView('dashboard',this)">Dashboard</div>
+      <div class="nav-tab" onclick="switchView('create',this)">Criar Agente</div>
+      <div class="nav-tab" onclick="switchView('playground',this)">Playground</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-btn" onclick="toggleTheme()">
+      <span id="themeIcon">☀</span><span id="themeLabel">Modo claro</span>
+    </button>
+    <button class="new-agent-btn" onclick="switchView('create',document.querySelector('.nav-tab:nth-child(2)'))">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+        <path d="M5.5 1v9M1 5.5h9" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Novo agente
+    </button>
+  </div>
+</div>
+
+<div class="app">
+
+<!-- ══════════════════════════════
+     VIEW: DASHBOARD
+══════════════════════════════ -->
+<div class="view active" id="viewDashboard">
+  <div class="dash-inner">
+
+    <div class="dash-kpis">
+      <div class="kcard hl-cyan">
+        <div class="klabel">Agentes ativos</div>
+        <div class="kval cyan" id="animAgents">0</div>
+        <div class="kdelta"><span class="up">▲ 2</span> este mês</div>
+      </div>
+      <div class="kcard">
+        <div class="klabel">Execuções hoje</div>
+        <div class="kval" id="animExec">0</div>
+        <div class="kdelta"><span class="up">▲ 18%</span> vs ontem</div>
+      </div>
+      <div class="kcard">
+        <div class="klabel">Taxa de sucesso</div>
+        <div class="kval green" id="animSuccess">0<span style="font-size:14px;font-weight:400">%</span></div>
+        <div class="kdelta">Meta: 95%</div>
+      </div>
+      <div class="kcard hl-red">
+        <div class="klabel">Tokens consumidos</div>
+        <div class="kval purple" id="animTokens">0</div>
+        <div class="kdelta">este mês</div>
+      </div>
+    </div>
+
+    <!-- Agents -->
+    <div>
+      <div class="dash-section-title">Seus agentes</div>
+      <div class="agent-grid" id="agentGrid"></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="dash-charts">
+      <div class="chart-card">
+        <div class="chart-card-hdr">
+          <span class="chart-card-title">Execuções por agente — últimos 7 dias</span>
+          <span class="chart-card-meta">diário</span>
+        </div>
+        <div class="chart-body"><canvas id="execChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-hdr">
+          <span class="chart-card-title">Status de execuções</span>
+          <span class="chart-card-meta">este mês</span>
+        </div>
+        <div class="chart-body"><canvas id="statusChart"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     VIEW: CREATE
+══════════════════════════════ -->
+<div class="view" id="viewCreate">
+  <div class="wizard-sidebar">
+    <div class="wizard-steps" id="wizardSteps"></div>
+    <div class="wizard-footer">
+      <div class="wizard-prog-label" id="wizProgLabel">Passo 1 de 5</div>
+      <div class="wizard-prog-track">
+        <div class="wizard-prog-fill" id="wizProgFill" style="width:20%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="wizard-content" id="wizardContent"></div>
+</div>
+
+<!-- ══════════════════════════════
+     VIEW: PLAYGROUND
+══════════════════════════════ -->
+<div class="view" id="viewPlayground">
+
+  <!-- Sidebar: agent + context -->
+  <div class="pg-sidebar">
+    <div class="pg-sidebar-hdr">
+      <span class="pg-sidebar-title">Agente & Contexto</span>
+    </div>
+    <div class="pg-sidebar-body">
+      <div class="pg-section-sep">Agente ativo</div>
+      <div class="pg-agent-select" id="pgAgentSelect">
+        <div class="pg-agent-select-top">
+          <span style="display:flex;align-items:center;margin-right:4px;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="var(--red)" stroke-width="1.8"/><path d="M13.5 13.5l4 4" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </span>
+          <span class="pg-agent-name">Change Analyzer Pro</span>
+        </div>
+        <div class="pg-agent-model">BIA-Pro · change-analysis</div>
+      </div>
+
+      <div class="pg-section-sep">Variáveis de contexto</div>
+      <div id="ctxRows">
+        <div class="ctx-row">
+          <input class="ctx-key" placeholder="chave" value="env">
+          <input class="ctx-val" placeholder="valor" value="production">
+          <button class="ctx-del" onclick="this.closest('.ctx-row').remove()">
+            <svg width="7" height="7" viewBox="0 0 7 7" fill="none"><path d="M1 1l5 5M6 1L1 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="ctx-row">
+          <input class="ctx-key" placeholder="chave" value="change_id">
+          <input class="ctx-val" placeholder="valor" value="CR-4821">
+          <button class="ctx-del" onclick="this.closest('.ctx-row').remove()">
+            <svg width="7" height="7" viewBox="0 0 7 7" fill="none"><path d="M1 1l5 5M6 1L1 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="add-ctx-btn" onclick="addCtxRow()">+ variável</button>
+
+      <div class="debug-row">
+        <span class="debug-label">Modo debug</span>
+        <div class="toggle-sw on" id="debugToggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="debug-row">
+        <span class="debug-label">Mostrar tool calls</span>
+        <div class="toggle-sw on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="debug-row">
+        <span class="debug-label">Stream tokens</span>
+        <div class="toggle-sw" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="pg-chat">
+    <div class="pg-chat-hdr">
+      <div>
+        <div class="pg-chat-title">Playground — Change Analyzer Pro</div>
+        <div class="pg-chat-meta">BIA-Pro · contexto: production · CR-4821</div>
+      </div>
+      <div class="pg-chat-actions">
+        <button class="icon-btn" title="Limpar conversa" onclick="clearPgChat()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 3h8M4 3V2h4v1M5 5.5v3M7 5.5v3M3 3l.5 7h5L9 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="icon-btn" title="Exportar">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1.5v7M3 6l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M1 9.5V11h10V9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="pg-messages" id="pgMessages"></div>
+
+    <div class="pg-input-area">
+      <div class="pg-input-box">
+        <textarea id="pgInput" rows="1" placeholder="Escreva uma mensagem para o agente..."
+          onkeydown="pgHandleKey(event)" oninput="autoResizePg(this)"></textarea>
+        <button class="pg-send-btn" onclick="pgSend()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M12 6.5H1M8 2.5l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="pg-footer-hint">
+        <span><kbd style="background:var(--surf3);border:0.5px solid var(--bord);border-radius:3px;padding:1px 5px;font-family:'JetBrains Mono',monospace;font-size:9px;">Enter</kbd> enviar · <kbd style="background:var(--surf3);border:0.5px solid var(--bord);border-radius:3px;padding:1px 5px;font-family:'JetBrains Mono',monospace;font-size:9px;">Shift+Enter</kbd> nova linha</span>
+        <span class="ia-badge">Agentix ativo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug panel -->
+  <div class="pg-debug">
+    <div class="pg-debug-hdr">Diagnóstico</div>
+    <div class="pg-debug-body">
+      <div>
+        <div class="debug-section-title">Sessão atual</div>
+        <div class="debug-stat"><span class="debug-stat-label">Mensagens</span><span class="debug-stat-val cyan" id="dbgMsgs">0</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">Tool calls</span><span class="debug-stat-val" id="dbgTools">0</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">Latência média</span><span class="debug-stat-val" id="dbgLatency">—</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">Status</span><span class="debug-stat-val green" id="dbgStatus">idle</span></div>
+      </div>
+      <div>
+        <div class="debug-section-title">Tokens</div>
+        <div class="token-bar"><div class="token-fill" id="tokenFill" style="width:0%"></div></div>
+        <div class="token-label"><span id="tokenUsed">0</span> / <span id="tokenMax">8.192</span> tokens</div>
+      </div>
+      <div>
+        <div class="debug-section-title">Ferramentas ativas</div>
+        <div class="debug-stat"><span class="debug-stat-label">change_lookup</span><span class="debug-stat-val green">✓</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">risk_scorer</span><span class="debug-stat-val green">✓</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">dep_graph</span><span class="debug-stat-val green">✓</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">servicenow_api</span><span class="debug-stat-val" style="color:var(--t3)">off</span></div>
+      </div>
+      <div>
+        <div class="debug-section-title">Modelo</div>
+        <div class="debug-stat"><span class="debug-stat-label">Nome</span><span class="debug-stat-val cyan">BIA-Pro</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">Temp.</span><span class="debug-stat-val">0.3</span></div>
+        <div class="debug-stat"><span class="debug-stat-label">Top-p</span><span class="debug-stat-val">0.9</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /playground -->
+</div><!-- /app -->
+
+<script>
+// ── THEME ──
+let isDark=true;
+function toggleTheme(){
+  isDark=!isDark;
+  document.body.setAttribute('data-theme',isDark?'dark':'light');
+  document.getElementById('themeIcon').textContent=isDark?'☀':'☾';
+  document.getElementById('themeLabel').textContent=isDark?'Modo claro':'Modo escuro';
+  updateChartTheme();
+}
+
+// ── VIEWS ──
+function switchView(name,tab){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('view'+name.charAt(0).toUpperCase()+name.slice(1)).classList.add('active');
+  if(tab) tab.classList.add('active');
+}
+
+// ── AGENTS DATA ──
+const AGENTS=[
+  {id:0,icon:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="var(--red)" stroke-width="1.8"/><path d="M13.5 13.5l4 4" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round"/></svg>',color:'rgba(204,9,47,0.12)',name:'Change Analyzer Pro',
+   desc:'Analisa changes de TI identificando riscos, dependências e impactos antes de ir para produção.',
+   tags:['change-mgmt','risk','sdlc'],model:'BIA-Pro',on:true,execs:1247,success:98.2,tools:3},
+  {id:1,icon:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="3" width="12" height="14" rx="2" stroke="var(--cyan)" stroke-width="1.8"/><path d="M7 8h6M7 12h4" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',color:'rgba(0,188,212,0.1)',name:'Story Generator',
+   desc:'Gera histórias e épicos com critérios de aceite baseados nos padrões do time.',
+   tags:['agile','jira','sdlc'],model:'BIA-Fast',on:true,execs:834,success:96.7,tools:2},
+  {id:2,icon:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11 2L3 11h6l-2 7 9-10h-6l2-6z" stroke="var(--warning)" stroke-width="1.8" stroke-linejoin="round"/></svg>',color:'rgba(249,168,37,0.1)',name:'PRB Investigator',
+   desc:'Abre e preenche PRBs automaticamente após incidentes críticos com análise de causa raiz.',
+   tags:['incident','prb','rca'],model:'BIA-Pro',on:true,execs:412,success:97.1,tools:4},
+  {id:3,icon:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 5v5c0 4.5 3.5 8.5 7 10 3.5-1.5 7-5.5 7-10V5l-7-3z" stroke="#64B5F6" stroke-width="1.8" stroke-linejoin="round"/></svg>',color:'rgba(21,101,192,0.1)',name:'Security Sentinel',
+   desc:'Monitora repositórios em busca de vulnerabilidades, segredos expostos e dependências desatualizadas.',
+   tags:['security','devsecops'],model:'BIA-Code',on:false,execs:203,success:99.5,tools:5},
+  {id:4,icon:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="11" width="4" height="6" rx="1" stroke="var(--purple)" stroke-width="1.8"/><rect x="8" y="6" width="4" height="11" rx="1" stroke="var(--purple)" stroke-width="1.8"/><rect x="13" y="3" width="4" height="14" rx="1" stroke="var(--purple)" stroke-width="1.8"/></svg>',color:'rgba(123,31,162,0.1)',name:'Release Reporter',
+   desc:'Consolida notas de release, changelog e comunicados para stakeholders automaticamente.',
+   tags:['release','docs'],model:'BIA-Fast',on:true,execs:98,success:94.3,tools:2},
+  {id:5,icon:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 9a4 4 0 118 0M4 7l2 2 2-2M14 11a4 4 0 11-8 0M16 13l-2-2-2 2" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',color:'rgba(46,125,50,0.1)',name:'Pipeline Healer',
+   desc:'Detecta falhas em pipelines CI/CD e sugere (ou executa) correções automaticamente.',
+   tags:['ci-cd','devops'],model:'BIA-Code',on:false,execs:156,success:91.8,tools:6},
+];
+
+function renderAgents(){
+  document.getElementById('agentGrid').innerHTML=AGENTS.map(a=>`
+    <div class="agent-card">
+      <div class="agent-card-top">
+        <div class="agent-icon" style="background:${a.color}">${a.icon}</div>
+        <div class="agent-status-dot ${a.on?'on':'off'}"></div>
+      </div>
+      <div class="agent-name">${a.name}</div>
+      <div class="agent-desc">${a.desc}</div>
+      <div class="agent-tags">${a.tags.map(t=>`<span class="agent-tag">${t}</span>`).join('')}</div>
+      <div class="agent-metrics">
+        <div class="agent-metric">
+          <div class="agent-metric-val">${a.execs.toLocaleString('pt-BR')}</div>
+          <div class="agent-metric-label">Execuções</div>
+        </div>
+        <div class="agent-metric">
+          <div class="agent-metric-val" style="color:${a.success>=97?'#4CAF50':a.success>=94?'#F9A825':'#EF5350'}">${a.success}%</div>
+          <div class="agent-metric-label">Sucesso</div>
+        </div>
+        <div class="agent-metric">
+          <div class="agent-metric-val">${a.tools}</div>
+          <div class="agent-metric-label">Ferramentas</div>
+        </div>
+      </div>
+      <div class="agent-card-actions">
+        <div class="ac-btn" onclick="switchView('playground',document.querySelector('.nav-tab:nth-child(3)'))">Testar</div>
+        <div class="ac-btn">Editar</div>
+        <div class="ac-btn primary">Ativar</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── COUNTER ANIMATION ──
+function animCount(id,target,suffix='',duration=1200){
+  const el=document.getElementById(id);
+  const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/duration,1);
+    const ease=1-Math.pow(1-p,3);
+    const val=Math.round(ease*target);
+    el.innerHTML=suffix?`${val.toLocaleString('pt-BR')}<span style="font-size:14px;font-weight:400">${suffix}</span>`:val.toLocaleString('pt-BR');
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ── CHARTS ──
+function ctTheme(){
+  return isDark
+    ?{grid:'rgba(255,255,255,0.04)',tick:'#444',ttBg:'#1A1A1A',ttT:'#F0F0F0',ttB:'#888'}
+    :{grid:'rgba(0,0,0,0.05)',tick:'#AAA',ttBg:'#FFF',ttT:'#1A1A1A',ttB:'#666'};
+}
+function makeTT(){
+  const t=ctTheme();
+  return{backgroundColor:t.ttBg,borderColor:'rgba(0,188,212,0.2)',borderWidth:1,
+    titleColor:t.ttT,bodyColor:t.ttB,padding:10,
+    titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:11}};
+}
+const charts={};
+
+// executions line chart
+charts.exec=new Chart(document.getElementById('execChart'),{
+  type:'line',
+  data:{
+    labels:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+    datasets:[
+      {label:'Change Analyzer',data:[187,210,198,245,231,89,67],borderColor:'#CC092F',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#CC092F',tension:0.4,fill:false},
+      {label:'Story Generator',data:[134,156,141,168,159,48,38],borderColor:'#00BCD4',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#00BCD4',tension:0.4,fill:false},
+      {label:'PRB Investigator',data:[52,61,48,73,67,12,8],borderColor:'#F9A825',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#F9A825',tension:0.4,fill:false},
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'bottom',labels:{color:ctTheme().tick,font:{family:'JetBrains Mono',size:9},padding:12,boxWidth:10,boxHeight:10,usePointStyle:true}},tooltip:makeTT()},
+    scales:{
+      x:{ticks:{color:ctTheme().tick,font:{family:'JetBrains Mono',size:8}},grid:{color:ctTheme().grid},border:{display:false}},
+      y:{ticks:{color:ctTheme().tick,font:{family:'JetBrains Mono',size:9}},grid:{color:ctTheme().grid},border:{display:false}}
+    }
+  }
+});
+
+// status donut
+charts.status=new Chart(document.getElementById('statusChart'),{
+  type:'doughnut',
+  data:{
+    labels:['Sucesso','Falha','Timeout','Cancelado'],
+    datasets:[{data:[2847,63,29,11],backgroundColor:['#4CAF50','#EF5350','#F9A825','#888'],borderWidth:0,hoverOffset:5}]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{display:true,position:'bottom',labels:{color:ctTheme().tick,font:{family:'JetBrains Mono',size:9},padding:10,boxWidth:8,boxHeight:8,usePointStyle:true}},tooltip:makeTT()}
+  }
+});
+
+function updateChartTheme(){
+  const t=ctTheme();const tt=makeTT();
+  Object.values(charts).forEach(ch=>{
+    if(!ch)return;
+    const sc=ch.options.scales;
+    if(sc)['x','y'].forEach(a=>{if(sc[a]){if(sc[a].ticks)sc[a].ticks.color=t.tick;if(sc[a].grid)sc[a].grid.color=t.grid;}});
+    if(ch.options.plugins?.tooltip)Object.assign(ch.options.plugins.tooltip,tt);
+    if(ch.options.plugins?.legend?.labels)ch.options.plugins.legend.labels.color=t.tick;
+    ch.update('none');
+  });
+}
+
+// ── WIZARD ──
+const STEPS=[
+  {title:'Identidade',desc:'Nome e propósito'},
+  {title:'Perfil & Tom',desc:'Persona do agente'},
+  {title:'Ferramentas',desc:'Capacidades e integrações'},
+  {title:'Modelo & IA',desc:'Engine e parâmetros'},
+  {title:'Permissões',desc:'Acesso e limites'},
+];
+let currentStep=0;
+
+function renderWizard(){
+  // steps sidebar
+  document.getElementById('wizardSteps').innerHTML=STEPS.map((s,i)=>`
+    <div class="wizard-step ${i<currentStep?'done':i===currentStep?'active':''}" onclick="goStep(${i})">
+      <div class="step-num">${i<currentStep?`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="var(--cyan)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`:i+1}</div>
+      <div class="step-info">
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('wizProgLabel').textContent=`Passo ${currentStep+1} de ${STEPS.length}`;
+  document.getElementById('wizProgFill').style.width=`${((currentStep+1)/STEPS.length)*100}%`;
+
+  // content panels
+  document.querySelectorAll('.wiz-step-panel').forEach(p=>p.classList.remove('active'));
+  const panels=document.getElementById('wizardContent').querySelectorAll('.wiz-step-panel');
+  if(panels[currentStep]) panels[currentStep].classList.add('active');
+}
+
+function goStep(i){currentStep=i;renderWizard();}
+function nextStep(){if(currentStep<STEPS.length-1){currentStep++;renderWizard();}}
+function prevStep(){if(currentStep>0){currentStep--;renderWizard();}}
+
+function buildWizardContent(){
+  document.getElementById('wizardContent').innerHTML=`
+
+  <!-- Step 0: Identity -->
+  <div class="wiz-step-panel active">
+    <div class="wiz-header">
+      <div class="wiz-eyebrow">01 — Identidade</div>
+      <div class="wiz-title">Quem é seu agente?</div>
+      <div class="wiz-desc">Defina o nome, propósito e como o agente se apresenta para os usuários.</div>
+    </div>
+    <div class="field">
+      <label class="field-label">Nome do agente</label>
+      <input type="text" placeholder="ex: Change Analyzer Pro" value="">
+      <div class="field-hint">Será exibido nas interfaces e logs.</div>
+    </div>
+    <div class="field">
+      <label class="field-label">Descrição curta</label>
+      <input type="text" placeholder="Analisa changes de TI e identifica riscos antes da produção">
+    </div>
+    <div class="field">
+      <label class="field-label">System prompt</label>
+      <textarea placeholder="Você é um agente especialista em análise de changes de TI no ambiente Bradesco. Sua função é avaliar o risco de cada change, identificar dependências críticas e recomendar ações antes do deploy...">Você é um agente especialista em análise de changes de TI no ambiente Bradesco. Sua função é avaliar o risco de cada change, identificar dependências críticas e recomendar ações antes do deploy em produção. Seja direto, técnico e baseado em dados. Nunca especule — sempre fundamente suas análises em evidências concretas.</textarea>
+      <div class="field-hint">Define o comportamento base do agente. Seja específico sobre o contexto e restrições.</div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Idioma padrão</label>
+        <select><option selected>Português (BR)</option><option>English</option><option>Espanhol</option></select>
+      </div>
+      <div class="field">
+        <label class="field-label">Categoria</label>
+        <select><option selected>SDLC / DevOps</option><option>Segurança</option><option>Qualidade</option><option>Gestão de Incidentes</option><option>Documentação</option><option>Custom</option></select>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <span class="step-counter">1 / 5</span>
+      <button class="wiz-next-btn" onclick="nextStep()">Próximo <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Step 1: Persona -->
+  <div class="wiz-step-panel">
+    <div class="wiz-header">
+      <div class="wiz-eyebrow">02 — Perfil & Tom</div>
+      <div class="wiz-title">Como o agente se comunica?</div>
+      <div class="wiz-desc">Escolha a persona base e ajuste o tom de voz para o seu contexto.</div>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card selected" onclick="selectPersona(this)">
+        <div class="persona-emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3c-4.4 0-8 3-8 7 0 2.4 1.2 4.5 3 6v3c0 1 1 2 2 2h6c1 0 2-1 2-2v-3c1.8-1.5 3-3.6 3-6 0-4-3.6-7-8-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 11h6M10 14h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <div class="persona-name">Analítico</div>
+        <div class="persona-desc">Dados antes de tudo. Preciso e fundamentado.</div>
+      </div>
+      <div class="persona-card" onclick="selectPersona(this)">
+        <div class="persona-emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-2 8 11-13h-9l2-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        <div class="persona-name">Executor</div>
+        <div class="persona-desc">Focado em ação. Respostas curtas e objetivas.</div>
+      </div>
+      <div class="persona-card" onclick="selectPersona(this)">
+        <div class="persona-emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-8 0v2 M12 11a4 4 0 100-8 4 4 0 000 8z M22 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="persona-name">Consultor</div>
+        <div class="persona-desc">Explica o raciocínio. Educativo e detalhado.</div>
+      </div>
+      <div class="persona-card" onclick="selectPersona(this)">
+        <div class="persona-emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        <div class="persona-name">Guardião</div>
+        <div class="persona-desc">Cauteloso. Prioriza compliance e segurança.</div>
+      </div>
+      <div class="persona-card" onclick="selectPersona(this)">
+        <div class="persona-emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13.5 2C13.5 2 7 3 4 8L2 14l5-1 4 4-1 5 6-2c5-3 6-9.5 6-9.5S15.5 8 13.5 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 15l-5 5M12 8a2 2 0 110-4 2 2 0 010 4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="persona-name">Inovador</div>
+        <div class="persona-desc">Sugere melhorias além do pedido.</div>
+      </div>
+      <div class="persona-card" onclick="selectPersona(this)">
+        <div class="persona-emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="persona-name">Custom</div>
+        <div class="persona-desc">Defina via system prompt.</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Nível de formalidade</label>
+      <select><option>Altamente técnico e formal</option><option selected>Técnico e direto</option><option>Conversacional e acessível</option></select>
+    </div>
+    <div class="field">
+      <label class="field-label">Comprimento das respostas</label>
+      <select><option>Conciso (até 3 parágrafos)</option><option selected>Balanceado</option><option>Detalhado com exemplos</option></select>
+    </div>
+    <div class="wizard-nav">
+      <button class="wiz-back-btn" onclick="prevStep()">Voltar</button>
+      <span class="step-counter">2 / 5</span>
+      <button class="wiz-next-btn" onclick="nextStep()">Próximo <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Step 2: Tools -->
+  <div class="wiz-step-panel">
+    <div class="wiz-header">
+      <div class="wiz-eyebrow">03 — Ferramentas</div>
+      <div class="wiz-title">O que o agente pode fazer?</div>
+      <div class="wiz-desc">Selecione as capacidades e integrações disponíveis para este agente.</div>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-toggle on" onclick="this.classList.toggle('on')">
+        <div class="tool-icon-wrap" style="background:rgba(0,188,212,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5" stroke="var(--cyan)" stroke-width="1.5"/><path d="M11.5 11.5l4 4" stroke="var(--cyan)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="tool-info-wrap">
+          <div class="tool-name">Change Lookup</div>
+          <div class="tool-desc-sm">Busca histórico de changes no ServiceNow</div>
+        </div>
+        <div class="tool-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="tool-toggle on" onclick="this.classList.toggle('on')">
+        <div class="tool-icon-wrap" style="background:rgba(204,9,47,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="9" width="3" height="6" rx="1" stroke="var(--red)" stroke-width="1.5"/><rect x="7.5" y="5" width="3" height="10" rx="1" stroke="var(--red)" stroke-width="1.5"/><rect x="12" y="2" width="3" height="13" rx="1" stroke="var(--red)" stroke-width="1.5"/></svg></div>
+        <div class="tool-info-wrap">
+          <div class="tool-name">Risk Scorer</div>
+          <div class="tool-desc-sm">Calcula score de risco com ML</div>
+        </div>
+        <div class="tool-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="tool-toggle on" onclick="this.classList.toggle('on')">
+        <div class="tool-icon-wrap" style="background:rgba(249,168,37,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="var(--warning)" stroke-width="1.5" stroke-dasharray="2 2"/><circle cx="9" cy="9" r="2" stroke="var(--warning)" stroke-width="1.5"/><path d="M9 3v4M9 11v4M3 9h4M11 9h4" stroke="var(--warning)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="tool-info-wrap">
+          <div class="tool-name">Dependency Graph</div>
+          <div class="tool-desc-sm">Mapeia dependências entre serviços</div>
+        </div>
+        <div class="tool-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="tool-toggle" onclick="this.classList.toggle('on')">
+        <div class="tool-icon-wrap" style="background:rgba(21,101,192,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="4" y="3" width="10" height="12" rx="1.5" stroke="#1E88E5" stroke-width="1.5"/><path d="M7 8h4M7 11h4" stroke="#1E88E5" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="tool-info-wrap">
+          <div class="tool-name">Jira Integration</div>
+          <div class="tool-desc-sm">Lê e cria tickets no Jira</div>
+        </div>
+        <div class="tool-check"></div>
+      </div>
+      <div class="tool-toggle" onclick="this.classList.toggle('on')">
+        <div class="tool-icon-wrap" style="background:rgba(123,31,162,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M14 11c0-3-1-5-5-5s-5 2-5 5v3h10v-3zM9 2a1 1 0 011 1v1M7.5 15h3a1.5 1.5 0 01-3 0z" stroke="var(--purple)" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+        <div class="tool-info-wrap">
+          <div class="tool-name">Notificações</div>
+          <div class="tool-desc-sm">Envia alertas via Slack/Teams/email</div>
+        </div>
+        <div class="tool-check"></div>
+      </div>
+      <div class="tool-toggle" onclick="this.classList.toggle('on')">
+        <div class="tool-icon-wrap" style="background:rgba(46,125,50,0.1)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="5" cy="14" r="2" stroke="var(--success)" stroke-width="1.5"/><circle cx="5" cy="4" r="2" stroke="var(--success)" stroke-width="1.5"/><circle cx="12" cy="9" r="2" stroke="var(--success)" stroke-width="1.5"/><path d="M5 6v6M12 11c0 2-3 3-7 3" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="tool-info-wrap">
+          <div class="tool-name">GitHub API</div>
+          <div class="tool-desc-sm">Acessa repositórios e PRs</div>
+        </div>
+        <div class="tool-check"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">URL de webhook customizado (opcional)</label>
+      <input type="text" placeholder="https://api.bradesco.io/webhooks/agentix">
+    </div>
+    <div class="wizard-nav">
+      <button class="wiz-back-btn" onclick="prevStep()">Voltar</button>
+      <span class="step-counter">3 / 5</span>
+      <button class="wiz-next-btn" onclick="nextStep()">Próximo <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Step 3: Model -->
+  <div class="wiz-step-panel">
+    <div class="wiz-header">
+      <div class="wiz-eyebrow">04 — Modelo & IA</div>
+      <div class="wiz-title">Qual engine vai usar?</div>
+      <div class="wiz-desc">Escolha o modelo base e ajuste os parâmetros de geração.</div>
+    </div>
+    <div class="model-cards">
+      <div class="model-card selected" onclick="selectModel(this)">
+        <div class="model-card-top">
+          <span class="model-name">BIA-Pro</span>
+          <span class="model-badge badge-smart">Alta precisão</span>
+        </div>
+        <div class="model-desc">Máxima capacidade de raciocínio. Ideal para análises complexas e decisões críticas.</div>
+      </div>
+      <div class="model-card" onclick="selectModel(this)">
+        <div class="model-card-top">
+          <span class="model-name">BIA-Fast</span>
+          <span class="model-badge badge-fast">Rápido</span>
+        </div>
+        <div class="model-desc">Respostas em milissegundos. Perfeito para tarefas repetitivas e alto volume.</div>
+      </div>
+      <div class="model-card" onclick="selectModel(this)">
+        <div class="model-card-top">
+          <span class="model-name">BIA-Code</span>
+          <span class="model-badge badge-code">Code</span>
+        </div>
+        <div class="model-desc">Especializado em análise e geração de código. Ideal para code review e debugging.</div>
+      </div>
+      <div class="model-card" onclick="selectModel(this)">
+        <div class="model-card-top">
+          <span class="model-name">BIA-Vision</span>
+          <span class="model-badge badge-vision">Multimodal</span>
+        </div>
+        <div class="model-desc">Processa imagens, diagramas e capturas de tela além de texto.</div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Temperatura <span style="color:var(--cyan);font-family:'JetBrains Mono',monospace" id="tempVal">0.3</span></label>
+        <input type="range" min="0" max="1" step="0.05" value="0.3" style="width:100%;margin-top:8px;" oninput="document.getElementById('tempVal').textContent=this.value">
+      </div>
+      <div class="field">
+        <label class="field-label">Contexto máx.</label>
+        <select><option>4.096 tokens</option><option selected>8.192 tokens</option><option>16.384 tokens</option><option>32k tokens</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Memória entre sessões</label>
+      <select><option selected>Sem memória (stateless)</option><option>Sumário da última sessão</option><option>Histórico completo (últimas 10)</option></select>
+    </div>
+    <div class="wizard-nav">
+      <button class="wiz-back-btn" onclick="prevStep()">Voltar</button>
+      <span class="step-counter">4 / 5</span>
+      <button class="wiz-next-btn" onclick="nextStep()">Próximo <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Step 4: Permissions -->
+  <div class="wiz-step-panel">
+    <div class="wiz-header">
+      <div class="wiz-eyebrow">05 — Permissões</div>
+      <div class="wiz-title">O que o agente pode acessar?</div>
+      <div class="wiz-desc">Defina os limites de acesso e controle de segurança do agente.</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-info">
+        <div class="perm-name">Leitura de dados de produção</div>
+        <div class="perm-desc">Permite consultar dados em ambiente de produção</div>
+      </div>
+      <div class="toggle-sw on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-info">
+        <div class="perm-name">Escrita e mutações</div>
+        <div class="perm-desc">Pode criar tickets, PRBs e documentos automaticamente</div>
+      </div>
+      <div class="toggle-sw on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-info">
+        <div class="perm-name">Execução de deploys</div>
+        <div class="perm-desc">Pode disparar pipelines e deploys (requer aprovação humana)</div>
+      </div>
+      <div class="toggle-sw" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-info">
+        <div class="perm-name">Acesso a dados sensíveis</div>
+        <div class="perm-desc">PII, dados financeiros e credenciais (exige log de auditoria)</div>
+      </div>
+      <div class="toggle-sw" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-info">
+        <div class="perm-name">Log de todas as ações</div>
+        <div class="perm-desc">Registra cada tool call e decisão para auditoria</div>
+      </div>
+      <div class="toggle-sw on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-info">
+        <div class="perm-name">Modo HITL (humano no loop)</div>
+        <div class="perm-desc">Ações críticas exigem aprovação antes de executar</div>
+      </div>
+      <div class="toggle-sw on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="field" style="margin-top:20px;">
+      <label class="field-label">Rate limit (execuções/hora)</label>
+      <input type="number" value="100" min="1">
+    </div>
+    <div class="wizard-nav">
+      <button class="wiz-back-btn" onclick="prevStep()">Voltar</button>
+      <span class="step-counter">5 / 5</span>
+      <button class="wiz-next-btn finish" onclick="finishWizard()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Criar agente
+      </button>
+    </div>
+  </div>
+  `;
+  renderWizard();
+}
+
+function selectPersona(el){
+  document.querySelectorAll('.persona-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectModel(el){
+  document.querySelectorAll('.model-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function finishWizard(){
+  switchView('dashboard',document.querySelector('.nav-tab:nth-child(1)'));
+}
+
+// ── PLAYGROUND ──
+let pgMsgCount=0, pgToolCount=0, pgTotalTokens=0;
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function nowT(){return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function autoResizePg(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,150)+'px';}
+function pgHandleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();pgSend();}}
+
+function updateDebug(){
+  document.getElementById('dbgMsgs').textContent=pgMsgCount;
+  document.getElementById('dbgTools').textContent=pgToolCount;
+  document.getElementById('dbgStatus').textContent='idle';
+  document.getElementById('dbgStatus').className='debug-stat-val green';
+  const lat=800+Math.random()*400;
+  document.getElementById('dbgLatency').textContent=Math.round(lat)+'ms';
+  const pct=Math.min(100,Math.round(pgTotalTokens/81.92));
+  document.getElementById('tokenFill').style.width=pct+'%';
+  document.getElementById('tokenUsed').textContent=pgTotalTokens.toLocaleString('pt-BR');
+}
+
+function appendPgMsg(html){
+  const msgs=document.getElementById('pgMessages');
+  const wrap=document.createElement('div');
+  wrap.className='pm-wrap';wrap.innerHTML=html;
+  msgs.appendChild(wrap);msgs.scrollTop=msgs.scrollHeight;
+  return wrap;
+}
+
+function pgSend(){
+  const inp=document.getElementById('pgInput');
+  const text=inp.value.trim();if(!text)return;
+  pgMsgCount++;pgTotalTokens+=Math.round(text.length/4);
+
+  appendPgMsg(`
+    <div class="pm-row user-row">
+      <div class="pm-avatar user">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <circle cx="6" cy="4" r="2.5" stroke="var(--t3)" stroke-width="1.1"/>
+          <path d="M1 11c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="var(--t3)" stroke-width="1.1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="pm-content">
+        <div class="pm-header"><span class="pm-name">você</span><span class="pm-time">${nowT()}</span></div>
+        <div class="pm-body"><p>${esc(text)}</p></div>
+      </div>
+    </div>`);
+
+  inp.value='';inp.style.height='auto';
+  document.getElementById('dbgStatus').textContent='thinking…';
+  document.getElementById('dbgStatus').className='debug-stat-val cyan';
+
+  // typing
+  const typWrap=appendPgMsg(`
+    <div class="pm-row">
+      <div class="pm-avatar agent" style="padding:0;overflow:hidden;border-radius:5px;">
+        <img src="BIA/BIA.svg" style="width:100%;height:100%;object-fit:cover;" alt="BIA"/>
+      </div>
+      <div class="pm-content">
+        <div class="pm-header"><span class="pm-name agent">Change Analyzer Pro</span><span class="pm-time">${nowT()}</span></div>
+        <div class="typing-row"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>
+      </div>
+    </div>`);
+
+  setTimeout(()=>{
+    typWrap.remove();
+    pgMsgCount++;pgToolCount+=2;
+    const respTokens=180+Math.round(Math.random()*120);
+    pgTotalTokens+=respTokens;
+
+    const debug=document.getElementById('debugToggle').classList.contains('on');
+    appendPgMsg(`
+      <div class="pm-row">
+        <div class="pm-avatar agent" style="padding:0;overflow:hidden;border-radius:5px;">
+          <img src="BIA/BIA.svg" style="width:100%;height:100%;object-fit:cover;" alt="BIA"/>
+        </div>
+        <div class="pm-content">
+          <div class="pm-header">
+            <span class="pm-name agent">Change Analyzer Pro</span>
+            <span class="pm-time">${nowT()}</span>
+            <span class="ia-badge">IA ativo</span>
+          </div>
+          <div class="pm-body">
+            ${debug?`
+            <div class="tool-trace">
+              <div class="trace-hdr">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="var(--cyan)" stroke-width="1"/><path d="M5 3v2.5L6.5 7" stroke="var(--cyan)" stroke-width="1" stroke-linecap="round"/></svg>
+                <span class="trace-title">change_lookup("${text.split(' ').slice(-1)[0]}")</span>
+                <span class="trace-expand">→ 12ms</span>
+              </div>
+              <div class="trace-body">
+                <span class="trace-key">change_id</span>: <span class="trace-val">"CR-4821"</span><br>
+                <span class="trace-key">services</span>: [<span class="trace-val">"auth-service"</span>, <span class="trace-val">"payment-gw"</span>]<br>
+                <span class="trace-key">risk_score</span>: <span class="trace-num">8.4</span>
+              </div>
+            </div>
+            <div class="tool-trace">
+              <div class="trace-hdr">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="var(--cyan)" stroke-width="1"/><path d="M5 3v2.5L6.5 7" stroke="var(--cyan)" stroke-width="1" stroke-linecap="round"/></svg>
+                <span class="trace-title">risk_scorer(change_id="CR-4821")</span>
+                <span class="trace-expand">→ 34ms</span>
+              </div>
+              <div class="trace-body">
+                <span class="trace-key">score</span>: <span class="trace-num">8.4</span> / 10<br>
+                <span class="trace-key">level</span>: <span style="color:#EF5350;">"ALTO"</span><br>
+                <span class="trace-key">factors</span>: [<span class="trace-val">"horário_pico"</span>, <span class="trace-val">"dep_critica"</span>]
+              </div>
+            </div>`:''}
+            <p>Analisei sua solicitação. Com base nos dados coletados, o change <code>CR-4821</code> tem risco <strong>alto</strong> — score 8.4/10. Os principais fatores são dependências críticas em <code>auth-service</code> e <code>payment-gateway</code>, sem fallback configurado.</p>
+            <p>Recomendo adiar para após as 23h ou reverter o item 3 do change. Quer que eu abra um PRB preventivo automaticamente?</p>
+          </div>
+        </div>
+      </div>`);
+    updateDebug();
+  },1600+Math.random()*800);
+}
+
+function clearPgChat(){
+  document.getElementById('pgMessages').innerHTML='';
+  pgMsgCount=0;pgToolCount=0;pgTotalTokens=0;updateDebug();
+  renderPgInitial();
+}
+
+function renderPgInitial(){
+  appendPgMsg(`
+    <div class="pm-row">
+      <div class="pm-avatar agent">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <rect x="1" y="1" width="5" height="5" rx="1.5" fill="rgba(255,255,255,0.9)"/>
+          <rect x="7" y="1" width="5" height="5" rx="1.5" fill="rgba(0,188,212,0.7)"/>
+          <rect x="1" y="7" width="5" height="5" rx="1.5" fill="rgba(0,188,212,0.35)"/>
+          <rect x="7" y="7" width="5" height="5" rx="1.5" fill="rgba(255,255,255,0.25)"/>
+        </svg>
+      </div>
+      <div class="pm-content">
+        <div class="pm-header"><span class="pm-name agent">Change Analyzer Pro</span><span class="pm-time">${nowT()}</span></div>
+        <div class="pm-body">
+          <p>Olá! Estou pronto para analisar changes de TI, identificar riscos e mapear dependências. Me informe o ID do change ou descreva o que precisa analisar.</p>
+          <p>Contexto ativo: <code>env: production</code> · <code>change_id: CR-4821</code></p>
+        </div>
+      </div>
+    </div>`);
+  pgMsgCount=1;pgTotalTokens=82;updateDebug();
+}
+
+function addCtxRow(){
+  const row=document.createElement('div');
+  row.className='ctx-row';
+  row.innerHTML=`
+    <input class="ctx-key" placeholder="chave">
+    <input class="ctx-val" placeholder="valor">
+    <button class="ctx-del" onclick="this.closest('.ctx-row').remove()">
+      <svg width="7" height="7" viewBox="0 0 7 7" fill="none"><path d="M1 1l5 5M6 1L1 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </button>`;
+  document.getElementById('ctxRows').appendChild(row);
+}
+
+// ── INIT ──
+renderAgents();
+buildWizardContent();
+renderPgInitial();
+
+// animated KPIs
+setTimeout(()=>{
+  animCount('animAgents',6);
+  animCount('animExec',2950);
+  animCount('animSuccess',97,'%');
+  animCount('animTokens',1240000);
+},200);
+</script>
+</body>
+</html>
