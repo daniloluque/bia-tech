@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIA Tech — Brand Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC092F;
+    --red-dark: #A00725;
+    --red-light: #FDECEA;
+    --cyan: #00BCD4;
+    --cyan-dark: #0097A7;
+    --cyan-light: #E0F7FA;
+    --cyan-text: #00696E;
+    --gray-900: #1A1A1A;
+    --gray-800: #333333;
+    --gray-600: #666666;
+    --gray-400: #999999;
+    --gray-200: #E0E0E0;
+    --gray-50: #F5F5F5;
+    --white: #FFFFFF;
+    --success: #2E7D32;
+    --success-light: #E8F5E9;
+    --warning: #F9A825;
+    --warning-light: #FFF8E1;
+    --error: #D32F2F;
+    --error-light: #FDECEA;
+    --info: #1565C0;
+    --info-light: #E3F2FD;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--gray-800);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: var(--gray-900);
+    padding: 32px 0;
+    z-index: 100;
+    overflow-y: auto;
+  }
+  nav .logo {
+    padding: 0 24px 24px;
+    border-bottom: 0.5px solid #333;
+    margin-bottom: 16px;
+  }
+  nav .logo .bia { font-weight: 600; font-size: 20px; color: #fff; }
+  nav .logo .pipe { color: #555; margin: 0 3px; }
+  nav .logo .tech { font-weight: 300; font-size: 20px; color: #fff; }
+  nav .logo .sub { display: block; font-size: 8.5px; color: #666; letter-spacing: 0.18em; margin-top: 6px; }
+  nav a {
+    display: block;
+    padding: 10px 24px;
+    font-size: 13px;
+    color: #888;
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+  nav a:hover { color: #ccc; background: rgba(255,255,255,0.03); }
+  nav a.active { color: var(--cyan); border-left-color: var(--cyan); background: rgba(0,188,212,0.06); font-weight: 500; }
+
+  /* MAIN */
+  main {
+    margin-left: 220px;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--red);
+    padding: 100px 80px 80px;
+    color: #fff;
+  }
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .hero h1 span { font-weight: 300; }
+  .hero p {
+    font-size: 18px;
+    font-weight: 300;
+    margin-top: 16px;
+    opacity: 0.75;
+    max-width: 500px;
+  }
+  .hero .version {
+    margin-top: 40px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.45;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 80px;
+    border-bottom: 0.5px solid var(--gray-200);
+  }
+  section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-400);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  section h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  section .desc {
+    font-size: 15px;
+    color: var(--gray-600);
+    max-width: 600px;
+    margin-bottom: 48px;
+    line-height: 1.7;
+  }
+  .subsection {
+    margin-bottom: 48px;
+  }
+  .subsection-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-800);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--gray-200);
+  }
+
+  /* LOGO SECTION */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .logo-card {
+    border-radius: 12px;
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 180px;
+  }
+  .logo-card .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .logo-card .wm-bia { font-weight: 600; font-size: 36px; }
+  .logo-card .wm-pipe { font-weight: 300; font-size: 36px; margin: 0 6px; opacity: 0.4; }
+  .logo-card .wm-tech { font-weight: 300; font-size: 36px; }
+  .logo-card .wm-sub { font-size: 9px; letter-spacing: 0.2em; font-weight: 300; }
+  .logo-card .label { font-size: 11px; color: var(--gray-400); margin-top: 8px; }
+  .lc-light { background: var(--gray-50); border: 0.5px solid var(--gray-200); }
+  .lc-light .wm-bia, .lc-light .wm-tech { color: var(--gray-800); }
+  .lc-light .wm-pipe { color: var(--gray-400); }
+  .lc-light .wm-sub { color: var(--gray-400); }
+  .lc-dark { background: var(--gray-900); }
+  .lc-dark .wm-bia, .lc-dark .wm-tech { color: #fff; }
+  .lc-dark .wm-pipe { color: rgba(255,255,255,0.3); }
+  .lc-dark .wm-sub { color: rgba(255,255,255,0.4); }
+  .lc-dark .label { color: #555; }
+  .lc-red { background: var(--red); }
+  .lc-red .wm-bia, .lc-red .wm-tech { color: #fff; }
+  .lc-red .wm-pipe { color: rgba(255,255,255,0.35); }
+  .lc-red .wm-sub { color: rgba(255,255,255,0.55); }
+  .lc-red .label { color: rgba(255,255,255,0.4); }
+  .lc-white { background: #fff; border: 0.5px solid var(--gray-200); }
+  .lc-white .wm-bia, .lc-white .wm-tech { color: var(--gray-900); }
+  .lc-white .wm-pipe { color: var(--gray-400); }
+  .lc-white .wm-sub { color: var(--gray-400); }
+
+  /* CLEAR SPACE */
+  .clearspace-demo {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px dashed var(--cyan);
+    padding: 32px 40px;
+    position: relative;
+    margin-top: 16px;
+  }
+  .clearspace-demo::before {
+    content: '←  Zona de proteção = altura do "B"  →';
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* COLORS */
+  .color-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .color-swatch {
+    width: 140px;
+  }
+  .color-swatch .swatch {
+    height: 80px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .color-swatch .swatch-sm {
+    height: 56px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+  }
+  .color-swatch .name { font-size: 13px; font-weight: 500; }
+  .color-swatch .hex { font-size: 11px; color: var(--gray-400); font-family: 'JetBrains Mono', monospace; }
+  .color-swatch .use { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
+  .color-sm { width: 110px; }
+
+  /* TYPOGRAPHY */
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 0.5px solid var(--gray-200);
+    flex-wrap: wrap;
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-sample { flex: 1; min-width: 250px; }
+  .type-spec {
+    font-size: 11px;
+    color: var(--gray-400);
+    font-family: 'JetBrains Mono', monospace;
+    min-width: 200px;
+    text-align: right;
+  }
+
+  /* COMPONENTS */
+  .comp-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--red); color: #fff; }
+  .btn-primary:hover { background: var(--red-dark); }
+  .btn-outline { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
+  .btn-ia { background: var(--cyan); color: #fff; }
+  .btn-ia:hover { background: var(--cyan-dark); }
+  .btn-ia-outline { background: transparent; color: var(--cyan); border: 1.5px solid var(--cyan); }
+  .btn-secondary { background: var(--gray-50); color: var(--gray-800); border: 0.5px solid var(--gray-200); }
+  .btn-disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+  .btn-sm { padding: 7px 16px; font-size: 12px; border-radius: 6px; }
+  .btn-lg { padding: 13px 32px; font-size: 15px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+  }
+  .badge-ia { background: var(--cyan-light); color: var(--cyan-text); }
+  .badge-error { background: var(--error-light); color: #991B1B; }
+  .badge-warning { background: var(--warning-light); color: #7A5D00; }
+  .badge-success { background: var(--success-light); color: #1B5E20; }
+  .badge-info { background: var(--info-light); color: #0D47A1; }
+  .badge-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--gray-900);
+  }
+  .badge-mono-cyan { color: var(--cyan); }
+  .badge-mono-green { color: var(--success); }
+  .badge-mono-red { color: var(--error); }
+  .badge-mono-yellow { color: var(--warning); }
+
+  .input-group { max-width: 380px; margin-bottom: 16px; }
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-bottom: 4px;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--gray-800);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .input-group input:focus { border-color: var(--cyan); }
+  .input-error input { border-color: var(--error); background: #FFF5F5; }
+  .input-error .error-msg { font-size: 12px; color: var(--error); margin-top: 4px; }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .metric-card {
+    background: #fff;
+    border: 0.5px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .metric-card .mc-label {
+    font-size: 10px;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .metric-card .mc-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+  }
+  .metric-card .mc-delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  /* ALERT */
+  .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-left: 3px solid;
+    border-radius: 0;
+    margin-bottom: 10px;
+  }
+  .alert-ia { background: var(--cyan-light); border-left-color: var(--cyan); }
+  .alert-ia .alert-title, .alert-ia .alert-text { color: var(--cyan-text); }
+  .alert-error { background: var(--error-light); border-left-color: var(--error); }
+  .alert-error .alert-title, .alert-error .alert-text { color: #991B1B; }
+  .alert-success { background: var(--success-light); border-left-color: var(--success); }
+  .alert-success .alert-title, .alert-success .alert-text { color: #1B5E20; }
+  .alert-title { font-size: 13px; font-weight: 500; }
+  .alert-text { font-size: 12px; margin-top: 3px; }
+
+  /* TERMINAL */
+  .terminal {
+    background: var(--gray-900);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 12px;
+  }
+  .terminal-dots {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    align-items: center;
+  }
+  .terminal-dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .terminal-dots .dot-r { background: var(--error); }
+  .terminal-dots .dot-y { background: var(--warning); }
+  .terminal-dots .dot-g { background: var(--success); }
+  .terminal-dots .title {
+    width: auto; height: auto; border-radius: 0; background: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #555; margin-left: 8px;
+  }
+  .terminal pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.9;
+    color: #aaa;
+    margin: 0;
+  }
+  .t-cmd { color: #888; }
+  .t-cyan { color: var(--cyan); }
+  .t-green { color: var(--success); }
+  .t-yellow { color: var(--warning); }
+  .t-red { color: var(--error); }
+
+  /* ICON RULES */
+  .icon-rule-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .icon-rule {
+    flex: 1;
+    min-width: 180px;
+    padding: 16px;
+    background: var(--gray-50);
+    border-radius: 10px;
+  }
+  .icon-rule .ir-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .icon-rule .ir-desc { font-size: 11px; color: var(--gray-600); line-height: 1.5; }
+
+  /* DO/DONT */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .do-card, .dont-card {
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .do-card { background: var(--success-light); }
+  .do-card .dd-label { color: var(--success); font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .dont-card { background: var(--error-light); }
+  .dont-card .dd-label { color: var(--error); font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .dd-item { font-size: 12px; color: var(--gray-800); margin-bottom: 4px; line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 80px;
+    background: var(--gray-900);
+    color: #555;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    main { margin-left: 0; }
+    section { padding: 48px 24px; }
+    .hero { padding: 60px 24px 48px; }
+    .hero h1 { font-size: 36px; }
+    .logo-grid { grid-template-columns: 1fr; }
+    .do-dont { grid-template-columns: 1fr; }
+    .type-spec { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <span class="bia">BIA</span><span class="pipe"> | </span><span class="tech">Tech</span>
+    <span class="sub">BRADESCO INTELIGÊNCIA ARTIFICIAL</span>
+  </div>
+  <a href="#logo" class="active">Logo</a>
+  <a href="#cores">Cores</a>
+  <a href="#tipografia">Tipografia</a>
+  <a href="#componentes">Componentes</a>
+  <a href="#iconografia">Iconografia</a>
+  <a href="#terminal">Terminal</a>
+  <a href="#uso">Uso correto</a>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>BIA | <span>Tech</span></h1>
+  <p>Brand book da plataforma de inteligência artificial para todo o ciclo de desenvolvimento de software do Bradesco.</p>
+  <div class="version">v1.0 · abril 2026</div>
+</div>
+
+<!-- LOGO -->
+<section id="logo">
+  <div class="section-label">01</div>
+  <h2>Logo</h2>
+  <p class="desc">O wordmark BIA | Tech é a representação principal da marca. Usa-se "BIA" em peso bold e "Tech" em peso light, separados por um pipe vertical. Abaixo, o descritivo "BRADESCO INTELIGÊNCIA ARTIFICIAL" em caixa alta com tracking aberto e peso light.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Aplicações</div>
+    <div class="logo-grid">
+      <div class="logo-card lc-light">
+        <div class="wordmark">
+          <span class="wm-bia">BIA</span>
+          <span class="wm-pipe">|</span>
+          <span class="wm-tech">Tech</span>
+        </div>
+        <div class="wm-sub">BRADESCO INTELIGÊNCIA ARTIFICIAL</div>
+        <div class="label">Fundo claro</div>
+      </div>
+      <div class="logo-card lc-dark">
+        <div class="wordmark">
+          <span class="wm-bia">BIA</span>
+          <span class="wm-pipe">|</span>
+          <span class="wm-tech">Tech</span>
+        </div>
+        <div class="wm-sub">BRADESCO INTELIGÊNCIA ARTIFICIAL</div>
+        <div class="label">Fundo escuro</div>
+      </div>
+      <div class="logo-card lc-red">
+        <div class="wordmark">
+          <span class="wm-bia">BIA</span>
+          <span class="wm-pipe">|</span>
+          <span class="wm-tech">Tech</span>
+        </div>
+        <div class="wm-sub">BRADESCO INTELIGÊNCIA ARTIFICIAL</div>
+        <div class="label">Fundo vermelho</div>
+      </div>
+      <div class="logo-card lc-white">
+        <div class="wordmark">
+          <span class="wm-bia">BIA</span>
+          <span class="wm-pipe">|</span>
+          <span class="wm-tech">Tech</span>
+        </div>
+        <div class="wm-sub">BRADESCO INTELIGÊNCIA ARTIFICIAL</div>
+        <div class="label">Fundo branco</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Zona de proteção</div>
+    <div class="clearspace-demo">
+      <span style="font-weight:600;font-size:28px;color:var(--gray-800);">BIA</span>
+      <span style="font-weight:300;font-size:28px;color:var(--gray-400);margin:0 4px;">|</span>
+      <span style="font-weight:300;font-size:28px;color:var(--gray-800);">Tech</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-top:40px;max-width:400px;">A zona de proteção mínima ao redor do logo é equivalente à altura da letra "B". Nenhum elemento gráfico ou texto deve invadir essa área.</p>
+  </div>
+</section>
+
+<!-- CORES -->
+<section id="cores">
+  <div class="section-label">02</div>
+  <h2>Cores</h2>
+  <p class="desc">A paleta combina o vermelho institucional do Bradesco com cyan como acento de IA e uma escala de cinzas para a base do sistema. Cores semânticas complementam para estados de interface.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Primárias</div>
+    <div class="color-row">
+      <div class="color-swatch">
+        <div class="swatch" style="background:var(--red);"></div>
+        <div class="name">Vermelho Bradesco</div>
+        <div class="hex">#CC092F</div>
+        <div class="use">CTAs, marca, ações primárias</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch" style="background:var(--cyan);"></div>
+        <div class="name">Cyan IA</div>
+        <div class="hex">#00BCD4</div>
+        <div class="use">Features IA, links, interações</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch" style="background:var(--cyan-dark);"></div>
+        <div class="name">Cyan escuro</div>
+        <div class="hex">#0097A7</div>
+        <div class="use">Hover, estados ativos</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch" style="background:var(--cyan-light);"></div>
+        <div class="name">Cyan light</div>
+        <div class="hex">#E0F7FA</div>
+        <div class="use">Backgrounds de badges IA</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Neutros</div>
+    <div class="color-row">
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--gray-900);"></div>
+        <div class="name">Gray 900</div>
+        <div class="hex">#1A1A1A</div>
+        <div class="use">Títulos, terminais</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--gray-800);"></div>
+        <div class="name">Gray 800</div>
+        <div class="hex">#333333</div>
+        <div class="use">Corpo de texto</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--gray-600);"></div>
+        <div class="name">Gray 600</div>
+        <div class="hex">#666666</div>
+        <div class="use">Texto secundário</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--gray-400);"></div>
+        <div class="name">Gray 400</div>
+        <div class="hex">#999999</div>
+        <div class="use">Placeholders</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--gray-200);"></div>
+        <div class="name">Gray 200</div>
+        <div class="hex">#E0E0E0</div>
+        <div class="use">Bordas, divisores</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--gray-50);border:0.5px solid var(--gray-200);"></div>
+        <div class="name">Gray 50</div>
+        <div class="hex">#F5F5F5</div>
+        <div class="use">Backgrounds</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Semânticas</div>
+    <div class="color-row">
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--success);"></div>
+        <div class="name">Sucesso</div>
+        <div class="hex">#2E7D32</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--warning);"></div>
+        <div class="name">Alerta</div>
+        <div class="hex">#F9A825</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--error);"></div>
+        <div class="name">Erro</div>
+        <div class="hex">#D32F2F</div>
+      </div>
+      <div class="color-swatch color-sm">
+        <div class="swatch-sm" style="background:var(--info);"></div>
+        <div class="name">Info</div>
+        <div class="hex">#1565C0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Regra de uso do Cyan</div>
+    <div class="icon-rule-grid">
+      <div class="icon-rule" style="background:var(--cyan-light);border-left:3px solid var(--cyan);border-radius:0;">
+        <div class="ir-title" style="color:var(--cyan-text);">Acento de IA</div>
+        <div class="ir-desc" style="color:var(--cyan-text);">Badges "powered by IA", ícones de features IA, tags de automação, indicadores de status de modelo.</div>
+      </div>
+      <div class="icon-rule" style="background:var(--cyan-light);border-left:3px solid var(--cyan);border-radius:0;">
+        <div class="ir-title" style="color:var(--cyan-text);">Interação</div>
+        <div class="ir-desc" style="color:var(--cyan-text);">Links inline, hover states, focus rings, botões secundários, toggles ativos, item ativo na sidebar.</div>
+      </div>
+      <div class="icon-rule" style="border-left:3px solid var(--red);border-radius:0;">
+        <div class="ir-title">Vermelho = ação primária</div>
+        <div class="ir-desc">CTAs principais, botões primários, alertas críticos, marca institucional.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOGRAFIA -->
+<section id="tipografia">
+  <div class="section-label">03</div>
+  <h2>Tipografia</h2>
+  <p class="desc">Duas famílias tipográficas complementares: Inter para comunicação e interface, JetBrains Mono para contextos técnicos. Inter fala com pessoas, JetBrains Mono fala com máquinas.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Escala — Inter</div>
+    <div class="type-row">
+      <div class="type-sample" style="font-size:28px;font-weight:600;">Heading 1</div>
+      <div class="type-spec">Inter Semi Bold · 28/36</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-size:22px;font-weight:500;">Heading 2</div>
+      <div class="type-spec">Inter Medium · 22/30</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-size:18px;font-weight:500;">Heading 3</div>
+      <div class="type-spec">Inter Medium · 18/26</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-size:15px;font-weight:400;">Corpo de texto — A BIA Tech acompanha todo o ciclo de desenvolvimento de software.</div>
+      <div class="type-spec">Inter Regular · 15/24</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-size:13px;font-weight:400;color:var(--gray-600);">Texto secundário — descrições, labels, metadata</div>
+      <div class="type-spec">Inter Regular · 13/20</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:0.12em;text-transform:uppercase;">OVERLINE · LABELS · SEÇÕES</div>
+      <div class="type-spec">Inter Medium · 11/16 · Caps</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Escala — JetBrains Mono</div>
+    <div class="type-row">
+      <div class="type-sample" style="font-family:'JetBrains Mono',monospace;font-size:14px;">const analysis = await bia.codeReview(pr)</div>
+      <div class="type-spec">JetBrains Mono · 14/22 · Code</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-600);">pipeline:deploy → status:running → env:prod</div>
+      <div class="type-spec">JetBrains Mono · 12/18 · Logs</div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample" style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:var(--cyan);">247</div>
+      <div class="type-spec">JetBrains Mono Medium · 24+ · Métricas</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTES -->
+<section id="componentes">
+  <div class="section-label">04</div>
+  <h2>Componentes</h2>
+  <p class="desc">Componentes base do design system, construídos para Angular Material. Customizáveis via theme tokens da BIA Tech.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Botões</div>
+    <div class="comp-group">
+      <button class="btn btn-primary">Primário</button>
+      <button class="btn btn-outline">Outline</button>
+      <button class="btn btn-ia">Ação IA</button>
+      <button class="btn btn-ia-outline">IA Outline</button>
+      <button class="btn btn-secondary">Secundário</button>
+      <button class="btn btn-disabled" disabled>Disabled</button>
+    </div>
+    <div class="comp-group">
+      <button class="btn btn-primary btn-sm">Small</button>
+      <button class="btn btn-primary">Medium</button>
+      <button class="btn btn-primary btn-lg">Large</button>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Badges</div>
+    <div class="comp-group">
+      <span class="badge badge-ia">Powered by IA</span>
+      <span class="badge badge-ia" style="font-family:'JetBrains Mono',monospace;">GPT-4o</span>
+      <span class="badge badge-error">Critical</span>
+      <span class="badge badge-warning">Warning</span>
+      <span class="badge badge-success">Success</span>
+      <span class="badge badge-info">Info</span>
+    </div>
+    <div class="comp-group" style="margin-top:8px;">
+      <span class="badge-mono badge-mono-cyan">pipeline:running</span>
+      <span class="badge-mono badge-mono-green">deploy:success</span>
+      <span class="badge-mono badge-mono-red">build:failed</span>
+      <span class="badge-mono badge-mono-yellow">review:pending</span>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Inputs</div>
+    <div class="input-group">
+      <label>Label padrão</label>
+      <input type="text" placeholder="Placeholder text">
+    </div>
+    <div class="input-group input-error">
+      <label style="color:var(--error);">Campo com erro</label>
+      <input type="text" value="valor inválido">
+      <div class="error-msg">Formato inválido. Use o padrão correto.</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Cards de métrica</div>
+    <div class="card-grid">
+      <div class="metric-card">
+        <div class="mc-label">Deploys hoje</div>
+        <div class="mc-value" style="color:var(--gray-800);">247</div>
+        <div class="mc-delta" style="color:var(--success);">+12% vs ontem</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Code reviews</div>
+        <div class="mc-value" style="color:var(--cyan);">1.2k</div>
+        <div class="mc-delta" style="color:var(--gray-400);">~ avg semanal</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Bugs bloqueados</div>
+        <div class="mc-value" style="color:var(--red);">38</div>
+        <div class="mc-delta" style="color:var(--success);">-23% vs sprint</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Alerts</div>
+    <div class="alert alert-ia">
+      <div>
+        <div class="alert-title">Análise em andamento</div>
+        <div class="alert-text">A BIA está revisando 12 arquivos alterados neste PR.</div>
+      </div>
+    </div>
+    <div class="alert alert-error">
+      <div>
+        <div class="alert-title">Vulnerabilidade detectada</div>
+        <div class="alert-text">SQL injection encontrada em auth/login.ts:47. Deploy bloqueado.</div>
+      </div>
+    </div>
+    <div class="alert alert-success">
+      <div>
+        <div class="alert-title">Deploy concluído</div>
+        <div class="alert-text">Build #1247 deployed to staging em 14.2s.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ICONOGRAFIA -->
+<section id="iconografia">
+  <div class="section-label">05</div>
+  <h2>Iconografia</h2>
+  <p class="desc">Material Symbols Outlined com weight 300. Traço fino, leve, coerente com o tom da marca. Integração nativa via mat-icon no Angular Material.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Regras de cor</div>
+    <div class="icon-rule-grid">
+      <div class="icon-rule">
+        <div class="ir-title" style="color:var(--gray-800);">Default</div>
+        <div class="ir-desc">Gray 800 (#333) — navegação, ações genéricas, toolbar.</div>
+      </div>
+      <div class="icon-rule" style="background:var(--cyan-light);">
+        <div class="ir-title" style="color:var(--cyan-text);">IA features</div>
+        <div class="ir-desc" style="color:var(--cyan-text);">Cyan (#00BCD4) — tudo relacionado a inteligência artificial.</div>
+      </div>
+      <div class="icon-rule">
+        <div class="ir-title" style="color:var(--error);">Crítico</div>
+        <div class="ir-desc">Vermelho (#CC092F) — erros, bloqueios, alertas críticos.</div>
+      </div>
+      <div class="icon-rule">
+        <div class="ir-title" style="color:var(--success);">Sucesso</div>
+        <div class="ir-desc">Verde (#2E7D32) — aprovações, deploys completos, checks.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Tamanhos</div>
+    <table style="font-size:13px;border-collapse:collapse;width:100%;max-width:500px;">
+      <tr style="border-bottom:0.5px solid var(--gray-200);">
+        <td style="padding:10px 0;font-weight:500;">16px</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Inline com texto, labels</td>
+      </tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);">
+        <td style="padding:10px 0;font-weight:500;">20px</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Botões, inputs, sidebar nav</td>
+      </tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);">
+        <td style="padding:10px 0;font-weight:500;">24px</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Toolbar, navegação principal</td>
+      </tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);">
+        <td style="padding:10px 0;font-weight:500;">32px</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Empty states, destaque</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 0;font-weight:500;">48px</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Hero, onboarding</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Ícones core — SDLC</div>
+    <table style="font-size:13px;border-collapse:collapse;width:100%;max-width:500px;">
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">dashboard</td><td style="padding:8px 0;color:var(--gray-600);">Visão geral</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">code</td><td style="padding:8px 0;color:var(--gray-600);">Código fonte</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">rate_review</td><td style="padding:8px 0;color:var(--gray-600);">Code review</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">bug_report</td><td style="padding:8px 0;color:var(--gray-600);">Bug tracking</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">rocket_launch</td><td style="padding:8px 0;color:var(--gray-600);">Deploy</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">security</td><td style="padding:8px 0;color:var(--gray-600);">Segurança</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">science</td><td style="padding:8px 0;color:var(--gray-600);">Testes</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">monitoring</td><td style="padding:8px 0;color:var(--gray-600);">Monitoramento</td></tr>
+      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">psychology</td><td style="padding:8px 0;color:var(--gray-600);">IA / Modelos</td></tr>
+      <tr><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">account_tree</td><td style="padding:8px 0;color:var(--gray-600);">Pipelines</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- TERMINAL -->
+<section id="terminal">
+  <div class="section-label">06</div>
+  <h2>Terminal e contextos técnicos</h2>
+  <p class="desc">A JetBrains Mono em cyan sobre fundo escuro é a assinatura visual dos contextos técnicos da BIA Tech — terminais, logs, pipelines e dashboards de métricas.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Terminal</div>
+    <div class="terminal">
+      <div class="terminal-dots">
+        <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+        <span class="title">bia-tech cli</span>
+      </div>
+<pre><span class="t-cmd">$ bia analyze --repo frontend-app</span>
+<span class="t-cyan">→ Scanning 847 files...</span>
+<span class="t-cyan">→ Running code review on 12 changed files</span>
+<span class="t-green">✓ 9 files passed</span>
+<span class="t-yellow">⚠ 2 files with suggestions</span>
+<span class="t-red">✗ 1 file with critical issue</span>
+
+<span class="t-cmd">$ bia deploy --env staging</span>
+<span class="t-cyan">→ Build #1247 started</span>
+<span class="t-green">✓ Deploy complete · staging · 14.2s</span></pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Pipeline status</div>
+    <div class="terminal">
+<pre><span class="t-cyan" style="font-weight:500;">CR-4821</span> <span style="color:#555;">→</span> <span class="t-yellow">RISK: HIGH</span>   <span style="color:#555;">→</span> <span class="t-red">ACTION: BLOCK</span>
+<span class="t-cyan" style="font-weight:500;">CR-4822</span> <span style="color:#555;">→</span> <span class="t-green">RISK: LOW</span>    <span style="color:#555;">→</span> <span class="t-green">ACTION: APPROVE</span>
+<span class="t-cyan" style="font-weight:500;">CR-4823</span> <span style="color:#555;">→</span> <span class="t-yellow">RISK: MED</span>    <span style="color:#555;">→</span> <span class="t-cyan">ACTION: REVIEW</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- USO CORRETO -->
+<section id="uso">
+  <div class="section-label">07</div>
+  <h2>Uso correto</h2>
+  <p class="desc">Diretrizes para manter a consistência da marca em todas as aplicações.</p>
+
+  <div class="do-dont">
+    <div class="do-card">
+      <div class="dd-label">FAÇA</div>
+      <div class="dd-item">Use o wordmark completo com o descritivo</div>
+      <div class="dd-item">Respeite a zona de proteção do logo</div>
+      <div class="dd-item">Use cyan exclusivamente para IA e interações</div>
+      <div class="dd-item">Use JetBrains Mono em contextos técnicos</div>
+      <div class="dd-item">Mantenha o pipe entre BIA e Tech</div>
+      <div class="dd-item">Use badges mono em fundo escuro para status técnicos</div>
+      <div class="dd-item">Use vermelho Bradesco como cor de ação primária</div>
+    </div>
+    <div class="dont-card">
+      <div class="dd-label">NÃO FAÇA</div>
+      <div class="dd-item">Não use o logo sem o descritivo em contextos formais</div>
+      <div class="dd-item">Não altere as proporções do wordmark</div>
+      <div class="dd-item">Não use cyan como cor primária de CTAs</div>
+      <div class="dd-item">Não use Inter em blocos de código ou terminais</div>
+      <div class="dd-item">Não remova o pipe do wordmark</div>
+      <div class="dd-item">Não use mais de 2 cores de destaque por tela</div>
+      <div class="dd-item">Não aplique o logo sobre fundos com pouco contraste</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  BIA Tech Brand Book · v1.0 · Bradesco Inteligência Artificial · Abril 2026
+</footer>
+
+</main>
+
+<script>
+  const links = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('section');
+  
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    links.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+  
+  links.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>
