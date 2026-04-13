@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIA Tech — Sprint Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #CC092F;
+      --red-dark: #A00725;
+      --cyan: #00BCD4;
+      --cyan-dark: #0097A7;
+    }
+    [data-theme="dark"] {
+      --bg: #1A1A1A;
+      --bg2: #222;
+      --surf: #242424;
+      --surf2: #2D2D2D;
+      --surf3: #363636;
+      --surf4: #404040;
+      --bord: rgba(255,255,255,0.09);
+      --bord-s: rgba(255,255,255,0.05);
+      --t1: #EFEFEF;
+      --t2: #A0A0A0;
+      --t3: #666;
+      --t4: #3A3A3A;
+      --inp: #1B1B1B;
+      --inp-bord: rgba(255,255,255,0.12);
+      --topbar: #222;
+      --topbar-bord: rgba(255,255,255,0.09);
+      --scroll: #3D3D3D;
+      --pill-bg: rgba(255,255,255,0.07);
+      --pill-bord: rgba(255,255,255,0.11);
+      --story-hdr: rgba(255,255,255,0.03);
+      --shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    [data-theme="light"] {
+      --bg: #F2F2F2;
+      --bg2: #EBEBEB;
+      --surf: #FFFFFF;
+      --surf2: #F8F8F8;
+      --surf3: #F0F0F0;
+      --surf4: #E8E8E8;
+      --bord: rgba(0,0,0,0.08);
+      --bord-s: rgba(0,0,0,0.05);
+      --t1: #1A1A1A;
+      --t2: #666;
+      --t3: #AAA;
+      --t4: #DDD;
+      --inp: #FFF;
+      --inp-bord: rgba(0,0,0,0.12);
+      --topbar: #FFF;
+      --topbar-bord: rgba(0,0,0,0.08);
+      --scroll: #CCC;
+      --pill-bg: rgba(0,0,0,0.04);
+      --pill-bord: rgba(0,0,0,0.09);
+      --story-hdr: rgba(0,0,0,0.02);
+      --shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--t1);
+      height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background .2s, color .2s;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      height: 50px;
+      background: var(--topbar);
+      border-bottom: .5px solid var(--topbar-bord);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 300;
+      flex-shrink: 0;
+      transition: background .2s, border-color .2s;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .topbar-right { display: flex; align-items: center; gap: 8px; }
+    .wordmark { display: flex; align-items: center; font-size: 15px; user-select: none; }
+    .wordmark .bia { font-weight: 700; color: var(--red); }
+    .wordmark .pipe { font-weight: 300; color: var(--t3); margin: 0 4px; }
+    .wordmark .tech { font-weight: 300; color: var(--t1); }
+    .topbar-sep { width: .5px; height: 16px; background: var(--bord); }
+    .product-name { font-size: 13px; font-weight: 500; color: var(--t2); }
+    .beta-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; font-weight: 500; letter-spacing: .12em;
+      color: var(--cyan);
+      background: rgba(0,188,212,0.1);
+      border: .5px solid rgba(0,188,212,0.25);
+      border-radius: 20px; padding: 2px 7px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+      border-radius: 7px; border: .5px solid var(--bord);
+      background: var(--surf2); color: var(--t1);
+      padding: 6px 12px; cursor: pointer; transition: all .15s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--surf3); }
+    .btn-primary { background: var(--red); border-color: var(--red-dark); color: #fff; }
+    .btn-primary:hover { background: var(--red-dark); }
+    .btn-ai { background: rgba(0,188,212,0.08); border-color: rgba(0,188,212,0.25); color: var(--cyan); }
+    .btn-ai:hover { background: rgba(0,188,212,0.16); }
+    .theme-btn {
+      width: 28px; height: 28px; border-radius: 7px;
+      border: .5px solid var(--bord); background: var(--surf2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 14px; transition: all .15s;
+    }
+    .theme-btn:hover { background: var(--surf3); }
+
+    /* ── LAYOUT ── */
+    .layout { display: flex; height: calc(100vh - 50px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 224px; flex-shrink: 0;
+      background: var(--surf);
+      border-right: .5px solid var(--bord);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transition: background .2s, border-color .2s;
+    }
+    .sb-section { padding: 14px; }
+    .sb-section + .sb-section { padding-top: 0; }
+    .sb-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; font-weight: 500; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--t3); margin-bottom: 8px;
+    }
+    .project-box {
+      background: var(--surf2); border: .5px solid var(--bord);
+      border-radius: 8px; padding: 10px 11px;
+      margin-bottom: 14px; cursor: pointer; transition: all .15s;
+    }
+    .project-box:hover { background: var(--surf3); }
+    .project-box-name { font-size: 12px; font-weight: 600; color: var(--t1); }
+    .project-box-sub { font-size: 10px; color: var(--t3); margin-top: 2px; }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+    .stat-card {
+      background: var(--surf2); border: .5px solid var(--bord);
+      border-radius: 8px; padding: 10px 10px 8px;
+    }
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px; font-weight: 700; color: var(--t1); line-height: 1;
+    }
+    .stat-label { font-size: 10px; color: var(--t3); margin-top: 4px; }
+    .stat-card.c-cyan .stat-value { color: var(--cyan); }
+    .stat-card.c-red .stat-value { color: var(--red); }
+
+    .sb-sep { height: .5px; background: var(--bord); margin: 0 14px 14px; }
+
+    .story-nav { flex: 1; overflow-y: auto; padding: 0 8px 14px; }
+    .story-nav::-webkit-scrollbar { width: 3px; }
+    .story-nav::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 3px; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 8px; border-radius: 7px;
+      cursor: pointer; transition: all .12s; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: var(--surf2); }
+    .nav-item.active { background: var(--surf3); }
+    .nav-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: var(--t3); flex-shrink: 0;
+    }
+    .nav-title { font-size: 11px; color: var(--t2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .nav-sp { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t3); flex-shrink: 0; }
+
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .main-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; border-bottom: .5px solid var(--bord);
+      flex-shrink: 0; gap: 10px;
+      background: var(--surf); transition: background .2s, border-color .2s;
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .toolbar-right { display: flex; align-items: center; gap: 6px; }
+
+    .search-wrap {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--inp); border: .5px solid var(--inp-bord);
+      border-radius: 7px; padding: 6px 10px; width: 200px;
+      transition: border-color .15s;
+    }
+    .search-wrap:focus-within { border-color: var(--cyan); }
+    .search-wrap input {
+      border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 12px;
+      color: var(--t1); outline: none; flex: 1;
+    }
+    .search-wrap input::placeholder { color: var(--t3); }
+    .search-ico { color: var(--t3); font-size: 12px; flex-shrink: 0; }
+
+    /* ── STORIES ── */
+    .stories-area {
+      flex: 1; overflow-y: auto; padding: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .stories-area::-webkit-scrollbar { width: 4px; }
+    .stories-area::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 4px; }
+
+    .story-group {
+      background: var(--surf); border: .5px solid var(--bord);
+      border-radius: 10px; overflow: hidden;
+      transition: border-color .15s, background .2s;
+      animation: fadeUp .18s ease;
+    }
+    .story-group:hover { border-color: rgba(255,255,255,0.15); }
+    [data-theme="light"] .story-group:hover { border-color: rgba(0,0,0,0.14); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+
+    /* story header */
+    .story-hdr {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 14px; height: 44px;
+      background: var(--story-hdr);
+      border-bottom: .5px solid var(--bord-s);
+      user-select: none;
+    }
+
+    .chevron {
+      width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+      color: var(--t3); font-size: 10px; cursor: pointer; flex-shrink: 0;
+      transition: transform .15s;
+    }
+    .story-group.collapsed .chevron { transform: rotate(-90deg); }
+
+    .story-id-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500;
+      color: var(--t3); background: var(--pill-bg); border: .5px solid var(--pill-bord);
+      border-radius: 5px; padding: 2px 6px; flex-shrink: 0;
+    }
+
+    .story-type-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500;
+      color: #8B6CF7; background: rgba(139,108,247,0.1);
+      border: .5px solid rgba(139,108,247,0.25);
+      border-radius: 5px; padding: 2px 6px; flex-shrink: 0;
+    }
+
+    .story-title-inp {
+      flex: 1; border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      color: var(--t1); outline: none; min-width: 0;
+    }
+    .story-title-inp::placeholder { color: var(--t3); font-weight: 400; }
+    .story-title-inp:focus {
+      background: var(--inp); border-radius: 5px;
+      padding: 3px 8px; margin: -3px -8px;
+    }
+
+    .story-sp-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+      color: var(--cyan); background: rgba(0,188,212,0.08);
+      border: .5px solid rgba(0,188,212,0.2);
+      border-radius: 5px; padding: 2px 8px; flex-shrink: 0;
+      cursor: default;
+    }
+
+    .hdr-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+    .btn-sm {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500;
+      border-radius: 5px; padding: 3px 8px; cursor: pointer; transition: all .15s;
+    }
+    .btn-sm-ai { color: var(--cyan); background: rgba(0,188,212,0.08); border: .5px solid rgba(0,188,212,0.2); }
+    .btn-sm-ai:hover { background: rgba(0,188,212,0.16); }
+    .btn-sm-add { color: var(--t2); background: transparent; border: .5px solid var(--bord); }
+    .btn-sm-add:hover { background: var(--surf2); color: var(--t1); }
+    .btn-sm-del {
+      width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: var(--t3); background: transparent; border: none;
+      border-radius: 5px; cursor: pointer; transition: all .15s;
+    }
+    .btn-sm-del:hover { background: rgba(204,9,47,0.1); color: var(--red); }
+
+    /* story desc */
+    .story-desc-row {
+      padding: 7px 14px;
+      border-bottom: .5px solid var(--bord-s);
+    }
+    .story-desc-inp {
+      width: 100%; border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 12px; color: var(--t2);
+      outline: none; resize: none; line-height: 1.5; display: block;
+    }
+    .story-desc-inp::placeholder { color: var(--t3); font-style: italic; }
+    .story-desc-inp:focus { color: var(--t1); }
+
+    /* tasks table */
+    .tasks-wrap { overflow: hidden; }
+    .story-group.collapsed .tasks-wrap { display: none; }
+    .story-group.collapsed .story-desc-row { display: none; }
+
+    .COLS { grid-template-columns: 28px 1fr 88px 52px 56px 1.4fr 68px; }
+
+    .tasks-head {
+      display: grid; gap: 0; padding: 0 14px;
+      border-bottom: .5px solid var(--bord-s);
+      background: var(--surf2);
+    }
+    .tasks-head > span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--t3); padding: 6px 0;
+    }
+
+    .task-row {
+      display: grid; gap: 0; padding: 0 14px;
+      border-bottom: .5px solid var(--bord-s);
+      align-items: center; min-height: 38px;
+      transition: background .1s;
+    }
+    .task-row:last-child { border-bottom: none; }
+    .task-row:hover { background: rgba(255,255,255,0.015); }
+    [data-theme="light"] .task-row:hover { background: rgba(0,0,0,0.02); }
+
+    .task-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--t3); }
+
+    .task-inp {
+      border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 12px; color: var(--t1);
+      outline: none; width: 100%; padding: 9px 8px 9px 0;
+    }
+    .task-inp::placeholder { color: var(--t3); font-size: 11px; }
+    .task-inp:focus { background: var(--inp); border-radius: 4px; padding: 5px 7px; }
+
+    .task-type-sel {
+      appearance: none; border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 11px; color: var(--t2);
+      cursor: pointer; outline: none; width: 100%; padding: 4px 0;
+    }
+    .task-type-sel:focus { color: var(--t1); }
+
+    .task-num-inp {
+      border: none; background: transparent;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--t1);
+      outline: none; width: 100%; text-align: center; padding: 9px 4px;
+    }
+    .task-num-inp::placeholder { color: var(--t3); font-size: 11px; }
+    .task-num-inp:focus { background: var(--inp); border-radius: 4px; }
+
+    .task-desc-inp {
+      border: none; background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 11px; color: var(--t2);
+      outline: none; width: 100%; padding: 9px 0 9px 6px;
+      resize: none; overflow: hidden; height: 38px;
+    }
+    .task-desc-inp::placeholder { color: var(--t3); }
+    .task-desc-inp:focus { background: var(--inp); border-radius: 4px; padding: 5px 7px; height: auto; min-height: 38px; }
+
+    .task-actions-cell { display: flex; align-items: center; gap: 4px; }
+    .btn-ai-task {
+      width: 24px; height: 24px; border-radius: 5px;
+      border: .5px solid rgba(0,188,212,0.25); background: rgba(0,188,212,0.08);
+      color: var(--cyan); font-size: 11px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s; flex-shrink: 0;
+    }
+    .btn-ai-task:hover { background: rgba(0,188,212,0.18); }
+    .btn-del-task {
+      width: 24px; height: 24px; border-radius: 5px;
+      border: none; background: transparent;
+      color: var(--t3); font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s; flex-shrink: 0;
+    }
+    .btn-del-task:hover { background: rgba(204,9,47,0.1); color: var(--red); }
+
+    .add-task-row {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; cursor: pointer; transition: background .12s;
+    }
+    .add-task-row:hover { background: rgba(0,188,212,0.04); }
+    .add-task-row span { font-size: 11px; color: var(--t3); }
+    .add-task-row:hover span { color: var(--cyan); }
+
+    .add-story-btn {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      border: .5px dashed var(--bord); border-radius: 10px;
+      padding: 14px; cursor: pointer; transition: all .15s;
+      font-size: 12px; color: var(--t3); background: transparent; width: 100%;
+    }
+    .add-story-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,188,212,0.04); }
+
+    /* ── AI MODAL ── */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--surf); border: .5px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 20px;
+      transform: translateY(10px); transition: transform .2s;
+      box-shadow: var(--shadow);
+    }
+    [data-theme="light"] .modal { border-color: rgba(0,0,0,0.1); }
+    .overlay.open .modal { transform: translateY(0); }
+
+    .modal-ai { width: 520px; max-width: 92vw; }
+    .modal-export { width: 420px; max-width: 92vw; }
+
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+    .modal-title { font-size: 14px; font-weight: 600; color: var(--t1); display: flex; align-items: center; gap: 7px; }
+    .modal-sub { font-size: 11px; color: var(--t3); margin-top: 3px; }
+    .modal-close {
+      width: 24px; height: 24px; border-radius: 6px; border: none;
+      background: transparent; color: var(--t3); font-size: 16px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .modal-close:hover { background: var(--surf3); color: var(--t1); }
+
+    .context-area {
+      width: 100%; background: var(--inp); border: .5px solid var(--inp-bord);
+      border-radius: 8px; padding: 10px 12px;
+      font-family: 'Inter', sans-serif; font-size: 12px; color: var(--t1);
+      outline: none; resize: vertical; min-height: 80px; margin-bottom: 12px;
+      transition: border-color .15s;
+    }
+    .context-area::placeholder { color: var(--t3); }
+    .context-area:focus { border-color: var(--cyan); }
+
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .chip {
+      font-size: 11px; color: var(--t2); background: var(--surf2);
+      border: .5px solid var(--bord); border-radius: 20px;
+      padding: 4px 11px; cursor: pointer; transition: all .12s;
+    }
+    .chip:hover, .chip.on { background: rgba(0,188,212,0.1); border-color: rgba(0,188,212,0.3); color: var(--cyan); }
+
+    .modal-footer { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+
+    /* export formats */
+    .export-list { display: flex; flex-direction: column; gap: 7px; margin: 14px 0; }
+    .export-item {
+      display: flex; align-items: center; gap: 11px;
+      padding: 11px 13px; background: var(--surf2);
+      border: .5px solid var(--bord); border-radius: 9px;
+      cursor: pointer; transition: all .12s;
+    }
+    .export-item:hover, .export-item.on { border-color: var(--cyan); background: rgba(0,188,212,0.05); }
+    .export-ico {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .export-name { font-size: 12px; font-weight: 600; color: var(--t1); }
+    .export-desc { font-size: 11px; color: var(--t3); margin-top: 2px; }
+    .export-radio {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: .5px solid var(--bord); margin-left: auto; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .export-item.on .export-radio { border-color: var(--cyan); background: var(--cyan); }
+    .export-item.on .export-radio::after { content: ''; width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 20px; right: 20px;
+      background: var(--surf); border: .5px solid var(--bord);
+      border-radius: 9px; padding: 10px 14px;
+      font-size: 12px; color: var(--t1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 8px;
+      z-index: 2000; animation: fadeUp .2s ease;
+      transition: opacity .3s;
+    }
+    .toast.hide { opacity: 0; pointer-events: none; }
+
+    /* spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinning { animation: spin .7s linear infinite; display: inline-block; }
+
+    /* empty */
+    .empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 80px 20px; text-align: center; color: var(--t3);
+    }
+    .empty-icon { font-size: 40px; margin-bottom: 14px; opacity: .4; }
+    .empty-title { font-size: 14px; font-weight: 600; color: var(--t2); margin-bottom: 4px; }
+    .empty-sub { font-size: 12px; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 4px; }
+
+    option { background: var(--surf2); color: var(--t1); }
+  </style>
+</head>
+<body data-theme="dark">
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="wordmark">
+      <span class="bia">BIA</span><span class="pipe">|</span><span class="tech">Tech</span>
+    </div>
+    <div class="topbar-sep"></div>
+    <span class="product-name">Sprint Builder</span>
+    <span class="beta-pill">BETA</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn" onclick="openExport()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v8M3 6l3.5 3.5L10 6M2 11h9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Exportar para Jira
+    </button>
+    <button class="btn btn-ai" onclick="openAIModal('bulk')">
+      <span>✦</span> Gerar sprint com IA
+    </button>
+    <button class="theme-btn" onclick="toggleTheme()" title="Alternar tema">
+      <span id="theme-icon">☀</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── LAYOUT ── -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Projeto</div>
+      <div class="project-box">
+        <div class="project-box-name">Portal do Cliente</div>
+        <div class="project-box-sub">Sprint 14 · Q2 2025</div>
+      </div>
+      <div class="sb-label">Resumo</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-stories">0</div>
+          <div class="stat-label">Histórias</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-tasks">0</div>
+          <div class="stat-label">Tarefas</div>
+        </div>
+        <div class="stat-card c-cyan">
+          <div class="stat-value" id="stat-sp">0</div>
+          <div class="stat-label">Story Pts</div>
+        </div>
+        <div class="stat-card c-red">
+          <div class="stat-value" id="stat-hours">0</div>
+          <div class="stat-label">Horas</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-sep"></div>
+    <div class="sb-section" style="padding-bottom:8px">
+      <div class="sb-label">Histórias</div>
+    </div>
+    <div class="story-nav" id="story-nav"></div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="main-toolbar">
+      <div class="toolbar-left">
+        <div class="search-wrap">
+          <span class="search-ico">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="3.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 8l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </span>
+          <input id="search-inp" placeholder="Buscar histórias..." oninput="filterStories(this.value)">
+        </div>
+        <select style="appearance:none;background:var(--inp);border:.5px solid var(--inp-bord);border-radius:7px;padding:6px 12px;font-family:Inter,sans-serif;font-size:12px;color:var(--t1);cursor:pointer;outline:none;">
+          <option>Todas as histórias</option>
+          <option>Com tarefas</option>
+          <option>Sem tarefas</option>
+        </select>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn" onclick="addStory()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Nova história
+        </button>
+      </div>
+    </div>
+
+    <div class="stories-area" id="stories-area">
+      <div class="empty" id="empty-state">
+        <div class="empty-icon">📋</div>
+        <div class="empty-title">Nenhuma história ainda</div>
+        <div class="empty-sub">Clique em "Nova história" ou use a IA para gerar o sprint completo</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── AI MODAL ── -->
+<div class="overlay" id="ai-overlay" onclick="closeAIModal(event)">
+  <div class="modal modal-ai">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title"><span style="color:var(--cyan)">✦</span> Gerar com IA</div>
+        <div class="modal-sub" id="ai-modal-sub">Descreva o contexto para a IA gerar o conteúdo</div>
+      </div>
+      <button class="modal-close" onclick="closeAIModal()">×</button>
+    </div>
+    <textarea class="context-area" id="ai-context" placeholder="Ex: Módulo de autenticação com login por e-mail, recuperação de senha e 2FA. Stack: React + Node.js..."></textarea>
+    <div class="chips" id="ai-chips">
+      <span class="chip on" onclick="toggleChip(this)">Criar histórias</span>
+      <span class="chip on" onclick="toggleChip(this)">Gerar tarefas</span>
+      <span class="chip on" onclick="toggleChip(this)">Descrições técnicas</span>
+      <span class="chip" onclick="toggleChip(this)">Critérios de aceite</span>
+      <span class="chip" onclick="toggleChip(this)">Story Points</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeAIModal()">Cancelar</button>
+      <button class="btn btn-ai" id="ai-generate-btn" onclick="runAI()"><span>✦</span> Gerar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXPORT MODAL ── -->
+<div class="overlay" id="export-overlay" onclick="closeExport(event)">
+  <div class="modal modal-export">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Exportar para Jira</div>
+        <div class="modal-sub">Escolha o formato de exportação</div>
+      </div>
+      <button class="modal-close" onclick="closeExport()">×</button>
+    </div>
+    <div class="export-list">
+      <div class="export-item on" onclick="selectExport(this)">
+        <div class="export-ico" style="background:rgba(0,100,220,0.1)">📊</div>
+        <div>
+          <div class="export-name">CSV (Jira Import)</div>
+          <div class="export-desc">Formato padrão para importação no Jira</div>
+        </div>
+        <div class="export-radio"></div>
+      </div>
+      <div class="export-item" onclick="selectExport(this)">
+        <div class="export-ico" style="background:rgba(0,180,100,0.1)">{ }</div>
+        <div>
+          <div class="export-name">JSON</div>
+          <div class="export-desc">Para integrações via API do Jira</div>
+        </div>
+        <div class="export-radio"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeExport()">Cancelar</button>
+      <button class="btn btn-primary" onclick="doExport()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M3 6l3 3 3-3M2 11h8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Baixar arquivo
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast hide" id="toast"></div>
+
+<script>
+  // ── STATE ──
+  let storyCount = 0;
+  let aiTarget = null; // { type: 'story'|'task'|'bulk', storyId, taskRow }
+  const TYPES = ['Dev', 'QA', 'Design', 'DevOps', 'Análise'];
+
+  // ── GRID COLS ──
+  const COLS = '28px 1fr 88px 52px 56px 1.4fr 68px';
+
+  // ── STORY ──
+  function addStory(data = {}) {
+    storyCount++;
+    const id = `s${Date.now()}`;
+    const storyNum = `US-${String(storyCount).padStart(3,'0')}`;
+
+    const group = document.createElement('div');
+    group.className = 'story-group';
+    group.id = id;
+    group.innerHTML = `
+      <div class="story-hdr" onclick="toggleStory('${id}', event)">
+        <span class="chevron">▾</span>
+        <span class="story-id-tag">${storyNum}</span>
+        <span class="story-type-tag">História</span>
+        <input class="story-title-inp" placeholder="Como [usuário], quero [funcionalidade] para [benefício]..."
+          value="${data.title || ''}" oninput="updateStats();updateNav()" onclick="event.stopPropagation()">
+        <span class="story-sp-badge" id="sp-${id}">0 SP</span>
+        <div class="hdr-actions" onclick="event.stopPropagation()">
+          <button class="btn-sm btn-sm-ai" onclick="openAIModal('story','${id}')">✦ IA</button>
+          <button class="btn-sm btn-sm-add" onclick="addTask('${id}')">+ Tarefa</button>
+          <button class="btn-sm-del" onclick="removeStory('${id}')">×</button>
+        </div>
+      </div>
+      <div class="story-desc-row">
+        <textarea class="story-desc-inp" rows="1" placeholder="Descrição / critérios de aceite..."
+          oninput="autoResize(this)">${data.desc || ''}</textarea>
+      </div>
+      <div class="tasks-wrap" id="tasks-${id}">
+        <div class="tasks-head COLS" style="grid-template-columns:${COLS}">
+          <span>#</span><span>Título da tarefa</span><span>Tipo</span>
+          <span>SP</span><span>Horas</span><span>Descrição</span><span></span>
+        </div>
+      </div>
+      <div class="add-task-row" onclick="addTask('${id}')">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <span>Adicionar tarefa</span>
+      </div>
+    `;
+
+    const area = document.getElementById('stories-area');
+    const empty = document.getElementById('empty-state');
+    if (empty) empty.style.display = 'none';
+    area.appendChild(group);
+
+    if (data.tasks) data.tasks.forEach(t => addTask(id, t));
+    else addTask(id);
+
+    updateStats();
+    updateNav();
+    group.querySelector('.story-title-inp').focus();
+    return id;
+  }
+
+  function removeStory(id) {
+    document.getElementById(id)?.remove();
+    const empty = document.getElementById('empty-state');
+    if (document.querySelectorAll('.story-group').length === 0 && empty) empty.style.display = '';
+    updateStats();
+    updateNav();
+  }
+
+  function toggleStory(id, e) {
+    if (e && e.target.tagName === 'INPUT') return;
+    document.getElementById(id)?.classList.toggle('collapsed');
+  }
+
+  // ── TASK ──
+  function addTask(storyId, data = {}) {
+    const wrap = document.getElementById(`tasks-${storyId}`);
+    if (!wrap) return;
+
+    const existing = wrap.querySelectorAll('.task-row').length + 1;
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    row.style.gridTemplateColumns = COLS;
+
+    const typeOpts = TYPES.map(t => `<option${t === (data.type||'Dev') ? ' selected':''} value="${t}">${t}</option>`).join('');
+
+    row.innerHTML = `
+      <span class="task-num">${existing}</span>
+      <input class="task-inp" placeholder="Título da tarefa..." value="${data.title||''}" oninput="updateStats()">
+      <select class="task-type-sel">${typeOpts}</select>
+      <input class="task-num-inp" type="number" min="0" max="100" placeholder="–" value="${data.sp||''}" oninput="updateSP('${storyId}');updateStats()">
+      <input class="task-num-inp" type="number" min="0" placeholder="–" value="${data.hours||''}" oninput="updateStats()">
+      <textarea class="task-desc-inp" rows="1" placeholder="Descrição técnica..." oninput="autoResize(this)">${data.desc||''}</textarea>
+      <div class="task-actions-cell">
+        <button class="btn-ai-task" title="Gerar com IA" onclick="openAIModal('task','${storyId}',this.closest('.task-row'))">✦</button>
+        <button class="btn-del-task" title="Remover" onclick="removeTask(this, '${storyId}')">×</button>
+      </div>
+    `;
+
+    wrap.appendChild(row);
+    updateStats();
+    return row;
+  }
+
+  function removeTask(btn, storyId) {
+    btn.closest('.task-row').remove();
+    renumberTasks(storyId);
+    updateSP(storyId);
+    updateStats();
+  }
+
+  function renumberTasks(storyId) {
+    document.querySelectorAll(`#tasks-${storyId} .task-row`).forEach((r, i) => {
+      r.querySelector('.task-num').textContent = i + 1;
+    });
+  }
+
+  function updateSP(storyId) {
+    const rows = document.querySelectorAll(`#tasks-${storyId} .task-row`);
+    let total = 0;
+    rows.forEach(r => { total += parseInt(r.querySelectorAll('.task-num-inp')[0]?.value || 0) || 0; });
+    const badge = document.getElementById(`sp-${storyId}`);
+    if (badge) badge.textContent = `${total} SP`;
+  }
+
+  // ── STATS ──
+  function updateStats() {
+    const stories = document.querySelectorAll('.story-group');
+    let tasks = 0, sp = 0, hours = 0;
+    stories.forEach(sg => {
+      const tRows = sg.querySelectorAll('.task-row');
+      tasks += tRows.length;
+      tRows.forEach(r => {
+        const inps = r.querySelectorAll('.task-num-inp');
+        sp += parseInt(inps[0]?.value||0)||0;
+        hours += parseInt(inps[1]?.value||0)||0;
+      });
+    });
+    document.getElementById('stat-stories').textContent = stories.length;
+    document.getElementById('stat-tasks').textContent = tasks;
+    document.getElementById('stat-sp').textContent = sp;
+    document.getElementById('stat-hours').textContent = hours;
+  }
+
+  // ── NAV ──
+  function updateNav() {
+    const nav = document.getElementById('story-nav');
+    nav.innerHTML = '';
+    document.querySelectorAll('.story-group').forEach((sg, i) => {
+      const title = sg.querySelector('.story-title-inp')?.value || '(sem título)';
+      const sp = sg.querySelector('[id^="sp-"]')?.textContent || '0 SP';
+      const num = `US-${String(i+1).padStart(3,'0')}`;
+      const item = document.createElement('div');
+      item.className = 'nav-item';
+      item.innerHTML = `<span class="nav-id">${num}</span><span class="nav-title">${title}</span><span class="nav-sp">${sp}</span>`;
+      item.onclick = () => { sg.scrollIntoView({ behavior:'smooth', block:'start' }); };
+      nav.appendChild(item);
+    });
+  }
+
+  // ── FILTER ──
+  function filterStories(q) {
+    const lower = q.toLowerCase();
+    document.querySelectorAll('.story-group').forEach(sg => {
+      const title = sg.querySelector('.story-title-inp')?.value.toLowerCase() || '';
+      sg.style.display = (!q || title.includes(lower)) ? '' : 'none';
+    });
+  }
+
+  // ── AUTO RESIZE TEXTAREA ──
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  // ── THEME ──
+  function toggleTheme() {
+    const body = document.body;
+    const isDark = body.dataset.theme === 'dark';
+    body.dataset.theme = isDark ? 'light' : 'dark';
+    document.getElementById('theme-icon').textContent = isDark ? '☽' : '☀';
+  }
+
+  // ── AI MODAL ──
+  function openAIModal(type, storyId, taskRow) {
+    aiTarget = { type, storyId, taskRow };
+    const overlay = document.getElementById('ai-overlay');
+    const sub = document.getElementById('ai-modal-sub');
+    const ctx = document.getElementById('ai-context');
+
+    if (type === 'bulk') {
+      sub.textContent = 'Descreva a funcionalidade e a IA cria histórias + tarefas completas';
+      ctx.placeholder = 'Ex: Módulo de autenticação com login por e-mail, 2FA e recuperação de senha. Stack: React + Node.js + PostgreSQL.';
+    } else if (type === 'story') {
+      sub.textContent = 'A IA vai gerar a descrição e critérios de aceite da história';
+      const title = document.querySelector(`#${storyId} .story-title-inp`)?.value;
+      ctx.placeholder = title ? `Contexto adicional para: "${title}"` : 'Descreva o contexto da história...';
+    } else {
+      sub.textContent = 'A IA vai gerar a descrição técnica da tarefa';
+      const taskTitle = taskRow?.querySelector('.task-inp')?.value;
+      ctx.placeholder = taskTitle ? `Contexto para: "${taskTitle}"` : 'Descreva o que essa tarefa deve fazer...';
+    }
+
+    ctx.value = '';
+    overlay.classList.add('open');
+    setTimeout(() => ctx.focus(), 200);
+  }
+
+  function closeAIModal(e) {
+    if (e && e.target !== document.getElementById('ai-overlay')) return;
+    document.getElementById('ai-overlay').classList.remove('open');
+    aiTarget = null;
+  }
+
+  function toggleChip(el) { el.classList.toggle('on'); }
+
+  // ── RUN AI (mock) ──
+  const AI_STORIES = [
+    {
+      title: 'Como usuário, quero fazer login com e-mail e senha para acessar minha conta',
+      desc: 'O usuário deve conseguir autenticar com e-mail e senha válidos. Deve haver validação de campos, mensagem de erro clara e opção de "lembrar-me".\n\nCritérios de aceite:\n- Login com credenciais válidas redireciona para dashboard\n- Credenciais inválidas exibem mensagem de erro\n- Campo senha com toggle de visibilidade\n- Sessão mantida com "lembrar-me" por 30 dias',
+      tasks: [
+        { title: 'Criar endpoint POST /auth/login', type: 'Dev', sp: 3, hours: 6, desc: 'Receber e-mail e senha, validar credenciais, retornar JWT com refresh token.' },
+        { title: 'Implementar tela de login no frontend', type: 'Dev', sp: 2, hours: 4, desc: 'Form com e-mail, senha e checkbox "lembrar-me". Integrar com endpoint.' },
+        { title: 'Testes unitários do serviço de autenticação', type: 'QA', sp: 2, hours: 4, desc: 'Cobrir casos: credenciais válidas, senha errada, usuário inexistente.' },
+        { title: 'Teste E2E fluxo de login', type: 'QA', sp: 1, hours: 2, desc: 'Cypress: login com sucesso, erro de credenciais, redirecionamento.' },
+      ]
+    },
+    {
+      title: 'Como usuário, quero recuperar minha senha via e-mail para não perder acesso',
+      desc: 'Fluxo de recuperação de senha com envio de link por e-mail, token com expiração de 1h e redefinição segura.\n\nCritérios de aceite:\n- Link de recuperação enviado em até 30s\n- Token expira em 1 hora\n- Nova senha com confirmação obrigatória\n- Invalidar sessões anteriores ao trocar senha',
+      tasks: [
+        { title: 'Endpoint POST /auth/forgot-password', type: 'Dev', sp: 2, hours: 4, desc: 'Gerar token UUID, salvar no banco com TTL 1h, disparar e-mail via SendGrid.' },
+        { title: 'Endpoint POST /auth/reset-password', type: 'Dev', sp: 2, hours: 4, desc: 'Validar token, atualizar senha com bcrypt, invalidar token e sessões ativas.' },
+        { title: 'Template de e-mail de recuperação', type: 'Design', sp: 1, hours: 2, desc: 'HTML responsivo com logo, link de ação e instruções claras.' },
+        { title: 'Tela de redefinição de senha', type: 'Dev', sp: 2, hours: 3, desc: 'Form nova senha + confirmação, validação de força, feedback visual.' },
+      ]
+    },
+    {
+      title: 'Como usuário, quero ativar autenticação em dois fatores para mais segurança',
+      desc: 'Suporte a 2FA via TOTP (Google Authenticator) com QR code de configuração.\n\nCritérios de aceite:\n- QR code gerado para apps TOTP\n- Código de 6 dígitos validado com janela de ±30s\n- Opção de desativar 2FA com confirmação de senha\n- Códigos de backup gerados no setup',
+      tasks: [
+        { title: 'Integrar biblioteca TOTP (speakeasy)', type: 'Dev', sp: 3, hours: 5, desc: 'Gerar secret, criar QR code e validar token TOTP com tolerância de clock drift.' },
+        { title: 'Fluxo de setup do 2FA no frontend', type: 'Dev', sp: 3, hours: 6, desc: 'Exibir QR code, campo para validar primeiro código, exibir códigos de backup.' },
+        { title: 'Middleware de verificação 2FA no login', type: 'Dev', sp: 2, hours: 4, desc: 'Após senha válida, verificar se 2FA está ativo e solicitar código antes de emitir JWT.' },
+        { title: 'Testes de segurança 2FA', type: 'QA', sp: 2, hours: 4, desc: 'Replay attack, código expirado, brute force com rate limiting.' },
+      ]
+    }
+  ];
+
+  const AI_TASK_DESCS = [
+    'Implementar a lógica de negócio conforme especificação técnica. Incluir tratamento de erros, logging estruturado e validação de entrada.',
+    'Criar componente reutilizável seguindo o design system. Props tipadas com TypeScript, storybook com casos de uso documentados.',
+    'Escrever testes cobrindo caminho feliz e edge cases. Garantir cobertura mínima de 80% nas funções críticas.',
+    'Configurar pipeline CI/CD com build, lint, testes e deploy automatizado para ambiente de staging.',
+    'Mapear entidades, criar migrations e definir índices para queries de maior frequência. Documentar modelo ER.',
+  ];
+
+  const AI_STORY_DESCS = [
+    'O usuário deve conseguir realizar essa ação de forma intuitiva e segura, com feedback visual claro em cada etapa.\n\nCritérios de aceite:\n- Fluxo completo funcional em até 3 cliques\n- Validações com mensagens de erro claras\n- Design responsivo (mobile-first)\n- Testes E2E cobrindo caminho principal',
+    'Funcionalidade crítica que deve seguir os requisitos de segurança e performance definidos para o sprint.\n\nCritérios de aceite:\n- Latência < 200ms em P95\n- Autenticação e autorização implementadas\n- Logs de auditoria para ações sensíveis\n- Rollback seguro em caso de falha',
+  ];
+
+  async function runAI() {
+    const btn = document.getElementById('ai-generate-btn');
+    const ctx = document.getElementById('ai-context').value.trim();
+    btn.innerHTML = '<span class="spinning">◌</span> Gerando...';
+    btn.disabled = true;
+
+    await sleep(1200 + Math.random() * 800);
+
+    if (aiTarget.type === 'bulk') {
+      document.getElementById('ai-overlay').classList.remove('open');
+      // generate 3 stories
+      for (let i = 0; i < AI_STORIES.length; i++) {
+        await sleep(300);
+        const sid = addStory({ title: AI_STORIES[i].title, tasks: AI_STORIES[i].tasks });
+        // type desc
+        await typeText(document.querySelector(`#${sid} .story-desc-inp`), AI_STORIES[i].desc);
+      }
+      showToast('✦ Sprint gerado com ' + AI_STORIES.length + ' histórias e ' + AI_STORIES.reduce((a,s) => a+s.tasks.length, 0) + ' tarefas');
+    } else if (aiTarget.type === 'story') {
+      document.getElementById('ai-overlay').classList.remove('open');
+      const desc = document.querySelector(`#${aiTarget.storyId} .story-desc-inp`);
+      if (desc) {
+        desc.value = '';
+        await typeText(desc, AI_STORY_DESCS[Math.floor(Math.random() * AI_STORY_DESCS.length)]);
+      }
+      showToast('✦ Descrição gerada');
+    } else if (aiTarget.type === 'task') {
+      document.getElementById('ai-overlay').classList.remove('open');
+      const descInp = aiTarget.taskRow?.querySelector('.task-desc-inp');
+      if (descInp) {
+        descInp.value = '';
+        await typeText(descInp, AI_TASK_DESCS[Math.floor(Math.random() * AI_TASK_DESCS.length)]);
+      }
+      showToast('✦ Descrição gerada');
+    }
+
+    btn.innerHTML = '<span>✦</span> Gerar';
+    btn.disabled = false;
+    aiTarget = null;
+    updateStats();
+    updateNav();
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function typeText(el, text) {
+    el.value = '';
+    autoResize(el);
+    for (let i = 0; i < text.length; i++) {
+      el.value += text[i];
+      if (i % 4 === 0) { autoResize(el); await sleep(12); }
+    }
+    autoResize(el);
+    updateStats();
+  }
+
+  // ── EXPORT ──
+  function openExport() { document.getElementById('export-overlay').classList.add('open'); }
+  function closeExport(e) {
+    if (e && e.target !== document.getElementById('export-overlay')) return;
+    document.getElementById('export-overlay').classList.remove('open');
+  }
+  function selectExport(el) {
+    document.querySelectorAll('.export-item').forEach(i => i.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  function doExport() {
+    const isCsv = document.querySelector('.export-item.on .export-name')?.textContent.includes('CSV');
+    const stories = document.querySelectorAll('.story-group');
+
+    if (isCsv) {
+      let csv = 'Issue Type,Summary,Description,Story Points,Original Estimate,Priority,Epic Name\n';
+      stories.forEach((sg, si) => {
+        const title = sg.querySelector('.story-title-inp')?.value || 'História ' + (si+1);
+        const desc = sg.querySelector('.story-desc-inp')?.value || '';
+        csv += `Story,"${esc(title)}","${esc(desc)}",,, Medium, Sprint 14\n`;
+        sg.querySelectorAll('.task-row').forEach(row => {
+          const inps = row.querySelectorAll('.task-num-inp');
+          const taskTitle = row.querySelector('.task-inp')?.value || '';
+          const type = row.querySelector('.task-type-sel')?.value || 'Dev';
+          const sp = inps[0]?.value || '';
+          const hours = inps[1]?.value ? inps[1].value + 'h' : '';
+          const taskDesc = row.querySelector('.task-desc-inp')?.value || '';
+          csv += `Sub-task,"[${type}] ${esc(taskTitle)}","${esc(taskDesc)}",${sp},${hours}, Medium,\n`;
+        });
+      });
+      download('jira-import.csv', csv, 'text/csv');
+    } else {
+      const data = { project: 'Portal do Cliente', sprint: 'Sprint 14', stories: [] };
+      stories.forEach((sg, si) => {
+        const story = {
+          id: `US-${String(si+1).padStart(3,'0')}`,
+          title: sg.querySelector('.story-title-inp')?.value || '',
+          description: sg.querySelector('.story-desc-inp')?.value || '',
+          type: 'Story', tasks: []
+        };
+        sg.querySelectorAll('.task-row').forEach(row => {
+          const inps = row.querySelectorAll('.task-num-inp');
+          story.tasks.push({
+            title: row.querySelector('.task-inp')?.value || '',
+            type: row.querySelector('.task-type-sel')?.value || 'Dev',
+            storyPoints: parseInt(inps[0]?.value||0)||0,
+            hours: parseInt(inps[1]?.value||0)||0,
+            description: row.querySelector('.task-desc-inp')?.value || '',
+          });
+        });
+        data.stories.push(story);
+      });
+      download('jira-import.json', JSON.stringify(data, null, 2), 'application/json');
+    }
+
+    closeExport();
+    showToast('✓ Arquivo exportado com sucesso');
+  }
+
+  function esc(str) { return (str || '').replace(/"/g, '""').replace(/\n/g, ' '); }
+
+  function download(name, content, type) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([content], { type }));
+    a.download = name;
+    a.click();
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hide');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.add('hide'), 3000);
+  }
+
+  // ── INIT ──
+  // seed one empty story so it's not blank
+  addStory();
+</script>
+</body>
+</html>
