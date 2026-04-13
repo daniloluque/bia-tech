@@ -909,7 +909,7 @@
     }
 
     .msg-wrap {
-      padding: 3px 0;
+      padding: 10px 0;
       animation: fadeUp .2s ease;
       width: 100%;
       max-width: 880px;
@@ -1014,7 +1014,16 @@
     }
 
     /* user bubble */
+    .msg-user-outer {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
     .msg-row.user-row .msg-content {
+      flex: none;
       background: var(--user-bubble);
       border: .5px solid var(--user-bub-bord);
       border-radius: 12px 2px 12px 12px;
@@ -1023,6 +1032,7 @@
 
     .msg-row.user-row .msg-header {
       flex-direction: row-reverse;
+      margin-bottom: 0;
     }
 
     .msg-body {
@@ -2240,17 +2250,19 @@
       appendMsg(`
     <div class="msg-row user-row">
       ${userAvatar()}
-      <div class="msg-content">
+      <div class="msg-user-outer">
         <div class="msg-header">
           <span class="msg-author">você</span>
           <span class="msg-time">${nowT()}</span>
         </div>
-        <div class="msg-body"><p>${esc(text)}</p></div>
-        ${reactionBar(msgCount)}
+        <div class="msg-content">
+          <div class="msg-body"><p>${esc(text)}</p></div>
+        </div>
       </div>
     </div>`);
 
-      inp.value = ''; inp.style.height = 'auto';
+      inp.value = '';
+      autoResize(inp);
       document.getElementById('charCount').textContent = '0 / 4096';
 
       // typing
@@ -2490,10 +2502,11 @@
     <div class="msg-wrap">
       <div class="msg-row user-row">
         ${userAvatar()}
-        <div class="msg-content">
+        <div class="msg-user-outer">
           <div class="msg-header"><span class="msg-author">você</span><span class="msg-time">09:14</span></div>
-          <div class="msg-body"><p>Analise o change CR-4821 que vai para produção às 22h de hoje.</p></div>
-          ${reactionBar('demo-1')}
+          <div class="msg-content">
+            <div class="msg-body"><p>Analise o change CR-4821 que vai para produção às 22h de hoje.</p></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2547,10 +2560,11 @@
     <div class="msg-wrap">
       <div class="msg-row user-row">
         ${userAvatar()}
-        <div class="msg-content">
+        <div class="msg-user-outer">
           <div class="msg-header"><span class="msg-author">você</span><span class="msg-time">09:17</span></div>
-          <div class="msg-body"><p>Gera o plano de rollback completo com os comandos.</p></div>
-          ${reactionBar('demo-3')}
+          <div class="msg-content">
+            <div class="msg-body"><p>Gera o plano de rollback completo com os comandos.</p></div>
+          </div>
         </div>
       </div>
     </div>
