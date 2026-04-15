@@ -86,13 +86,15 @@
     padding: 100px 80px 80px;
     color: #fff;
   }
-  .hero h1 {
-    font-size: 56px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+  .hero-logo-svg {
+    display: block;
+    width: 300px;
+    height: auto;
+    margin-bottom: 8px;
   }
-  .hero h1 span { font-weight: 300; }
+  @media (max-width: 900px) {
+    .hero-logo-svg { width: 200px; }
+  }
   .hero p {
     font-size: 18px;
     font-weight: 300;
@@ -457,6 +459,104 @@
   .dont-card .dd-label { color: var(--error); font-size: 12px; font-weight: 600; margin-bottom: 8px; }
   .dd-item { font-size: 12px; color: var(--gray-800); margin-bottom: 4px; line-height: 1.5; }
 
+  /* IDENTIDADE */
+  .mission-block {
+    border-left: 3px solid var(--cyan);
+    padding: 20px 28px;
+    background: var(--cyan-light);
+    margin-bottom: 0;
+  }
+  .mission-block .mission-text {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--cyan-text);
+    line-height: 1.65;
+    max-width: 680px;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .principle-card {
+    border: 0.5px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 24px;
+    background: #fff;
+  }
+  .principle-card .p-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+  .principle-card .p-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .principle-card .p-desc {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  .distinction-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+  .distinction-card {
+    border: 0.5px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 24px;
+    background: var(--gray-50);
+  }
+  .distinction-card.dc-active {
+    background: #fff;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px var(--cyan-light);
+  }
+  .distinction-card .dc-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+  }
+  .distinction-card.dc-active .dc-name { color: var(--cyan-text); }
+  .distinction-card .dc-scope {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+  }
+  .distinction-card.dc-active .dc-scope { color: var(--cyan); }
+  .distinction-card .dc-desc {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+  .distinction-arrow {
+    font-size: 22px;
+    color: var(--gray-200);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 900px) {
+    .principles-grid { grid-template-columns: 1fr; }
+    .distinction-grid { grid-template-columns: 1fr; }
+    .distinction-arrow { transform: rotate(90deg); }
+  }
+
   /* FOOTER */
   footer {
     padding: 40px 80px;
@@ -481,6 +581,391 @@
     .do-dont { grid-template-columns: 1fr; }
     .type-spec { text-align: left; }
   }
+
+  /* VOZ E TOM */
+  .archetype-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .archetype-card {
+    border-radius: 12px;
+    padding: 28px;
+    border: 0.5px solid var(--gray-200);
+    background: var(--gray-50);
+  }
+  .archetype-card.ac-primary {
+    border-color: var(--cyan);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--cyan-light);
+  }
+  .ac-tag {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gray-400);
+    margin-bottom: 12px;
+  }
+  .archetype-card.ac-primary .ac-tag { color: var(--cyan-text); }
+  .ac-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .ac-desc {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+  .ac-traits { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ac-trait {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--gray-200);
+    color: var(--gray-600);
+  }
+  .archetype-card.ac-primary .ac-trait {
+    background: var(--cyan-light);
+    color: var(--cyan-text);
+  }
+
+  .personality-scales { max-width: 560px; }
+  .ps-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 0.5px solid var(--gray-200);
+  }
+  .ps-row:last-child { border-bottom: none; }
+  .ps-left, .ps-right {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-700);
+    min-width: 80px;
+  }
+  .ps-right { text-align: right; color: var(--gray-400); }
+  .ps-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--gray-200);
+    border-radius: 2px;
+    position: relative;
+  }
+  .ps-dot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--cyan);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1.5px var(--cyan);
+  }
+
+  .tone-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .tone-card {
+    border-radius: 10px;
+    padding: 18px;
+    border-left: 3px solid var(--gray-200);
+    background: var(--gray-50);
+  }
+  .tone-card.tc-error  { border-left-color: var(--error);   background: var(--error-light);   }
+  .tone-card.tc-warn   { border-left-color: var(--warning); background: var(--warning-light); }
+  .tone-card.tc-ia     { border-left-color: var(--cyan);    background: var(--cyan-light);    }
+  .tone-card.tc-destr  { border-left-color: var(--red);     background: var(--red-light);     }
+  .tc-context {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-400);
+    margin-bottom: 6px;
+  }
+  .tone-card.tc-error .tc-context  { color: var(--error);     }
+  .tone-card.tc-warn  .tc-context  { color: #7A5D00;          }
+  .tone-card.tc-ia    .tc-context  { color: var(--cyan-text); }
+  .tone-card.tc-destr .tc-context  { color: var(--red);       }
+  .tc-tone {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-800);
+    margin-bottom: 10px;
+  }
+  .tc-example {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+  .tone-card.tc-error .tc-example  { color: #991B1B;          }
+  .tone-card.tc-ia    .tc-example  { color: var(--cyan-text); }
+
+  .copy-examples { display: flex; flex-direction: column; gap: 10px; }
+  .copy-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .copy-good, .copy-bad {
+    padding: 16px 20px;
+    border-radius: 10px;
+  }
+  .copy-good { background: var(--success-light); border-left: 3px solid var(--success); }
+  .copy-bad  { background: var(--error-light);   border-left: 3px solid var(--error);   }
+  .copy-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .good-label { color: var(--success); }
+  .bad-label  { color: var(--error);   }
+  .copy-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .copy-good .copy-text { color: #1B5E20; }
+  .copy-bad  .copy-text { color: #991B1B; }
+
+  .never-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .never-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--gray-600);
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    line-height: 1.5;
+  }
+  .never-x {
+    color: var(--error);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .archetype-grid { grid-template-columns: 1fr; }
+    .tone-grid      { grid-template-columns: 1fr; }
+    .copy-row       { grid-template-columns: 1fr; }
+    .never-grid     { grid-template-columns: 1fr; }
+  }
+
+  /* ESPAÇAMENTO */
+  .spacing-table { width: 100%; max-width: 700px; border-collapse: collapse; }
+  .st-row { border-bottom: 0.5px solid var(--gray-200); }
+  .st-row:last-child { border-bottom: none; }
+  .st-token {
+    padding: 11px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    width: 110px;
+    vertical-align: middle;
+  }
+  .st-value {
+    padding: 11px 16px 11px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gray-400);
+    width: 52px;
+    vertical-align: middle;
+  }
+  .st-bar-cell { padding: 11px 24px 11px 0; width: 220px; vertical-align: middle; }
+  .st-bar { height: 6px; background: var(--cyan); border-radius: 3px; opacity: 0.65; }
+  .st-use { padding: 11px 0; font-size: 13px; color: var(--gray-600); vertical-align: middle; }
+
+  /* ACESSIBILIDADE */
+  .contrast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .contrast-pair {
+    border: 0.5px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .cp-preview {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .cp-info { padding: 12px; background: #fff; }
+  .cp-colors {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-400);
+    margin-bottom: 6px;
+  }
+  .cp-bottom { display: flex; align-items: center; gap: 8px; }
+  .cp-ratio {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-800);
+  }
+  .cp-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .cp-badge.aaa  { background: var(--success-light); color: var(--success); }
+  .cp-badge.aa   { background: var(--cyan-light);    color: var(--cyan-text); }
+  .cp-badge.fail { background: var(--error-light);   color: var(--error); }
+  .cp-note { font-size: 11px; color: var(--gray-400); margin-top: 5px; line-height: 1.45; }
+
+  .a11y-rules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .a11y-rule {
+    padding: 20px 22px;
+    border-radius: 10px;
+    background: var(--gray-50);
+    border: 0.5px solid var(--gray-200);
+  }
+  .ar-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+  .ar-spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+  .ar-desc { font-size: 12px; color: var(--gray-600); line-height: 1.55; }
+
+  .focus-demo { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+  .focus-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .focus-item .fi-label { font-size: 11px; color: var(--gray-400); }
+  .focus-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    cursor: default;
+  }
+  .focus-btn.state-default { border: 1px solid var(--gray-200); outline: none; }
+  .focus-btn.state-focus   { border: 1px solid var(--cyan); outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .focus-btn.state-bad     { border: 1px solid var(--gray-200); outline: 1px dotted #aaa; outline-offset: 0; }
+
+  @media (max-width: 900px) {
+    .a11y-rules { grid-template-columns: 1fr; }
+  }
+
+  /* ICONOGRAFIA */
+  .icon-spec-card {
+    background: var(--gray-900);
+    border-radius: 12px;
+    padding: 24px 32px;
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .isc-params { display: flex; gap: 32px; flex-wrap: wrap; }
+  .isc-param  { display: flex; flex-direction: column; gap: 5px; }
+  .isc-key    { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #555; letter-spacing: 0.06em; }
+  .isc-val    { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--cyan); }
+  .isc-preview { display: flex; gap: 20px; align-items: flex-end; padding-left: 32px; border-left: 0.5px solid #2a2a2a; }
+  .isc-size   { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .isc-size svg { color: #aaa; }
+  .isc-size-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #444; }
+
+  .icon-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 8px;
+  }
+  .icon-showcase-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 8px 14px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    border: 0.5px solid var(--gray-200);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .icon-showcase-item:hover { border-color: var(--cyan); background: var(--cyan-light); }
+  .icon-showcase-item:hover svg { color: var(--cyan-text); }
+  .icon-showcase-item svg { color: var(--gray-700); transition: color 0.15s; }
+  .ic-name {
+    font-size: 10px;
+    color: var(--gray-400);
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .icon-color-row {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-top: 8px;
+  }
+  .icon-color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .icon-color-bubble {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icb-default { background: var(--gray-50);   border: 0.5px solid var(--gray-200); }
+  .icb-ia      { background: var(--cyan-light); }
+  .icb-error   { background: var(--error-light); }
+  .icb-success { background: var(--success-light); }
+  .icb-warn    { background: var(--warning-light); }
+  .icon-color-label {
+    font-size: 11px;
+    color: var(--gray-400);
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    line-height: 1.4;
+  }
 </style>
 </head>
 <body>
@@ -490,12 +975,16 @@
     <span class="bia">BIA</span><span class="pipe"> | </span><span class="tech">Tech</span>
     <span class="sub">BRADESCO INTELIGÊNCIA ARTIFICIAL</span>
   </div>
+  <a href="#identidade">Identidade</a>
+  <a href="#voz">Voz e Tom</a>
   <a href="#logo" class="active">Logo</a>
   <a href="#cores">Cores</a>
   <a href="#tipografia">Tipografia</a>
   <a href="#componentes">Componentes</a>
   <a href="#iconografia">Iconografia</a>
   <a href="#terminal">Terminal</a>
+  <a href="#espacamento">Espaçamento</a>
+  <a href="#acessibilidade">Acessibilidade</a>
   <a href="#uso">Uso correto</a>
 </nav>
 
@@ -503,14 +992,210 @@
 
 <!-- HERO -->
 <div class="hero">
-  <h1>BIA | <span>Tech</span></h1>
+  <!-- viewBox alinhado ao "B": x=336 elimina espaço transparente à esquerda -->
+  <svg class="hero-logo-svg" viewBox="336 655 840 185" xmlns="http://www.w3.org/2000/svg">
+    <image href="BIA/svg/white.svg" width="1500" height="1500"/>
+  </svg>
   <p>Brand book da plataforma de inteligência artificial para todo o ciclo de desenvolvimento de software do Bradesco.</p>
   <div class="version">v1.0 · abril 2026</div>
 </div>
 
+<!-- IDENTIDADE -->
+<section id="identidade">
+  <div class="section-label">00</div>
+  <h2>Identidade</h2>
+  <p class="desc">Fundamentos da marca BIA Tech — o que é, para quem existe, e os princípios que guiam cada decisão de design e experiência.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">O que é BIA Tech</div>
+    <p style="font-size:15px;color:var(--gray-700);line-height:1.75;max-width:680px;">
+      Não é uma ferramenta. É uma camada de inteligência integrada ao jeito que o Bradesco desenvolve software — presente nos momentos certos, invisível quando não é necessária, e cada vez mais capaz conforme os times a utilizam. A BIA Tech é a aposta do Bradesco de que o futuro da engenharia de software não é substituir pessoas por IA — é dar às pessoas as melhores condições para construir o que só elas sabem construir.<br><br>
+      Cada ferramenta existe para um único objetivo: reduzir o esforço repetitivo e aumentar a velocidade e qualidade de entrega dos times de engenharia.
+    </p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Missão</div>
+    <div class="mission-block">
+      <div class="mission-text">Fazer os times de tecnologia do Bradesco entregarem mais, com menos esforço — e sem abrir mão da qualidade.</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Princípios de design</div>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="p-number">01</div>
+        <div class="p-name">Técnica</div>
+        <div class="p-desc">A plataforma fala a linguagem dos desenvolvedores. Densa onde precisa ser, simples onde pode ser.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-number">02</div>
+        <div class="p-name">Confiável</div>
+        <div class="p-desc">Respostas consistentes, rastreáveis e auditáveis. O desenvolvedor precisa confiar no output da IA para agir sobre ele sem hesitação.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-number">03</div>
+        <div class="p-name">Aceleradora</div>
+        <div class="p-desc">Cada interação poupa tempo real. A plataforma nunca adiciona fricção ao fluxo de trabalho — só reduz. Se não acelera, não pertence à interface.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-number">04</div>
+        <div class="p-name">Integrada</div>
+        <div class="p-desc">Parte natural do pipeline de desenvolvimento, não um desvio. A BIA Tech aparece onde o desenvolvedor já está trabalhando, não onde ele precisaria ir.</div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<!-- VOZ E TOM -->
+<section id="voz">
+  <div class="section-label">01</div>
+  <h2>Voz e Tom</h2>
+  <p class="desc">Como a BIA Tech se comunica. A voz é constante — técnica, direta, confiável. O tom adapta-se ao contexto: não é o mesmo falar de um deploy com sucesso e de uma vulnerabilidade crítica.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Arquétipo</div>
+    <div class="archetype-grid">
+      <div class="archetype-card ac-primary">
+        <div class="ac-tag">Primário</div>
+        <div class="ac-name">O Sábio</div>
+        <div class="ac-desc">Conhecimento preciso, guiado por dados. A BIA Tech não opina — ela informa. Cada resposta é rastreável, cada sugestão é justificada. A confiança vem da consistência, não do estilo.</div>
+        <div class="ac-traits">
+          <span class="ac-trait">Preciso</span>
+          <span class="ac-trait">Confiável</span>
+          <span class="ac-trait">Objetivo</span>
+        </div>
+      </div>
+      <div class="archetype-card ac-secondary">
+        <div class="ac-tag">Secundário</div>
+        <div class="ac-name">O Executor</div>
+        <div class="ac-desc">Orientado à ação, remove obstáculos. A plataforma não apenas analisa — entrega o próximo passo. Cada mensagem termina com clareza sobre o que fazer.</div>
+        <div class="ac-traits">
+          <span class="ac-trait">Direto</span>
+          <span class="ac-trait">Acionável</span>
+          <span class="ac-trait">Eficiente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Escala de personalidade</div>
+    <div class="personality-scales">
+      <div class="ps-row">
+        <span class="ps-left">Formal</span>
+        <div class="ps-bar"><div class="ps-dot" style="left:28%"></div></div>
+        <span class="ps-right">Casual</span>
+      </div>
+      <div class="ps-row">
+        <span class="ps-left">Técnica</span>
+        <div class="ps-bar"><div class="ps-dot" style="left:12%"></div></div>
+        <span class="ps-right">Genérica</span>
+      </div>
+      <div class="ps-row">
+        <span class="ps-left">Direta</span>
+        <div class="ps-bar"><div class="ps-dot" style="left:10%"></div></div>
+        <span class="ps-right">Elaborada</span>
+      </div>
+      <div class="ps-row">
+        <span class="ps-left">Séria</span>
+        <div class="ps-bar"><div class="ps-dot" style="left:38%"></div></div>
+        <span class="ps-right">Leve</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Tom por contexto</div>
+    <div class="tone-grid">
+      <div class="tone-card" style="border-left-color:var(--success);background:var(--success-light);">
+        <div class="tc-context" style="color:var(--success);">Sucesso</div>
+        <div class="tc-tone">Confirmatório · Preciso</div>
+        <div class="tc-example" style="color:#1B5E20;">"Build #1247 deployed to staging em 14.2s."</div>
+      </div>
+      <div class="tone-card tc-error">
+        <div class="tc-context">Erro crítico</div>
+        <div class="tc-tone">Direto · Acionável</div>
+        <div class="tc-example">"SQL injection em auth/login.ts:47. Deploy bloqueado."</div>
+      </div>
+      <div class="tone-card tc-warn">
+        <div class="tc-context">Alerta</div>
+        <div class="tc-tone">Informativo · Não alarmista</div>
+        <div class="tc-example" style="color:#7A5D00;">"2 arquivos com sugestões. Revisão recomendada antes do merge."</div>
+      </div>
+      <div class="tone-card tc-ia">
+        <div class="tc-context">Processamento IA</div>
+        <div class="tc-tone">Transparente · Progressivo</div>
+        <div class="tc-example">"Analisando 12 arquivos alterados…"</div>
+      </div>
+      <div class="tone-card">
+        <div class="tc-context">Empty state</div>
+        <div class="tc-tone">Orientativo · Sem pressão</div>
+        <div class="tc-example">"Nenhuma análise ainda. Conecte um repositório para começar."</div>
+      </div>
+      <div class="tone-card tc-destr">
+        <div class="tc-context">Ação destrutiva</div>
+        <div class="tc-tone">Claro · Sem ambiguidade</div>
+        <div class="tc-example" style="color:var(--red-dark);">"Esta ação irá revogar o acesso. Confirmar?"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Exemplos de copy</div>
+    <div class="copy-examples">
+      <div class="copy-row">
+        <div class="copy-good">
+          <div class="copy-label good-label">CERTO</div>
+          <div class="copy-text">"Vulnerabilidade crítica detectada. Deploy bloqueado até resolução."</div>
+        </div>
+        <div class="copy-bad">
+          <div class="copy-label bad-label">EVITAR</div>
+          <div class="copy-text">"Ops! Parece que encontramos um probleminha no seu código 😅"</div>
+        </div>
+      </div>
+      <div class="copy-row">
+        <div class="copy-good">
+          <div class="copy-label good-label">CERTO</div>
+          <div class="copy-text">"9 arquivos aprovados. 1 requer revisão antes do merge."</div>
+        </div>
+        <div class="copy-bad">
+          <div class="copy-label bad-label">EVITAR</div>
+          <div class="copy-text">"Uau! Quase perfeito! Só um arquivinho precisou de ajudinha 🎉"</div>
+        </div>
+      </div>
+      <div class="copy-row">
+        <div class="copy-good">
+          <div class="copy-label good-label">CERTO</div>
+          <div class="copy-text">"Análise concluída. Risco: médio. 3 pontos de atenção."</div>
+        </div>
+        <div class="copy-bad">
+          <div class="copy-label bad-label">EVITAR</div>
+          <div class="copy-text">"A BIA terminou de analisar e encontrou algumas coisas que talvez você queira verificar!"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection" style="margin-bottom:0;">
+    <div class="subsection-title">O que nunca dizer</div>
+    <div class="never-grid">
+      <div class="never-item"><span class="never-x">✕</span> Linguagem infantilizada: "probleminha", "arquivinho", "deu ruim"</div>
+      <div class="never-item"><span class="never-x">✕</span> Emojis na interface do produto: mensagens de sistema, erros, alertas e status técnicos</div>
+      <div class="never-item"><span class="never-x">✕</span> Exclamações entusiasmadas: "Incrível!", "Perfeito!", "Uau!"</div>
+      <div class="never-item"><span class="never-x">✕</span> Voz passiva e ambígua: "parece que", "talvez", "pode ser que"</div>
+      <div class="never-item"><span class="never-x">✕</span> Auto-referência excessiva: "A BIA está trabalhando duro para você…"</div>
+      <div class="never-item"><span class="never-x">✕</span> Jargão corporativo deslocado: "sinergia", "alinhamento estratégico"</div>
+    </div>
+  </div>
+</section>
+
 <!-- LOGO -->
 <section id="logo">
-  <div class="section-label">01</div>
+  <div class="section-label">02</div>
   <h2>Logo</h2>
   <p class="desc">O wordmark BIA | Tech é a representação principal da marca. Usa-se "BIA" em peso bold e "Tech" em peso light, separados por um pipe vertical. Abaixo, o descritivo "BRADESCO INTELIGÊNCIA ARTIFICIAL" em caixa alta com tracking aberto e peso light.</p>
 
@@ -569,7 +1254,7 @@
 
 <!-- CORES -->
 <section id="cores">
-  <div class="section-label">02</div>
+  <div class="section-label">03</div>
   <h2>Cores</h2>
   <p class="desc">A paleta combina o vermelho institucional do Bradesco com cyan como acento de IA e uma escala de cinzas para a base do sistema. Cores semânticas complementam para estados de interface.</p>
 
@@ -692,7 +1377,7 @@
 
 <!-- TIPOGRAFIA -->
 <section id="tipografia">
-  <div class="section-label">03</div>
+  <div class="section-label">04</div>
   <h2>Tipografia</h2>
   <p class="desc">Duas famílias tipográficas complementares: Inter para comunicação e interface, JetBrains Mono para contextos técnicos. Inter fala com pessoas, JetBrains Mono fala com máquinas.</p>
 
@@ -743,7 +1428,7 @@
 
 <!-- COMPONENTES -->
 <section id="componentes">
-  <div class="section-label">04</div>
+  <div class="section-label">05</div>
   <h2>Componentes</h2>
   <p class="desc">Componentes base do design system, construídos para Angular Material. Customizáveis via theme tokens da BIA Tech.</p>
 
@@ -841,78 +1526,187 @@
 
 <!-- ICONOGRAFIA -->
 <section id="iconografia">
-  <div class="section-label">05</div>
+  <div class="section-label">06</div>
   <h2>Iconografia</h2>
-  <p class="desc">Material Symbols Outlined com weight 300. Traço fino, leve, coerente com o tom da marca. Integração nativa via mat-icon no Angular Material.</p>
+  <p class="desc">Inline SVGs estilo Lucide — traço fino, geométrico, rounded. Sem biblioteca externa: todos os ícones são SVG inline, garantindo zero dependência e controle total de cor e peso via CSS.</p>
 
   <div class="subsection">
-    <div class="subsection-title">Regras de cor</div>
-    <div class="icon-rule-grid">
-      <div class="icon-rule">
-        <div class="ir-title" style="color:var(--gray-800);">Default</div>
-        <div class="ir-desc">Gray 800 (#333) — navegação, ações genéricas, toolbar.</div>
+    <div class="subsection-title">Especificação técnica</div>
+    <div class="icon-spec-card">
+      <div class="isc-params">
+        <div class="isc-param"><span class="isc-key">viewBox</span><span class="isc-val">0 0 24 24</span></div>
+        <div class="isc-param"><span class="isc-key">fill</span><span class="isc-val">none</span></div>
+        <div class="isc-param"><span class="isc-key">stroke</span><span class="isc-val">currentColor</span></div>
+        <div class="isc-param"><span class="isc-key">stroke-width</span><span class="isc-val">1.6</span></div>
+        <div class="isc-param"><span class="isc-key">stroke-linecap</span><span class="isc-val">round</span></div>
+        <div class="isc-param"><span class="isc-key">stroke-linejoin</span><span class="isc-val">round</span></div>
       </div>
-      <div class="icon-rule" style="background:var(--cyan-light);">
-        <div class="ir-title" style="color:var(--cyan-text);">IA features</div>
-        <div class="ir-desc" style="color:var(--cyan-text);">Cyan (#00BCD4) — tudo relacionado a inteligência artificial.</div>
-      </div>
-      <div class="icon-rule">
-        <div class="ir-title" style="color:var(--error);">Crítico</div>
-        <div class="ir-desc">Vermelho (#CC092F) — erros, bloqueios, alertas críticos.</div>
-      </div>
-      <div class="icon-rule">
-        <div class="ir-title" style="color:var(--success);">Sucesso</div>
-        <div class="ir-desc">Verde (#2E7D32) — aprovações, deploys completos, checks.</div>
+      <div class="isc-preview">
+        <div class="isc-size">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+          <span class="isc-size-label">16px</span>
+        </div>
+        <div class="isc-size">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+          <span class="isc-size-label">20px</span>
+        </div>
+        <div class="isc-size">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+          <span class="isc-size-label">24px</span>
+        </div>
+        <div class="isc-size">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+          <span class="isc-size-label">32px</span>
+        </div>
+        <div class="isc-size">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+          <span class="isc-size-label">48px</span>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="subsection">
-    <div class="subsection-title">Tamanhos</div>
-    <table style="font-size:13px;border-collapse:collapse;width:100%;max-width:500px;">
+    <div class="subsection-title">Ícones core — SDLC</div>
+    <div class="icon-showcase-grid">
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+        <span class="ic-name">código</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h7M7 16h4"/><circle cx="18" cy="16" r="2.5"/><path d="M17 16l.8.8 1.4-1.6" stroke-width="1.2"/></svg>
+        <span class="ic-name">code review</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        <span class="ic-name">bug</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M15 21v-5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        <span class="ic-name">deploy</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="ic-name">segurança</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M9 2v7l-5 11h16L15 9V2"/><path d="M6 15h12"/></svg>
+        <span class="ic-name">testes</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v6M12 13l-7 6M12 13l7 6"/></svg>
+        <span class="ic-name">pipeline</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 10l3 3 3-3 5 5"/></svg>
+        <span class="ic-name">monitoramento</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span class="ic-name">IA / chat</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14l2 2 5-5"/></svg>
+        <span class="ic-name">sprint</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 16V10M12 16V8M17 16V12"/></svg>
+        <span class="ic-name">dashboard</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span class="ic-name">incidente</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        <span class="ic-name">documentação</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        <span class="ic-name">integração</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span class="ic-name">dados</span>
+      </div>
+      <div class="icon-showcase-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <span class="ic-name">equipe</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Estados de cor</div>
+    <div class="icon-color-row">
+      <div class="icon-color-item">
+        <div class="icon-color-bubble icb-default">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gray-700)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+        </div>
+        <span class="icon-color-label">Default<br>Gray 700</span>
+      </div>
+      <div class="icon-color-item">
+        <div class="icon-color-bubble icb-ia">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <span class="icon-color-label">IA feature<br>Cyan</span>
+      </div>
+      <div class="icon-color-item">
+        <div class="icon-color-bubble icb-error">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <span class="icon-color-label">Crítico<br>Red</span>
+      </div>
+      <div class="icon-color-item">
+        <div class="icon-color-bubble icb-success">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <span class="icon-color-label">Sucesso<br>Green</span>
+      </div>
+      <div class="icon-color-item">
+        <div class="icon-color-bubble icb-warn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <span class="icon-color-label">Alerta<br>Yellow</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection" style="margin-bottom:0;">
+    <div class="subsection-title">Tamanhos e stroke-width</div>
+    <table style="font-size:13px;border-collapse:collapse;width:100%;max-width:560px;">
       <tr style="border-bottom:0.5px solid var(--gray-200);">
-        <td style="padding:10px 0;font-weight:500;">16px</td>
-        <td style="padding:10px 0;color:var(--gray-600);">Inline com texto, labels</td>
+        <td style="padding:10px 0;font-weight:500;width:60px;">16px</td>
+        <td style="padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);width:140px;">stroke-width: 1.8</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Inline com texto, labels, chips</td>
       </tr>
       <tr style="border-bottom:0.5px solid var(--gray-200);">
         <td style="padding:10px 0;font-weight:500;">20px</td>
+        <td style="padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);">stroke-width: 1.6</td>
         <td style="padding:10px 0;color:var(--gray-600);">Botões, inputs, sidebar nav</td>
       </tr>
       <tr style="border-bottom:0.5px solid var(--gray-200);">
         <td style="padding:10px 0;font-weight:500;">24px</td>
+        <td style="padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);">stroke-width: 1.6</td>
         <td style="padding:10px 0;color:var(--gray-600);">Toolbar, navegação principal</td>
       </tr>
       <tr style="border-bottom:0.5px solid var(--gray-200);">
         <td style="padding:10px 0;font-weight:500;">32px</td>
+        <td style="padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);">stroke-width: 1.4</td>
         <td style="padding:10px 0;color:var(--gray-600);">Empty states, destaque</td>
       </tr>
       <tr>
         <td style="padding:10px 0;font-weight:500;">48px</td>
-        <td style="padding:10px 0;color:var(--gray-600);">Hero, onboarding</td>
+        <td style="padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);">stroke-width: 1.2</td>
+        <td style="padding:10px 0;color:var(--gray-600);">Hero, onboarding, ilustrações</td>
       </tr>
-    </table>
-  </div>
-
-  <div class="subsection">
-    <div class="subsection-title">Ícones core — SDLC</div>
-    <table style="font-size:13px;border-collapse:collapse;width:100%;max-width:500px;">
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">dashboard</td><td style="padding:8px 0;color:var(--gray-600);">Visão geral</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">code</td><td style="padding:8px 0;color:var(--gray-600);">Código fonte</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">rate_review</td><td style="padding:8px 0;color:var(--gray-600);">Code review</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">bug_report</td><td style="padding:8px 0;color:var(--gray-600);">Bug tracking</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">rocket_launch</td><td style="padding:8px 0;color:var(--gray-600);">Deploy</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">security</td><td style="padding:8px 0;color:var(--gray-600);">Segurança</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">science</td><td style="padding:8px 0;color:var(--gray-600);">Testes</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">monitoring</td><td style="padding:8px 0;color:var(--gray-600);">Monitoramento</td></tr>
-      <tr style="border-bottom:0.5px solid var(--gray-200);"><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">psychology</td><td style="padding:8px 0;color:var(--gray-600);">IA / Modelos</td></tr>
-      <tr><td style="padding:8px 0;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:12px;">account_tree</td><td style="padding:8px 0;color:var(--gray-600);">Pipelines</td></tr>
     </table>
   </div>
 </section>
 
 <!-- TERMINAL -->
 <section id="terminal">
-  <div class="section-label">06</div>
+  <div class="section-label">07</div>
   <h2>Terminal e contextos técnicos</h2>
   <p class="desc">A JetBrains Mono em cyan sobre fundo escuro é a assinatura visual dos contextos técnicos da BIA Tech — terminais, logs, pipelines e dashboards de métricas.</p>
 
@@ -946,9 +1740,252 @@
   </div>
 </section>
 
+<!-- ESPAÇAMENTO -->
+<section id="espacamento">
+  <div class="section-label">09</div>
+  <h2>Espaçamento</h2>
+  <p class="desc">Grid base de 4px. Todos os espaçamentos derivam deste múltiplo — garantindo consistência e previsibilidade entre componentes e layouts.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Tokens</div>
+    <table class="spacing-table">
+      <tr class="st-row">
+        <td class="st-token">--space-1</td>
+        <td class="st-value">4px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:5%"></div></td>
+        <td class="st-use">Gap entre ícone e label, padding de badges</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-2</td>
+        <td class="st-value">8px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:10%"></div></td>
+        <td class="st-use">Gap entre chips, margem de labels</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-3</td>
+        <td class="st-value">12px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:15%"></div></td>
+        <td class="st-use">Padding interno de inputs small</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-4</td>
+        <td class="st-value">16px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:20%"></div></td>
+        <td class="st-use">Padding padrão, gap entre itens de lista</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-5</td>
+        <td class="st-value">20px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:25%"></div></td>
+        <td class="st-use">Padding de cards pequenos</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-6</td>
+        <td class="st-value">24px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:30%"></div></td>
+        <td class="st-use">Gap entre grupos de elementos</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-8</td>
+        <td class="st-value">32px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:40%"></div></td>
+        <td class="st-use">Margem entre subseções</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-10</td>
+        <td class="st-value">40px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:50%"></div></td>
+        <td class="st-use">Padding de cards grandes</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-12</td>
+        <td class="st-value">48px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:60%"></div></td>
+        <td class="st-use">Padding de seções em mobile</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-16</td>
+        <td class="st-value">64px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:80%"></div></td>
+        <td class="st-use">Espaço entre seções principais</td>
+      </tr>
+      <tr class="st-row">
+        <td class="st-token">--space-20</td>
+        <td class="st-value">80px</td>
+        <td class="st-bar-cell"><div class="st-bar" style="width:100%"></div></td>
+        <td class="st-use">Padding lateral do layout desktop</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="subsection" style="margin-bottom:0;">
+    <div class="subsection-title">Regra</div>
+    <div class="icon-rule-grid">
+      <div class="icon-rule" style="background:var(--cyan-light);border-left:3px solid var(--cyan);border-radius:0;">
+        <div class="ir-title" style="color:var(--cyan-text);">Use sempre múltiplos de 4px</div>
+        <div class="ir-desc" style="color:var(--cyan-text);">Valores como 5px, 7px, 13px quebram o grid e criam inconsistência visual entre componentes.</div>
+      </div>
+      <div class="icon-rule" style="border-left:3px solid var(--gray-200);border-radius:0;">
+        <div class="ir-title">Tokens, não valores absolutos</div>
+        <div class="ir-desc">Use os tokens CSS (--space-4, --space-6…) nos componentes — nunca valores hardcoded. Facilita ajustes globais de densidade.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACESSIBILIDADE -->
+<section id="acessibilidade">
+  <div class="section-label">10</div>
+  <h2>Acessibilidade</h2>
+  <p class="desc">Requisitos mínimos de WCAG 2.1 AA para o design system. Produtos internos de banco são auditados — e acessibilidade é qualidade, não opcional.</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Contraste de cores</div>
+    <div class="contrast-grid">
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#1A1A1A;color:#fff;">Texto</div>
+        <div class="cp-info">
+          <div class="cp-colors">#1A1A1A on #FFFFFF</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">18.1:1</span>
+            <span class="cp-badge aaa">AAA</span>
+          </div>
+          <div class="cp-note">Títulos e texto principal</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#333333;color:#fff;">Texto</div>
+        <div class="cp-info">
+          <div class="cp-colors">#333333 on #FFFFFF</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">12.6:1</span>
+            <span class="cp-badge aaa">AAA</span>
+          </div>
+          <div class="cp-note">Corpo de texto padrão</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#666666;color:#fff;">Texto</div>
+        <div class="cp-info">
+          <div class="cp-colors">#666666 on #FFFFFF</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">5.7:1</span>
+            <span class="cp-badge aa">AA</span>
+          </div>
+          <div class="cp-note">Texto secundário, descrições</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#999999;color:#fff;">Texto</div>
+        <div class="cp-info">
+          <div class="cp-colors">#999999 on #FFFFFF</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">2.9:1</span>
+            <span class="cp-badge fail">Fail</span>
+          </div>
+          <div class="cp-note">Apenas decorativo — nunca texto informativo</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#CC092F;color:#fff;">Ação</div>
+        <div class="cp-info">
+          <div class="cp-colors">#FFFFFF on #CC092F</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">4.6:1</span>
+            <span class="cp-badge aa">AA</span>
+          </div>
+          <div class="cp-note">Texto branco em botões primários</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#00696E;color:#fff;">IA</div>
+        <div class="cp-info">
+          <div class="cp-colors">#FFFFFF on #00696E</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">4.9:1</span>
+            <span class="cp-badge aa">AA</span>
+          </div>
+          <div class="cp-note">Texto cyan-text em fundos escuros</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#00BCD4;color:#fff;">IA</div>
+        <div class="cp-info">
+          <div class="cp-colors">#FFFFFF on #00BCD4</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">2.1:1</span>
+            <span class="cp-badge fail">Fail</span>
+          </div>
+          <div class="cp-note">Nunca usar cyan #00BCD4 como fundo de texto</div>
+        </div>
+      </div>
+      <div class="contrast-pair">
+        <div class="cp-preview" style="background:#E0F7FA;color:#00696E;">IA Badge</div>
+        <div class="cp-info">
+          <div class="cp-colors">#00696E on #E0F7FA</div>
+          <div class="cp-bottom">
+            <span class="cp-ratio">3.8:1</span>
+            <span class="cp-badge aa">AA Large</span>
+          </div>
+          <div class="cp-note">Badges IA — válido para texto ≥ 14px bold</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Estado de foco</div>
+    <div class="a11y-rule" style="margin-bottom:16px;">
+      <div class="ar-title">Focus ring obrigatório em todos os elementos interativos</div>
+      <div class="ar-spec">outline: 2px solid #00BCD4 · outline-offset: 2px</div>
+      <div class="ar-desc">Todo elemento que recebe foco via teclado deve exibir o anel visível. Nunca use <code style="font-size:11px;background:var(--gray-200);padding:1px 5px;border-radius:3px;">outline: none</code> sem fornecer um substituto visual equivalente.</div>
+    </div>
+    <div class="focus-demo">
+      <div class="focus-item">
+        <button class="focus-btn state-default">Padrão</button>
+        <span class="fi-label">sem foco</span>
+      </div>
+      <div class="focus-item">
+        <button class="focus-btn state-focus">Focado</button>
+        <span class="fi-label">foco correto</span>
+      </div>
+      <div class="focus-item">
+        <button class="focus-btn state-bad">Invisível</button>
+        <span class="fi-label" style="color:var(--error);">não fazer</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection" style="margin-bottom:0;">
+    <div class="subsection-title">Outras regras</div>
+    <div class="a11y-rules">
+      <div class="a11y-rule">
+        <div class="ar-title">Área clicável mínima</div>
+        <div class="ar-spec">44 × 44px</div>
+        <div class="ar-desc">Botões, ícones clicáveis e itens de navegação devem ter área de toque mínima de 44×44px — mesmo que visualmente menores. Use padding para expandir a área.</div>
+      </div>
+      <div class="a11y-rule">
+        <div class="ar-title">Não use cor como única informação</div>
+        <div class="ar-spec">ícone + cor + texto</div>
+        <div class="ar-desc">Status, erros e alertas devem combinar cor com ícone ou texto. Um usuário daltônico não pode depender apenas do vermelho/verde para entender o estado.</div>
+      </div>
+      <div class="a11y-rule">
+        <div class="ar-title">Labels em todos os inputs</div>
+        <div class="ar-spec">aria-label ou &lt;label for&gt;</div>
+        <div class="ar-desc">Placeholder não substitui label. Todo campo de formulário precisa de label associado — visível ou via aria-label para leitores de tela.</div>
+      </div>
+      <div class="a11y-rule">
+        <div class="ar-title">Tamanho mínimo de texto</div>
+        <div class="ar-spec">12px mínimo · 14px recomendado</div>
+        <div class="ar-desc">Texto abaixo de 12px não é legível e não passa em auditorias de acessibilidade. Use 11px apenas para metadados decorativos não informativos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- USO CORRETO -->
 <section id="uso">
-  <div class="section-label">07</div>
+  <div class="section-label">11</div>
   <h2>Uso correto</h2>
   <p class="desc">Diretrizes para manter a consistência da marca em todas as aplicações.</p>
 
