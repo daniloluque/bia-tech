@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "BIA Tech — Páginas (new)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "new", "--listen", "3000", "--no-clipboard"],
+      "port": 3000
+    },
+    {
+      "name": "BIA Tech — Páginas (old)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "old", "--listen", "3001", "--no-clipboard"],
+      "port": 3001
+    }
+  ]
+}

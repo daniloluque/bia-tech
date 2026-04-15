@@ -19,8 +19,8 @@
     }
 
     [data-theme="dark"] {
-      --bg: #1E1E1E;
-      --bg2: #252525;
+      --bg: #1A1A1A;
+      --bg2: #202020;
       --surf: #252525;
       --surf2: #2A2A2A;
       --surf3: #333333;
@@ -30,16 +30,18 @@
       --t2: #888;
       --t3: #444;
       --t4: #2a2a2a;
-      --topbar: #1E1E1E;
+      --topbar: #1A1A1A;
       --topbar-bord: rgba(255, 255, 255, 0.07);
       --pill-bg: rgba(255, 255, 255, 0.05);
       --pill-bord: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 188, 212, 0.05);
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-bord: rgba(255, 255, 255, 0.1);
+      --scrollbar: rgba(255,255,255,0.1);
     }
 
     [data-theme="light"] {
-      --bg: #FFFFFF;
-      --bg2: #F8F8F8;
+      --bg: #F5F5F5;
+      --bg2: #EBEBEB;
       --surf: #FFFFFF;
       --surf2: #F8F8F8;
       --surf3: #F0F0F0;
@@ -53,14 +55,12 @@
       --topbar-bord: rgba(0, 0, 0, 0.08);
       --pill-bg: rgba(0, 0, 0, 0.04);
       --pill-bord: rgba(0, 0, 0, 0.09);
-      --card-hover: rgba(0, 188, 212, 0.05);
+      --input-bg: rgba(0, 0, 0, 0.03);
+      --input-bord: rgba(0, 0, 0, 0.12);
+      --scrollbar: rgba(0,0,0,0.12);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -96,22 +96,9 @@
       line-height: 1;
       user-select: none;
     }
-
-    .wordmark .bia {
-      font-weight: 700;
-      color: var(--red);
-    }
-
-    .wordmark .pipe {
-      font-weight: 300;
-      color: var(--t3);
-      margin: 0 6px;
-    }
-
-    .wordmark .tech {
-      font-weight: 300;
-      color: var(--t1);
-    }
+    .wordmark .bia   { font-weight: 700; color: var(--red); }
+    .wordmark .pipe  { font-weight: 300; color: var(--t3); margin: 0 6px; }
+    .wordmark .tech  { font-weight: 300; color: var(--t1); }
 
     .product-badge {
       margin-left: 14px;
@@ -124,6 +111,45 @@
       padding: 3px 10px;
       border-radius: 20px;
       letter-spacing: 0.06em;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--pill-bg);
+      border: 0.5px solid var(--pill-bord);
+      border-radius: 20px;
+      padding: 4px 12px 4px 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .user-pill:hover { border-color: rgba(0, 188, 212, 0.3); }
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .user-name {
+      font-size: 12px;
+      color: var(--t1);
+      font-weight: 500;
     }
 
     .theme-btn {
@@ -140,73 +166,316 @@
       color: var(--t2);
       transition: all 0.15s;
     }
+    .theme-btn:hover { border-color: rgba(0, 188, 212, 0.4); color: var(--cyan); }
 
-    .theme-btn:hover {
-      border-color: rgba(0, 188, 212, 0.4);
-      color: var(--cyan);
-    }
-
-    /* ── MAIN AREA ── */
-    .main-wrapper {
+    /* ── CONTENT WRAPPER ── */
+    .content-wrapper {
       flex: 1;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── SEARCH AREA ── */
+    .search-area {
+      padding: 20px 32px 0;
+      flex-shrink: 0;
+    }
+
+    .search-box {
+      position: relative;
+      max-width: 540px;
+    }
+
+    .search-box svg.search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--t2);
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 40px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-bord);
+      border-radius: 10px;
+      padding: 0 100px 0 40px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--t1);
+      outline: none;
+      transition: all 0.15s;
+    }
+    .search-input::placeholder { color: var(--t2); }
+    .search-input:focus {
+      border-color: rgba(0, 188, 212, 0.5);
+      background: var(--surf);
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.07);
+    }
+
+    .search-hint {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--t3);
+      background: var(--surf3);
+      border: 0.5px solid var(--bord);
+      padding: 2px 7px;
+      border-radius: 5px;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+    .search-hint.hidden { opacity: 0; }
+
+    .search-clear {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--surf3);
+      border: none;
+      cursor: pointer;
+      display: none;
       align-items: center;
       justify-content: center;
-      padding: 40px;
-      overflow-y: auto;
+      color: var(--t2);
+      transition: all 0.15s;
+    }
+    .search-clear:hover { background: var(--bord); color: var(--t1); }
+    .search-clear.visible { display: flex; }
+
+    /* ── CATEGORY TABS ── */
+    .tabs-area {
+      padding: 16px 32px 0;
+      flex-shrink: 0;
     }
 
-    .hub-header {
-      text-align: center;
-      margin-bottom: 48px;
+    .tabs-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
     }
+    .tabs-scroll::-webkit-scrollbar { display: none; }
 
-    .hub-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--t2);
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .tab:hover { color: var(--t1); background: var(--surf2); }
+    .tab.active {
       color: var(--cyan);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      background: var(--cyan-light);
+      border-color: rgba(0, 188, 212, 0.25);
+    }
+
+    .tab-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      background: var(--surf3);
+      border-radius: 10px;
+      padding: 1px 6px;
+      color: var(--t3);
+      transition: all 0.15s;
+    }
+    .tab.active .tab-count {
+      background: rgba(0, 188, 212, 0.15);
+      color: var(--cyan);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 0.5px;
+      background: var(--bord);
+      margin: 14px 32px 0;
+      flex-shrink: 0;
+    }
+
+    /* ── MAIN SCROLL ── */
+    .main-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 32px 32px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar) transparent;
+    }
+    .main-scroll::-webkit-scrollbar { width: 6px; }
+    .main-scroll::-webkit-scrollbar-track { background: transparent; }
+    .main-scroll::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 12px;
     }
 
-    .hub-title {
-      font-size: 32px;
+    .section-title {
+      font-size: 11px;
       font-weight: 600;
-      color: var(--t1);
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
+      color: var(--t2);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .hub-desc {
-      font-size: 14px;
+    .section-action {
+      font-size: 11px;
+      color: var(--cyan);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      opacity: 0.8;
+      transition: opacity 0.15s;
+    }
+    .section-action:hover { opacity: 1; }
+
+    /* ── RECENTS ROW (horizontal scroll) ── */
+    .recents-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .recents-row::-webkit-scrollbar { display: none; }
+
+    .recent-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--surf);
+      border: 1px solid var(--bord);
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      min-width: 160px;
+    }
+    .recent-chip:hover {
+      border-color: rgba(0, 188, 212, 0.35);
+      background: var(--surf2);
+    }
+
+    .recent-chip-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .recent-chip-icon svg { width: 14px; height: 14px; stroke-width: 1.8; }
+
+    .recent-chip-info { min-width: 0; }
+    .recent-chip-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--t1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .recent-chip-cat {
+      font-size: 10px;
       color: var(--t2);
-      max-width: 400px;
-      margin: 0 auto;
-      line-height: 1.6;
+      margin-top: 1px;
+    }
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--surf2);
+      border: 0.5px solid var(--bord);
+      border-radius: 8px;
+      padding: 3px;
+    }
+    .view-btn {
+      width: 28px;
+      height: 26px;
+      border-radius: 5px;
+      border: none;
+      background: transparent;
+      color: var(--t2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .view-btn svg { width: 14px; height: 14px; stroke-width: 1.8; }
+    .view-btn.active { background: var(--surf); color: var(--t1); box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    .view-btn:hover:not(.active) { color: var(--t1); }
+
+    /* ── RESULT COUNT ── */
+    .result-meta {
+      font-size: 11px;
+      color: var(--t2);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     /* ── GRID ── */
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      max-width: 900px;
-      width: 100%;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
     }
 
+    .hub-grid.list-view {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    /* ── CARD ── */
     .hub-card {
       display: flex;
       flex-direction: column;
-      padding: 24px;
+      padding: 18px;
       background: var(--surf);
       border: 1px solid var(--bord);
-      border-radius: 16px;
+      border-radius: 14px;
       text-decoration: none;
       color: inherit;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
       position: relative;
       overflow: hidden;
     }
@@ -215,102 +484,187 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(0, 188, 212, 0.1), transparent 40%);
+      background: linear-gradient(135deg, rgba(0, 188, 212, 0.08), transparent 50%);
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.25s;
       pointer-events: none;
     }
 
     .hub-card:hover {
-      border-color: rgba(0, 188, 212, 0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 188, 212, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
+    .hub-card:hover::after { opacity: 1; }
 
-    .hub-card:hover::after {
-      opacity: 1;
+    /* List view card */
+    .hub-grid.list-view .hub-card {
+      flex-direction: row;
+      align-items: center;
+      padding: 12px 16px;
+      gap: 14px;
+      border-radius: 10px;
     }
+    .hub-grid.list-view .hub-card:hover { transform: none; box-shadow: none; }
+    .hub-grid.list-view .card-body { flex: 1; min-width: 0; }
+    .hub-grid.list-view .card-meta { flex-direction: row; align-items: center; gap: 10px; margin-top: 2px; }
+    .hub-grid.list-view .card-icon { margin-bottom: 0; }
+    .hub-grid.list-view .card-desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hub-grid.list-view .card-footer { margin-top: 0; padding-top: 0; border-top: none; flex-direction: row; align-items: center; gap: 8px; }
+    .hub-grid.list-view .star-btn { margin-left: auto; }
 
     .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      margin-bottom: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
+    .card-icon svg { width: 20px; height: 20px; stroke-width: 1.6; }
 
-    .card-icon svg {
-      width: 24px;
-      height: 24px;
-      stroke-width: 1.6;
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 14px;
     }
+    .hub-grid:not(.list-view) .card-top .card-icon { margin-bottom: 0; }
 
-    .hub-card.agentix .card-icon {
-      background: rgba(0, 188, 212, 0.1);
-      color: var(--cyan);
-    }
-
-    .hub-card.chat .card-icon {
-      background: rgba(204, 9, 47, 0.1);
-      color: var(--red);
-    }
-
-    .hub-card.dashboard .card-icon {
-      background: rgba(249, 168, 37, 0.1);
-      color: #F9A825;
-    }
-
-    .hub-card.performance .card-icon {
-      background: rgba(46, 125, 50, 0.1);
-      color: #4CAF50;
-    }
-
-    .hub-card.brandbook .card-icon {
-      background: rgba(123, 31, 162, 0.1);
-      color: #AB47BC;
-    }
-
-    .hub-card.code .card-icon {
-      background: rgba(30, 136, 229, 0.1);
-      color: #42A5F5;
-    }
-
-    .hub-card.sprint .card-icon {
-      background: rgba(255, 152, 0, 0.1);
-      color: #FFA726;
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--t1);
-      margin-bottom: 6px;
     }
 
     .card-desc {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--t2);
       line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    @media (max-width: 800px) {
-      .hub-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 0.5px solid var(--bord-s);
     }
 
-    @media (max-width: 500px) {
-      .hub-grid {
-        grid-template-columns: 1fr;
-      }
+    .cat-chip {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--t3);
+      background: var(--surf3);
+      border-radius: 5px;
+      padding: 2px 7px;
     }
+
+    .badge {
+      font-size: 9px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 5px;
+      text-transform: uppercase;
+    }
+    .badge-new  { background: rgba(0, 188, 212, 0.12); color: var(--cyan); border: 0.5px solid rgba(0,188,212,0.25); }
+    .badge-beta { background: rgba(249, 168, 37, 0.12); color: #F9A825; border: 0.5px solid rgba(249,168,37,0.25); }
+
+    /* Star button */
+    .star-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--t3);
+      opacity: 0;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .star-btn svg { width: 14px; height: 14px; stroke-width: 1.8; transition: all 0.15s; }
+    .hub-card:hover .star-btn { opacity: 1; }
+    .star-btn.starred { opacity: 1 !important; color: #F9A825; }
+    .star-btn.starred svg { fill: #F9A825; stroke: #F9A825; }
+    .star-btn:hover:not(.starred) { color: var(--t1); background: var(--surf3); }
+
+    /* Color themes per category */
+    .ic-cyan  { background: rgba(0, 188, 212, 0.1);   color: var(--cyan); }
+    .ic-red   { background: rgba(204, 9, 47, 0.1);    color: var(--red); }
+    .ic-amber { background: rgba(249, 168, 37, 0.1);  color: #F9A825; }
+    .ic-green { background: rgba(76, 175, 80, 0.1);   color: #4CAF50; }
+    .ic-purple{ background: rgba(171, 71, 188, 0.1);  color: #AB47BC; }
+    .ic-blue  { background: rgba(66, 165, 245, 0.1);  color: #42A5F5; }
+    .ic-orange{ background: rgba(255, 152, 0, 0.1);   color: #FFA726; }
+    .ic-teal  { background: rgba(38, 166, 154, 0.1);  color: #26A69A; }
+    .ic-indigo{ background: rgba(121, 134, 203, 0.1); color: #7986CB; }
+    .ic-pink  { background: rgba(236, 64, 122, 0.1);  color: #EC407A; }
+    .ic-lime  { background: rgba(212, 225, 87, 0.1);  color: #D4E157; }
+    .ic-brown { background: rgba(141, 110, 99, 0.1);  color: #8D6E63; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 32px;
+      text-align: center;
+      gap: 12px;
+    }
+    .empty-state.visible { display: flex; }
+    .empty-state svg { color: var(--t3); width: 40px; height: 40px; stroke-width: 1.2; }
+    .empty-title { font-size: 15px; font-weight: 600; color: var(--t1); }
+    .empty-desc { font-size: 13px; color: var(--t2); max-width: 280px; line-height: 1.6; }
+    .empty-clear {
+      margin-top: 4px;
+      padding: 7px 18px;
+      background: var(--cyan-light);
+      border: 1px solid rgba(0,188,212,0.3);
+      border-radius: 8px;
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .empty-clear:hover { background: rgba(0,188,212,0.15); }
+
+    /* ── HIDDEN ── */
+    .hidden { display: none !important; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
   </style>
 </head>
 
 <body data-theme="dark">
 
+  <!-- TOPBAR -->
   <div class="topbar">
     <div style="display:flex;align-items:center;">
       <div class="wordmark">
@@ -318,109 +672,600 @@
       </div>
       <div class="product-badge">Hub</div>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()">
-      <span id="themeIcon">☀</span><span id="themeLabel">Modo claro</span>
-    </button>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <div class="user-avatar">DL</div>
+        <span class="user-name">Danilo</span>
+      </div>
+      <button class="theme-btn" onclick="toggleTheme()">
+        <span id="themeIcon">☀</span><span id="themeLabel">Modo claro</span>
+      </button>
+    </div>
   </div>
 
-  <div class="main-wrapper">
-    <div class="hub-header">
-      <div class="hub-eyebrow">BIA Tech Ecosystem</div>
-      <h1 class="hub-title">Bem-vindo(a)</h1>
-      <p class="hub-desc">Acesse as ferramentas e plataformas que impulsionam a inteligência da sua operação.</p>
+  <!-- CONTENT WRAPPER -->
+  <div class="content-wrapper">
+
+    <!-- SEARCH -->
+    <div class="search-area">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+        <input
+          class="search-input"
+          id="searchInput"
+          type="text"
+          placeholder="Buscar ferramentas..."
+          autocomplete="off"
+          oninput="handleSearch(this.value)"
+        />
+        <span class="search-hint" id="searchHint">/</span>
+        <button class="search-clear" id="searchClear" onclick="clearSearch()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="12" height="12" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
-    <div class="hub-grid">
-      <a href="bia-tech-agentix.html" class="hub-card agentix">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" />
-            <path d="M8 9h8M8 12h8M8 15h4" stroke="currentColor" stroke-linecap="round" />
-          </svg>
-        </div>
-        <div class="card-title">Agentix</div>
-        <div class="card-desc">Criação, gestão e playground de agentes customizados de IA.</div>
-      </a>
+    <!-- CATEGORY TABS -->
+    <div class="tabs-area">
+      <div class="tabs-scroll" id="tabsContainer">
+        <!-- populated by JS -->
+      </div>
+    </div>
 
-      <a href="bia-tech-chat-v2.html" class="hub-card chat">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
-              stroke="currentColor" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <div class="card-title">Chat</div>
-        <div class="card-desc">Interface conversacional padrão para interagir com seus agentes e modelos.</div>
-      </a>
+    <div class="divider"></div>
 
-      <a href="bia-tech-incident-dashboard.html" class="hub-card dashboard">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
-            <path d="M7 16V10M12 16V8M17 16V12" stroke="currentColor" stroke-linecap="round" />
-          </svg>
-        </div>
-        <div class="card-title">Dashboard</div>
-        <div class="card-desc">Monitoramento em tempo real de incidentes e latências de serviços.</div>
-      </a>
+    <!-- MAIN SCROLL AREA -->
+    <div class="main-scroll" id="mainScroll">
 
-      <a href="bia-tech-performance.html" class="hub-card performance">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="currentColor" />
-            <path d="M16 11l-4 4-2-2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
+      <!-- RECENTS SECTION -->
+      <div class="section" id="recentsSection">
+        <div class="section-header">
+          <span class="section-title">Acessados recentemente</span>
+          <button class="section-action" onclick="clearRecents()">Limpar</button>
         </div>
-        <div class="card-title">Performance</div>
-        <div class="card-desc">Análise profunda de KPIs e eficiência geral das aplicações.</div>
-      </a>
+        <div class="recents-row" id="recentsRow"></div>
+      </div>
 
-      <a href="bia-tech-brandbook.html" class="hub-card brandbook">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="currentColor" stroke-linecap="round" />
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="currentColor" />
-          </svg>
+      <!-- ALL PRODUCTS SECTION -->
+      <div class="section" id="allSection">
+        <div class="section-header">
+          <span class="section-title" id="sectionLabel">Todos os produtos</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="result-meta" id="resultMeta"></span>
+            <div class="view-toggle">
+              <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Grade">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </button>
+              <button class="view-btn" id="listBtn" onclick="setView('list')" title="Lista">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="card-title">Brandbook</div>
-        <div class="card-desc">Fundamentos visuais, tipografia e diretrizes de design system da marca.</div>
-      </a>
 
-      <a href="bia-tech-code.html" class="hub-card code">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <div class="card-title">Code</div>
-        <div class="card-desc">Revisão, geração e análise de código assistida por IA com contexto do repositório.</div>
-      </a>
+        <div class="hub-grid" id="productGrid"></div>
 
-      <a href="bia-tech-sprint-builder.html" class="hub-card sprint">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
-            <path d="M7 8h10M7 12h7M7 16h4" stroke="currentColor" stroke-linecap="round" />
-            <circle cx="18" cy="16" r="2.5" stroke="currentColor" />
-            <path d="M17 16l.8.8 1.4-1.6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" />
+        <div class="empty-state" id="emptyState">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
           </svg>
+          <div class="empty-title">Nenhum resultado encontrado</div>
+          <p class="empty-desc" id="emptyDesc">Nenhuma ferramenta corresponde à sua busca.</p>
+          <button class="empty-clear" onclick="clearSearch()">Limpar busca</button>
         </div>
-        <div class="card-title">Sprint Builder</div>
-        <div class="card-desc">Crie histórias e tarefas em lote com IA e exporte diretamente para o Jira.</div>
-      </a>
+      </div>
+
     </div>
   </div>
 
   <script>
+    /* ── DATA ── */
+    const PRODUCTS = [
+      {
+        id: 'agentix',
+        name: 'Agentix',
+        desc: 'Criação, gestão e playground de agentes customizados de IA.',
+        href: 'bia-tech-agentix.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 12h8M8 15h4" stroke-linecap="round"/></svg>`,
+        color: 'ic-cyan',
+        category: 'ai',
+        badge: null,
+      },
+      {
+        id: 'chat',
+        name: 'Chat',
+        desc: 'Interface conversacional para interagir com seus agentes e modelos.',
+        href: 'bia-tech-chat-v2.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke-linejoin="round"/></svg>`,
+        color: 'ic-red',
+        category: 'comunicacao',
+        badge: null,
+      },
+      {
+        id: 'dashboard',
+        name: 'Dashboard',
+        desc: 'Monitoramento em tempo real de incidentes e latências de serviços.',
+        href: 'bia-tech-incident-dashboard.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 16V10M12 16V8M17 16V12" stroke-linecap="round"/></svg>`,
+        color: 'ic-amber',
+        category: 'analytics',
+        badge: null,
+      },
+      {
+        id: 'performance',
+        name: 'Performance',
+        desc: 'Análise profunda de KPIs e eficiência geral das aplicações.',
+        href: 'bia-tech-performance.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22a10 10 0 100-20 10 10 0 000 20z"/><path d="M16 11l-4 4-2-2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        color: 'ic-green',
+        category: 'analytics',
+        badge: null,
+      },
+      {
+        id: 'brandbook',
+        name: 'Brandbook',
+        desc: 'Fundamentos visuais, tipografia e diretrizes de design system da marca.',
+        href: 'bia-tech-brandbook.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke-linecap="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
+        color: 'ic-purple',
+        category: 'design',
+        badge: null,
+      },
+      {
+        id: 'code',
+        name: 'Code',
+        desc: 'Revisão, geração e análise de código assistida por IA com contexto do repositório.',
+        href: 'bia-tech-code.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        color: 'ic-blue',
+        category: 'dev',
+        badge: null,
+      },
+      {
+        id: 'sprint',
+        name: 'Sprint Builder',
+        desc: 'Crie histórias e tarefas em lote com IA e exporte diretamente para o Jira.',
+        href: 'bia-tech-sprint-builder.html',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h7M7 16h4" stroke-linecap="round"/><circle cx="18" cy="16" r="2.5"/><path d="M17 16l.8.8 1.4-1.6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/></svg>`,
+        color: 'ic-orange',
+        category: 'gestao',
+        badge: null,
+      },
+      {
+        id: 'docwriter',
+        name: 'Doc Writer',
+        desc: 'Gera documentação técnica e funcional a partir do código ou de prompts estruturados.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+        color: 'ic-teal',
+        category: 'docs',
+        badge: 'new',
+      },
+      {
+        id: 'sql',
+        name: 'SQL Assistant',
+        desc: 'Escreva, otimize e explique queries SQL em linguagem natural com suporte a múltiplos dialetos.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+        color: 'ic-blue',
+        category: 'dev',
+        badge: null,
+      },
+      {
+        id: 'slides',
+        name: 'Slide Builder',
+        desc: 'Transforme briefings e textos em apresentações estruturadas prontas para edição.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round"/></svg>`,
+        color: 'ic-indigo',
+        category: 'produtividade',
+        badge: 'new',
+      },
+      {
+        id: 'email',
+        name: 'Email Writer',
+        desc: 'Redija e-mails profissionais com sugestões de tom, clareza e formatação automática.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+        color: 'ic-red',
+        category: 'comunicacao',
+        badge: null,
+      },
+      {
+        id: 'testgen',
+        name: 'Test Generator',
+        desc: 'Gera testes unitários, de integração e de contrato a partir do código-fonte.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+        color: 'ic-green',
+        category: 'dev',
+        badge: null,
+      },
+      {
+        id: 'explorer',
+        name: 'Data Explorer',
+        desc: 'Explore e visualize conjuntos de dados com linguagem natural e gráficos interativos.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+        color: 'ic-amber',
+        category: 'analytics',
+        badge: null,
+      },
+      {
+        id: 'risk',
+        name: 'Risk Analyzer',
+        desc: 'Detecta e classifica riscos operacionais e de compliance em processos e documentos.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+        color: 'ic-pink',
+        category: 'analytics',
+        badge: 'beta',
+      },
+      {
+        id: 'meeting',
+        name: 'Meeting Recap',
+        desc: 'Transcreve reuniões, extrai ações e gera atas formatadas em segundos.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`,
+        color: 'ic-teal',
+        category: 'comunicacao',
+        badge: 'new',
+      },
+      {
+        id: 'kb',
+        name: 'Knowledge Base',
+        desc: 'Base de conhecimento indexada com busca semântica e geração de respostas.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`,
+        color: 'ic-indigo',
+        category: 'docs',
+        badge: null,
+      },
+      {
+        id: 'uxreview',
+        name: 'UX Reviewer',
+        desc: 'Avalia fluxos e telas com base em heurísticas de usabilidade e diretrizes Bradesco.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>`,
+        color: 'ic-purple',
+        category: 'design',
+        badge: 'beta',
+      },
+      {
+        id: 'cicd',
+        name: 'CI/CD Optimizer',
+        desc: 'Analisa pipelines e sugere melhorias de performance, custo e confiabilidade.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>`,
+        color: 'ic-lime',
+        category: 'dev',
+        badge: null,
+      },
+      {
+        id: 'security',
+        name: 'Security Scanner',
+        desc: 'Identificação de vulnerabilidades em código e dependências com CVSS scoring.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        color: 'ic-red',
+        category: 'dev',
+        badge: null,
+      },
+      {
+        id: 'budget',
+        name: 'Budget Tracker',
+        desc: 'Acompanhe orçamentos de projetos, burn rate e desvios com alertas automáticos.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>`,
+        color: 'ic-amber',
+        category: 'gestao',
+        badge: null,
+      },
+      {
+        id: 'prreview',
+        name: 'PR Reviewer',
+        desc: 'Revisão automática de pull requests com foco em qualidade, segurança e boas práticas.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 009 9"/></svg>`,
+        color: 'ic-blue',
+        category: 'dev',
+        badge: 'new',
+      },
+      {
+        id: 'translate',
+        name: 'Smart Translate',
+        desc: 'Tradução contextual de documentos e interfaces com preservação de termos técnicos.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>`,
+        color: 'ic-teal',
+        category: 'comunicacao',
+        badge: null,
+      },
+      {
+        id: 'ocrtools',
+        name: 'OCR & Extractor',
+        desc: 'Extrai dados estruturados de imagens, PDFs e documentos escaneados.',
+        href: '#',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"/><path d="M12 7v10M7 12h10"/></svg>`,
+        color: 'ic-brown',
+        category: 'produtividade',
+        badge: 'beta',
+      },
+    ];
+
+    const CATEGORIES = [
+      { id: 'all',          label: 'Todos',         icon: '◈' },
+      { id: 'favoritos',    label: 'Favoritos',      icon: '★' },
+      { id: 'ai',           label: 'Agentes & IA',   icon: '◎' },
+      { id: 'dev',          label: 'Desenvolvimento', icon: '◰' },
+      { id: 'analytics',    label: 'Analytics',      icon: '◫' },
+      { id: 'comunicacao',  label: 'Comunicação',    icon: '◷' },
+      { id: 'design',       label: 'Design',         icon: '◑' },
+      { id: 'gestao',       label: 'Gestão',         icon: '◧' },
+      { id: 'docs',         label: 'Documentação',   icon: '◻' },
+      { id: 'produtividade',label: 'Produtividade',  icon: '◈' },
+    ];
+
+    const CAT_LABELS = {
+      ai: 'Agentes & IA', dev: 'Dev', analytics: 'Analytics',
+      comunicacao: 'Comunicação', design: 'Design', gestao: 'Gestão',
+      docs: 'Docs', produtividade: 'Produtividade',
+    };
+
+    /* ── STATE ── */
+    let currentCategory = 'all';
+    let currentSearch   = '';
+    let currentView     = 'grid';
+    let favorites       = JSON.parse(localStorage.getItem('bia_favs') || '[]');
+    let recents         = JSON.parse(localStorage.getItem('bia_recents') || '[]');
+
+    /* ── THEME ── */
     let isDark = true;
     function toggleTheme() {
       isDark = !isDark;
       document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-      document.getElementById('themeIcon').textContent = isDark ? '☀' : '☾';
+      document.getElementById('themeIcon').textContent  = isDark ? '☀' : '☾';
       document.getElementById('themeLabel').textContent = isDark ? 'Modo claro' : 'Modo escuro';
     }
+
+    /* ── TABS ── */
+    function buildTabs() {
+      const container = document.getElementById('tabsContainer');
+      container.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const count = cat.id === 'all'
+          ? PRODUCTS.length
+          : cat.id === 'favoritos'
+            ? favorites.length
+            : PRODUCTS.filter(p => p.category === cat.id).length;
+
+        if (cat.id !== 'all' && cat.id !== 'favoritos' && count === 0) return;
+
+        const el = document.createElement('button');
+        el.className = 'tab' + (cat.id === currentCategory ? ' active' : '');
+        el.dataset.cat = cat.id;
+        el.innerHTML = `${cat.label} <span class="tab-count">${count}</span>`;
+        el.onclick = () => setCategory(cat.id);
+        container.appendChild(el);
+      });
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      buildTabs();
+      renderGrid();
+    }
+
+    /* ── SEARCH ── */
+    function handleSearch(val) {
+      currentSearch = val.trim().toLowerCase();
+      const hint  = document.getElementById('searchHint');
+      const clear = document.getElementById('searchClear');
+      if (currentSearch) {
+        hint.classList.add('hidden');
+        clear.classList.add('visible');
+      } else {
+        hint.classList.remove('hidden');
+        clear.classList.remove('visible');
+      }
+      renderGrid();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      handleSearch('');
+      input.focus();
+    }
+
+    /* ── KEYBOARD SHORTCUT ── */
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+        document.getElementById('searchHint').classList.add('hidden');
+      }
+      if (e.key === 'Escape') {
+        clearSearch();
+        document.getElementById('searchInput').blur();
+      }
+    });
+
+    /* ── VIEW TOGGLE ── */
+    function setView(v) {
+      currentView = v;
+      const grid    = document.getElementById('productGrid');
+      const gridBtn = document.getElementById('gridBtn');
+      const listBtn = document.getElementById('listBtn');
+      if (v === 'grid') {
+        grid.classList.remove('list-view');
+        gridBtn.classList.add('active');
+        listBtn.classList.remove('active');
+      } else {
+        grid.classList.add('list-view');
+        listBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+      }
+    }
+
+    /* ── FAVORITES ── */
+    function toggleFav(id, e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(f => f !== id);
+      } else {
+        favorites = [id, ...favorites];
+      }
+      localStorage.setItem('bia_favs', JSON.stringify(favorites));
+      buildTabs();
+      renderGrid();
+    }
+
+    /* ── RECENTS ── */
+    function addRecent(id) {
+      recents = [id, ...recents.filter(r => r !== id)].slice(0, 6);
+      localStorage.setItem('bia_recents', JSON.stringify(recents));
+    }
+
+    function clearRecents() {
+      recents = [];
+      localStorage.setItem('bia_recents', JSON.stringify(recents));
+      renderRecents();
+    }
+
+    function renderRecents() {
+      const section = document.getElementById('recentsSection');
+      const row     = document.getElementById('recentsRow');
+      const showRecents = recents.length > 0 && !currentSearch && currentCategory === 'all';
+      section.style.display = showRecents ? '' : 'none';
+      if (!showRecents) return;
+
+      row.innerHTML = '';
+      recents.forEach(id => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p) return;
+        const el = document.createElement('a');
+        el.className = 'recent-chip';
+        el.href = p.href;
+        el.onclick = () => addRecent(p.id);
+        el.innerHTML = `
+          <div class="recent-chip-icon ${p.color}">${p.icon}</div>
+          <div class="recent-chip-info">
+            <div class="recent-chip-name">${p.name}</div>
+            <div class="recent-chip-cat">${CAT_LABELS[p.category] || p.category}</div>
+          </div>`;
+        row.appendChild(el);
+      });
+    }
+
+    /* ── GRID ── */
+    function getFilteredProducts() {
+      let list = PRODUCTS;
+      if (currentCategory === 'favoritos') {
+        list = list.filter(p => favorites.includes(p.id));
+      } else if (currentCategory !== 'all') {
+        list = list.filter(p => p.category === currentCategory);
+      }
+      if (currentSearch) {
+        list = list.filter(p =>
+          p.name.toLowerCase().includes(currentSearch) ||
+          p.desc.toLowerCase().includes(currentSearch) ||
+          (CAT_LABELS[p.category] || '').toLowerCase().includes(currentSearch)
+        );
+      }
+      return list;
+    }
+
+    function renderGrid() {
+      renderRecents();
+
+      const grid       = document.getElementById('productGrid');
+      const empty      = document.getElementById('emptyState');
+      const meta       = document.getElementById('resultMeta');
+      const label      = document.getElementById('sectionLabel');
+      const list       = getFilteredProducts();
+
+      // section label
+      if (currentCategory === 'favoritos') label.textContent = 'Favoritos';
+      else if (currentCategory === 'all')  label.textContent = 'Todos os produtos';
+      else label.textContent = CATEGORIES.find(c => c.id === currentCategory)?.label || '';
+
+      // result meta
+      if (currentSearch) {
+        meta.textContent = `${list.length} resultado${list.length !== 1 ? 's' : ''}`;
+      } else {
+        meta.textContent = '';
+      }
+
+      // empty state
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.add('visible');
+        const desc = document.getElementById('emptyDesc');
+        if (currentCategory === 'favoritos' && !currentSearch) {
+          desc.textContent = 'Você ainda não favoritou nenhuma ferramenta. Clique na estrela em qualquer card.';
+          document.querySelector('.empty-clear').style.display = 'none';
+        } else {
+          desc.textContent = 'Nenhuma ferramenta corresponde à sua busca. Tente outros termos.';
+          document.querySelector('.empty-clear').style.display = '';
+        }
+        return;
+      }
+
+      empty.classList.remove('visible');
+      document.querySelector('.empty-clear').style.display = '';
+      grid.innerHTML = '';
+
+      list.forEach(p => {
+        const isFav = favorites.includes(p.id);
+        const card = document.createElement('a');
+        card.className = 'hub-card';
+        card.href = p.href;
+        card.onclick = () => addRecent(p.id);
+
+        const badgeHtml = p.badge === 'new'
+          ? `<span class="badge badge-new">Novo</span>`
+          : p.badge === 'beta'
+            ? `<span class="badge badge-beta">Beta</span>`
+            : '';
+
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-icon ${p.color}">${p.icon}</div>
+            <button class="star-btn ${isFav ? 'starred' : ''}" title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}" onclick="toggleFav('${p.id}', event)">
+              <svg viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row">
+              <span class="card-title">${p.name}</span>
+              ${badgeHtml}
+            </div>
+            <div class="card-desc">${p.desc}</div>
+          </div>
+          <div class="card-footer">
+            <span class="cat-chip">${CAT_LABELS[p.category] || p.category}</span>
+          </div>`;
+
+        grid.appendChild(card);
+      });
+    }
+
+    /* ── INIT ── */
+    buildTabs();
+    renderGrid();
   </script>
 </body>
-
 </html>
